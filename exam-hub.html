@@ -619,6 +619,18 @@ document.getElementById('theme-btn').onclick=()=>{
 
 /* ─── INIT ─── */
 if(localStorage.theme==='dark') document.documentElement.classList.add('dark');
+
+// One-time cleanup: remove junk test exams (keep only 60-question bundled exam)
+var CLEAN_V2 = 'hubClean_v2';
+if(!localStorage.getItem(CLEAN_V2)) {
+  try {
+    var d = JSON.parse(localStorage.getItem(STORE) || '[]');
+    d = d.filter(function(e) { return e.questions && e.questions.length >= 60; });
+    localStorage.setItem(STORE, JSON.stringify(d));
+    localStorage.setItem(CLEAN_V2, '1');
+  } catch(e) {}
+}
+
 renderLibrary();
 </script>
 
@@ -629,44 +641,28 @@ document.addEventListener('DOMContentLoaded', () => {
   try {
     const parsed = parseMarkdown(examMd);
     if (parsed.questions.length > 0) {
-      const exam = {
-        id: uid(),
-        title: parsed.examTitle,
-        domainsMap: parsed.domainsMap,
-        questions: parsed.questions,
-        addedAt: new Date().toISOString(),
-        answers: {},
-        flagged: []
-      };
-      library.push(exam);
-      saveStore(library);
+      // Check if exam already exists (by title) to avoid duplicates on page reload
+      var exists = library.some(function(e) { return e.title === parsed.examTitle; });
+      if (!exists) {
+        const exam = {
+          id: uid(),
+          title: parsed.examTitle,
+          domainsMap: parsed.domainsMap,
+          questions: parsed.questions,
+          addedAt: new Date().toISOString(),
+          answers: {},
+          flagged: []
+        };
+        library.push(exam);
+        saveStore(library);
+        console.log('Auto-loaded:', parsed.questions.length, 'questions');
+      }
       renderLibrary();
-      console.log('Auto-loaded:', parsed.questions.length, 'questions');
     }
   } catch(e) {
     console.error('Auto-load error:', e);
   }
 });
 </script>
-<!-- AUTO-LOAD TEST -->
-<script>
-(function() {
-    var testExam = {
-        id: uid(),
-        title: 'AI-900 Practice Test',
-        domainsMap: { D1: 'AI Workloads', D2: 'ML', D3: 'NLP' },
-        questions: [
-            { domain: 'D1', text: 'Test Q1: What is AI?', options: ['Correct', 'Wrong1', 'Wrong2', 'Wrong3'], answer: 0, explanation: 'AI is artificial intelligence.' },
-            { domain: 'D1', text: 'Test Q2: What is ML?', options: ['Wrong', 'Correct', 'Wrong2', 'Wrong3'], answer: 1, explanation: 'ML is machine learning.' }
-        ],
-        addedAt: new Date().toISOString(),
-        answers: {},
-        flagged: []
-    };
-    library.push(testExam);
-    saveStore(library);
-    renderLibrary();
-    console.log('TEST EXAM LOADED');
-})();
-</script></body>
+</body>
 </html>
