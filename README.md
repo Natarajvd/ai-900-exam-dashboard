@@ -4,7 +4,7 @@
 
 A lightweight, browser-based exam practice tool. Works for any subject — certification prep, classroom quizzes, interview practice, trivia — if you can write questions in a simple text format, you can quiz yourself.
 
-**🔗 Live Demo:** https://natarajvd.github.io/ai-900-exam-dashboard/
+**🔗 Live Demo:** https://natarajvd.github.io/exam-quiz-dashboard/
 
 ---
 
@@ -25,7 +25,7 @@ A lightweight, browser-based exam practice tool. Works for any subject — certi
 ## 🚀 Get Started
 
 ### Option 1: Use the Live Site
-Open [https://natarajvd.github.io/ai-900-exam-dashboard/](https://natarajvd.github.io/ai-900-exam-dashboard/) — start quizzing immediately. A sample exam is pre-loaded.
+Open [https://natarajvd.github.io/exam-quiz-dashboard/](https://natarajvd.github.io/exam-quiz-dashboard/) — start quizzing immediately. A sample exam is pre-loaded.
 
 ### Option 2: Run Locally
 1. Clone or download this repo
