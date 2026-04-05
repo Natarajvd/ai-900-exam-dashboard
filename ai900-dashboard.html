@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-900 Practice Dashboard</title>
+    <!-- Tailwind CSS (via CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        azure: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7', // Primary Azure Blue
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Vanilla CSS Custom Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            /* background-color: #f8fafc; Removed for dark mode */
+        }
+
+        /* SVG Circular Gauge Animation */
+        .gauge-circle {
+            transition: stroke-dasharray 0.8s ease-out;
+        }
+
+        /* Interactive Option Button Styles */
+        .option-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border-color: #bae6fd; /* azure-200 */
+        }
+        
+        /* Explanation Box Slide Down Animation */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                max-height: 500px;
+            }
+        }
+        
+        .animate-slide-down {
+            animation: slideDown 0.4s ease-out forwards;
+            overflow: hidden;
+        }
+
+        /* Custom Scrollbar for Sidebar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 flex h-screen overflow-hidden text-slate-800 dark:text-slate-100 antialiased">
+    
+    <!-- Left Sidebar (25% Width) -->
+    <aside class="w-1/4 min-w-[320px] max-w-[400px] bg-white dark:bg-slate-800 transition-colors border-r border-slate-200 dark:border-slate-700 flex flex-col shadow-sm z-10 transition-all duration-300">
+        
+        <!-- Dashboard Header -->
+        <div class="p-6 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between bg-white dark:bg-slate-800 transition-colors sticky top-0 z-20">
+            <div>
+                <h1 class="text-xl font-bold text-azure-700 tracking-tight flex items-center gap-2">
+                    <i class="fa-brands fa-microsoft text-azure-600"></i> AI-900 Prep
+                </h1>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 font-semibold mt-1 uppercase tracking-widest">Practice Dashboard</p>
+            </div>
+            <div class="h-10 w-10 bg-azure-50 rounded-full flex items-center justify-center text-azure-600 font-bold shadow-inner border border-azure-100">
+                 <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+        </div>
+
+        <!-- Scrollable Dashboard Content -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-8">
+            
+            <!-- Study Progress Section w/ Circular Gauge -->
+            <div class="flex flex-col items-center">
+                <h2 class="text-xs font-bold text-slate-600 dark:text-slate-300 w-full mb-3 uppercase tracking-wider">Study Progress</h2>
+                <div class="relative w-44 h-44 drop-shadow-sm">
+                    <svg class="w-full h-full" viewBox="0 0 100 100">
+                        <circle class="text-slate-100 stroke-current" stroke-width="8" cx="50" cy="50" r="40" fill="transparent"></circle>
+                        <circle id="progress-gauge" class="text-azure-500 gauge-circle stroke-current" stroke-width="8" stroke-linecap="round" cx="50" cy="50" r="40" fill="transparent" stroke-dasharray="0, 251.2" transform="rotate(-90 50 50)"></circle>
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <span id="progress-percent" class="text-3xl font-bold text-slate-800 dark:text-slate-100">0%</span>
+                        <span id="progress-fraction" class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1 bg-slate-100 dark:bg-slate-700 transition-colors px-2 py-1 rounded-full">0 / 90</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scoreboard -->
+            <div>
+                <h2 class="text-xs font-bold text-slate-600 dark:text-slate-300 mb-3 uppercase tracking-wider">Scoreboard</h2>
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="bg-slate-50 dark:bg-slate-900 transition-colors border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-center transition hover:bg-slate-100 dark:bg-slate-700 transition-colors hover:border-slate-300">
+                        <div class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase mb-1">Attempted</div>
+                        <div id="stat-attempted" class="text-xl font-bold text-slate-700 dark:text-slate-200">0</div>
+                    </div>
+                    <div class="bg-green-50 border border-green-200 rounded-xl p-3 text-center transition hover:bg-green-100">
+                        <div class="text-[10px] text-green-700 font-bold uppercase mb-1">Correct</div>
+                        <div id="stat-correct" class="text-xl font-bold text-green-700">0</div>
+                    </div>
+                    <div class="bg-red-50 border border-red-200 rounded-xl p-3 text-center transition hover:bg-red-100">
+                        <div class="text-[10px] text-red-700 font-bold uppercase mb-1">Wrong</div>
+                        <div id="stat-wrong" class="text-xl font-bold text-red-700">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI-900 Domains List & Progress -->
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Domains</h2>
+                    <span class="text-[10px] font-medium text-slate-400">Score</span>
+                </div>
+                <div class="space-y-4" id="domain-list">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="pt-4 border-t border-slate-100 dark:border-slate-700 pb-4">
+                <button id="practice-wrong-btn" class="hidden w-full mb-3 py-2.5 px-4 bg-white dark:bg-slate-800 transition-colors border border-red-300 shadow-sm text-red-600 rounded-lg text-sm font-medium hover:bg-red-50 hover:text-red-800 transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-red-200">
+                    <i class="fa-solid fa-bullseye"></i> Practice Wrong Questions
+                </button>
+                
+                <button id="reset-btn" class="w-full py-2.5 px-4 bg-white dark:bg-slate-800 transition-colors border border-slate-300 shadow-sm text-slate-600 dark:text-slate-300 rounded-lg text-sm font-medium hover:bg-slate-50 dark:bg-slate-900 transition-colors hover:text-slate-800 dark:text-slate-100 transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-slate-200">
+                    <i class="fa-solid fa-rotate-right"></i> Reset Dashboard
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Right Main Panel (75% Width) -->
+    <main class="flex-1 flex flex-col relative bg-slate-50 dark:bg-slate-900 transition-colors relative selection:bg-azure-200 selection:text-azure-900">
+        
+        <!-- Top Status Bar -->
+        <header class="h-16 bg-white dark:bg-slate-800 transition-colors border-b border-slate-200 dark:border-slate-700 px-6 md:px-10 flex items-center justify-between shadow-sm sticky top-0 z-20">
+            <div class="flex items-center gap-4">
+                <span class="bg-azure-100 text-azure-800 border border-azure-200 text-[11px] font-bold px-3 py-1.5 rounded-full tracking-wide truncate max-w-[200px] md:max-w-xs" id="current-domain-badge">
+                    Domain
+                </span>
+                <span class="text-slate-500 dark:text-slate-400 font-medium text-sm">Question <strong class="text-slate-800", "dark:text-slate-100" id="q-num">1</strong> of <span id="q-total">90</span></span>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="theme-toggle" class="w-9 h-9 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors focus:outline-none">
+                    <i class="fa-solid fa-moon text-lg dark:hidden"></i>
+                    <i class="fa-solid fa-sun text-lg hidden dark:block"></i>
+                </button>
+            
+            <button id="flag-btn" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold border transition-all duration-200 hover:bg-slate-50 dark:bg-slate-900 transition-colors focus:outline-none border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 shadow-sm">
+                <i class="fa-regular fa-flag" id="flag-icon"></i>
+                <span id="flag-text" class="hidden sm:inline">Flag for Review</span>
+            </button>
+        </header>
+
+        <!-- Exam Console -->
+        <div class="flex-1 overflow-y-auto p-4 sm:p-8 lg:p-12 pb-32">
+            <div class="max-w-3xl mx-auto w-full">
+                
+                <!-- Main Question Card -->
+                <div class="bg-white dark:bg-slate-800 transition-colors rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-8 sm:p-10 transition-all duration-300 relative" id="question-card">
+                    
+                    <!-- Question Marker -->
+                    <div class="absolute -top-4 -left-4 w-10 h-10 bg-azure-600 text-white rounded-xl shadow-lg flex items-center justify-center font-bold text-lg rotate-[-5deg]" id="q-stamp">
+                        Q1
+                    </div>
+
+                    <!-- Question Text -->
+                    <h2 class="text-lg sm:text-xl md:text-2xl font-semibold text-slate-800 dark:text-slate-100 leading-relaxed mb-8 mt-2" id="question-text">
+                        Loading your AI-900 practice question...
+                    </h2>
+
+                    <!-- Multiple Choice Options -->
+                    <div class="space-y-3" id="options-container">
+                        <!-- Rendered via JavaScript -->
+                    </div>
+
+                    <!-- Explanation Alert Box (Hidden Initially) -->
+                    <div id="explanation-box" class="hidden mt-6 bg-slate-50 dark:bg-slate-900 transition-colors border border-slate-200 dark:border-slate-700 shadow-sm rounded-xl p-5 relative overflow-hidden">
+                        <!-- Left Accent Bar -->
+                        <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-azure-500"></div>
+                        
+                        <div class="flex items-start gap-4">
+                            <div class="mt-0.5 bg-azure-100 text-azure-600 rounded-full w-8 h-8 flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-lightbulb"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm mb-1.5 text-slate-800 dark:text-slate-100">Explanation</h4>
+                                <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-300" id="explanation-text"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Footer -->
+        <footer class="absolute bottom-0 left-0 right-0 h-20 bg-white dark:bg-slate-800 transition-colors border-t border-slate-200 dark:border-slate-700 px-6 md:px-10 flex items-center justify-between shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-20">
+            <button id="prev-btn" class="px-5 py-2.5 rounded-lg font-semibold text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-slate-300 hover:bg-slate-50 dark:bg-slate-900 transition-colors transition-colors flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-slate-200 disabled:opacity-40 disabled:pointer-events-none shadow-sm">
+                <i class="fa-solid fa-arrow-left text-sm"></i> Previous
+            </button>
+            
+            <!-- Quick Jump Pagination Dots (Desktop only) -->
+            <div id="pagination-dots" class="hidden md:flex flex-wrap max-w-sm justify-center gap-1.5">
+                <!-- Populated dynamically via JS -->
+            </div>
+            
+            <button id="next-btn" class="px-6 py-2.5 rounded-lg font-semibold bg-azure-600 text-white hover:bg-azure-700 shadow-md hover:shadow-lg transition-all flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-azure-500 disabled:opacity-40 disabled:pointer-events-none transform active:scale-95">
+                Next <i class="fa-solid fa-arrow-right text-sm"></i>
+            </button>
+        </footer>
+    </main>
+
+
+    <!-- Exam Complete Modal -->
+    <div id="exam-complete-modal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-lg p-8 relative transform scale-95 transition-transform duration-300">
+            <div class="absolute top-4 right-4 cursor-pointer text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" id="close-modal-btn">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </div>
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-azure-100 dark:bg-azure-900 border border-azure-200 dark:border-azure-700 text-azure-600 dark:text-azure-400 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 bg-gradient-to-br from-azure-100 to-azure-200 shadow-sm">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Exam Complete!</h2>
+                <p class="text-slate-500 dark:text-slate-400 mt-1">Here is how you performed.</p>
+            </div>
+            
+            <div class="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-6 border border-slate-200 dark:border-slate-700 mb-6 flex flex-col items-center shadow-inner">
+                <div class="text-4xl font-black text-slate-800 dark:text-white" id="modal-score">0 / 1000</div>
+                <div class="text-sm font-semibold mt-1" id="modal-status">Pending</div>
+            </div>
+            
+            <button id="modal-practice-wrong" class="w-full py-2.5 px-4 bg-red-50 dark:bg-red-400/10 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30 font-semibold rounded-lg hover:bg-red-100 dark:hover:bg-red-400/20 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                <i class="fa-solid fa-bullseye"></i> Practice Wrong Questions
+            </button>
+        </div>
+    </div>
+
+    <!-- Single File Vanilla JavaScript Application Logic -->
+    <script>
+        /*******************************************************
+         * DATA LAYER
+         *******************************************************/
+        const DOMAINS = {
+            WORKLOADS: "AI Workloads & Concepts",
+            ML: "Machine Learning Concepts",
+            VISION: "Computer Vision Workloads",
+            NLP: "Natural Language Processing",
+            BOT: "Conversational AI Workloads"
+        };
+
+        // 40 Comprehensive AI-900 Style Questions
+        const rawQuestions = [
+            { domain: DOMAINS.WORKLOADS, text: "What type of AI workload is used to automatically flag unusual spikes in network traffic?", options: ["Fairness", "Inclusiveness", "Predictive Maintenance (a Machine Learning workload)", "Anomaly Detection"], answer: 3, explanation: "It identifies unusual patterns or events in data" },
+            { domain: DOMAINS.WORKLOADS, text: "Which Responsible AI principle ensures an AI system does not introduce systemic bias against a specific demographic?", options: ["Anomaly Detection", "Fairness", "Transparency", "Machine Learning (specifically, Regression)"], answer: 1, explanation: "AI systems should treat all people equally" },
+            { domain: DOMAINS.WORKLOADS, text: "If an AI system provides a detailed explanation of how it decided to deny a loan, which Responsible AI principle is it demonstrating?", options: ["Transparency", "Privacy and Security", "To identify fraudulent transactions", "Anomaly Detection"], answer: 0, explanation: "Users should be able to understand how the AI makes decisions" },
+            { domain: DOMAINS.WORKLOADS, text: "What Azure service provides a centralized platform for managing end-to-end machine learning lifecycles?", options: ["Fairness", "Reliability and Safety", "Inclusiveness", "Azure Machine Learning"], answer: 3, explanation: "It is the primary service for training, deploying, and managing ML models" },
+            { domain: DOMAINS.WORKLOADS, text: "Which Responsible AI principle focuses on ensuring AI systems operate reliably and safely under normal and unexpected conditions?", options: ["Inclusiveness", "Reliability and Safety", "Predictive Maintenance (a Machine Learning workload)", "Document Intelligence (formerly Form Recognizer)"], answer: 1, explanation: "Systems should perform consistently and not pose risks" },
+            { domain: DOMAINS.WORKLOADS, text: "What AI workload extracts text, key-value pairs, and tables from scanned receipts?", options: ["Inclusiveness", "Document Intelligence (formerly Form Recognizer)", "Fairness", "Conversational AI / Speech Recognition"], answer: 1, explanation: "It uses AI to extract structured data from documents" },
+            { domain: DOMAINS.WORKLOADS, text: "Empowering users with visual impairments by using AI to describe images aligns with which Responsible AI principle?", options: ["Computer Vision", "To identify fraudulent transactions", "Document Intelligence (formerly Form Recognizer)", "Inclusiveness"], answer: 3, explanation: "AI should empower everyone and engage people of all abilities" },
+            { domain: DOMAINS.WORKLOADS, text: "Securing user data and ensuring it is not exposed during AI model training is governed by which principle?", options: ["Inclusiveness", "Accountability", "Privacy and Security", "To identify fraudulent transactions"], answer: 2, explanation: "AI systems must respect privacy and be secure from attacks" },
+            { domain: DOMAINS.WORKLOADS, text: "Who is ultimately held liable for the decisions made by an autonomous AI system according to the Accountability principle?", options: ["Inclusiveness", "Anomaly Detection", "The designers and developers of the AI system", "Predictive Maintenance (a Machine Learning workload)"], answer: 2, explanation: "Humans must remain accountable for AI systems" },
+            { domain: DOMAINS.WORKLOADS, text: "Predicting how many ice cream cones a shop will sell next week based on historical weather data is an example of what?", options: ["Machine Learning (specifically, Regression)", "Privacy and Security", "Accountability", "The designers and developers of the AI system"], answer: 0, explanation: "It uses historical data to predict future numeric values" },
+            { domain: DOMAINS.WORKLOADS, text: "What AI workload involves identifying and classifying different types of vehicles in a live traffic camera feed?", options: ["Computer Vision", "Machine Learning (specifically, Regression)", "Anomaly Detection", "Privacy and Security"], answer: 0, explanation: "It processes and analyzes visual data" },
+            { domain: DOMAINS.WORKLOADS, text: "What type of AI workload allows a user to interact with a system using spoken commands?", options: ["Fairness", "Inclusiveness", "Anomaly Detection", "Conversational AI / Speech Recognition"], answer: 3, explanation: "It processes human language in audio format" },
+            { domain: DOMAINS.ML, text: "What type of machine learning is used to predict a continuous numeric value, such as a house price?", options: ["Regression", "Azure Machine Learning Designer", "Mean Absolute Error (MAE) or Root Mean Squared Error (RMSE)", "Features"], answer: 0, explanation: "A supervised learning technique for numeric predictions" },
+            { domain: DOMAINS.ML, text: "Grouping customers based on purchasing behavior without using pre-labeled data is an example of what ML technique?", options: ["Clustering", "Inference cluster (often Azure Kubernetes Service or Azure Container Instances)", "A highly accurate model", "Automated Machine Learning (AutoML)"], answer: 0, explanation: "An unsupervised learning technique that groups similar data points" },
+            { domain: DOMAINS.ML, text: "Predicting whether an email is \"Spam\" or \"Not Spam\" is an example of what type of machine learning?", options: ["Classification (specifically, Binary Classification)", "Regression", "Features", "Compute Instance"], answer: 0, explanation: "It categorizes data into discrete classes" },
+            { domain: DOMAINS.ML, text: "What is the term for the data used to teach a machine learning model to recognize patterns?", options: ["Label", "Clustering", "Training data", "Multiclass Classification"], answer: 2, explanation: "The dataset used to initially build and tune the model" },
+            { domain: DOMAINS.ML, text: "What dataset is used to evaluate the performance of a machine learning model after it has been trained?", options: ["Validation or Test data", "Mean Absolute Error (MAE) or Root Mean Squared Error (RMSE)", "Training data", "Clustering"], answer: 0, explanation: "It measures how well the model generalizes to new data" },
+            { domain: DOMAINS.ML, text: "In Azure Machine Learning, what feature allows non-programmers to build ML pipelines using a drag-and-drop interface?", options: ["Azure Machine Learning Designer", "Mean Absolute Error (MAE) or Root Mean Squared Error (RMSE)", "Inference cluster (often Azure Kubernetes Service or Azure Container Instances)", "Multiclass Classification"], answer: 0, explanation: "A visual interface for creating ML models" },
+            { domain: DOMAINS.ML, text: "What Azure ML feature automatically tests multiple algorithms and hyperparameters to find the best model for your data?", options: ["Automated Machine Learning (AutoML)", "Training data", "Regression", "Multiclass Classification"], answer: 0, explanation: "It automates the time-consuming, iterative tasks of ML model development" },
+            { domain: DOMAINS.ML, text: "What are the inputs or variables used by a machine learning model to make predictions called?", options: ["A highly accurate model", "Clustering", "Features", "Multiclass Classification"], answer: 2, explanation: "The measurable properties or characteristics of the data" },
+            { domain: DOMAINS.ML, text: "What is the term for the actual value or category that a supervised ML model is trying to predict?", options: ["Inference cluster (often Azure Kubernetes Service or Azure Container Instances)", "Data Anonymization (or Data Masking)", "Label", "Validation or Test data"], answer: 2, explanation: "The target output in supervised learning" },
+            { domain: DOMAINS.ML, text: "What metric is used to evaluate a classification model by showing the ratio of true positive predictions to the total positive predictions?", options: ["Precision", "Multiclass Classification", "Classification (specifically, Binary Classification)", "Features"], answer: 0, explanation: "It measures the accuracy of the positive predictions" },
+            { domain: DOMAINS.ML, text: "Which regression metric represents the average difference between the predicted values and the actual values?", options: ["Label", "Mean Absolute Error (MAE) or Root Mean Squared Error (RMSE)", "Regression", "Multiclass Classification"], answer: 1, explanation: "Both measure the average error magnitude" },
+            { domain: DOMAINS.ML, text: "In Azure ML, what is the compute resource used to host a deployed machine learning model as a real-time web service?", options: ["Inference cluster (often Azure Kubernetes Service or Azure Container Instances)", "Azure Machine Learning Designer", "Precision", "Mean Absolute Error (MAE) or Root Mean Squared Error (RMSE)"], answer: 0, explanation: "It serves predictions to end users" },
+            { domain: DOMAINS.VISION, text: "Which Azure AI Vision feature would you use to draw bounding boxes around individual apples in an image?", options: ["Azure AI Custom Vision (Object Detection)", "Image Description / Image Captioning", "Object Detection", "Optical Character Recognition (OCR)"], answer: 2, explanation: "It identifies the location and class of multiple objects within an image" },
+            { domain: DOMAINS.VISION, text: "What Azure AI Vision feature determines what an entire image represents (e.g., tagging an image as \"landscape\" or \"portrait\")?", options: ["Optical Character Recognition (OCR)", "Image Classification", "Yes", "Azure AI Document Intelligence"], answer: 1, explanation: "It assigns a single label to the entire image" },
+            { domain: DOMAINS.VISION, text: "Which service would you use to detect the location of a person's nose, eyes, and mouth in a photograph?", options: ["Azure AI Face", "Azure AI Custom Vision (Object Detection)", "Azure AI Custom Vision", "Face Grouping"], answer: 0, explanation: "It detects human faces and facial landmarks" },
+            { domain: DOMAINS.VISION, text: "What Azure AI feature is used to extract printed or handwritten text from a photograph of a street sign?", options: ["Yes, using the Domain-Specific Models feature", "Object Detection", "Optical Character Recognition (OCR)", "Image Segmentation"], answer: 2, explanation: "It extracts text from images" },
+            { domain: DOMAINS.VISION, text: "If you need to identify the exact pixel boundaries of a car within an image, what vision technique is required?", options: ["An Azure AI Services resource (or a specific Computer Vision resource)", "Image Segmentation", "Image Classification", "Yes"], answer: 1, explanation: "It classifies every pixel in the image to a specific object class" },
+            { domain: DOMAINS.VISION, text: "Which Azure service is optimized for extracting key-value pairs (like \"Total Amount\") from invoices and receipts?", options: ["Image Classification", "The prebuilt Receipt model", "Azure AI Document Intelligence", "Optical Character Recognition (OCR)"], answer: 2, explanation: "It uses OCR combined with deep learning to understand document structures" },
+            { domain: DOMAINS.VISION, text: "What Azure AI Vision feature generates a human-readable sentence summarizing the contents of an image?", options: ["Azure AI Custom Vision (Object Detection)", "Yes, using the Domain-Specific Models feature", "Image Description / Image Captioning", "Object Detection"], answer: 2, explanation: "It uses AI to describe the visual content in natural language" },
+            { domain: DOMAINS.VISION, text: "What feature of the Azure AI Face service can determine if two different photos show the same person?", options: ["Azure AI Vision Spatial Analysis", "Face Verification", "Face Grouping", "Azure AI Face"], answer: 1, explanation: "It compares two faces to check if they belong to the same individual" },
+            { domain: DOMAINS.VISION, text: "Which tool allows you to train a custom computer vision model using your own uploaded images and labels without writing code?", options: ["Azure AI Custom Vision (Object Detection)", "The prebuilt Receipt model", "Azure AI Vision Spatial Analysis", "Azure AI Custom Vision"], answer: 3, explanation: "It allows you to build custom image classification and object detection models" },
+            { domain: DOMAINS.VISION, text: "Can Azure AI Vision detect famous landmarks and company logos in images?", options: ["Yes, using the Domain-Specific Models feature", "Face Grouping", "Image Classification", "Optical Character Recognition (OCR)"], answer: 0, explanation: "It has built-in recognition for landmarks and celebrities/logos" },
+            { domain: DOMAINS.VISION, text: "What is the primary difference between OCR and Document Intelligence?", options: ["Azure AI Custom Vision (Object Detection)", "Image Description / Image Captioning", "Image Classification", "OCR only extracts raw text, while Document Intelligence understands context and structural relationships"], answer: 3, explanation: "like tables and forms" },
+            { domain: DOMAINS.VISION, text: "To use Azure AI Vision services securely, what must you provision in the Azure portal to get an endpoint and a key?", options: ["Image Description / Image Captioning", "Azure AI Custom Vision", "An Azure AI Services resource (or a specific Computer Vision resource)", "Yes"], answer: 2, explanation: "This grants access to the APIs" },
+            { domain: DOMAINS.NLP, text: "What Azure AI Language feature determines whether a customer review is positive, negative, or neutral?", options: ["Speaker Diarization", "Custom Translator (specifically using a Custom Dictionary/Glossary)", "Sentiment Analysis", "Language Detection"], answer: 2, explanation: "It evaluates the emotional tone of text" },
+            { domain: DOMAINS.NLP, text: "Which NLP feature identifies names of people, organizations, locations, and dates within a block of text?", options: ["Key Phrase Extraction", "Named Entity Recognition (NER)", "Azure AI Translator", "Personally Identifiable Information (PII) Detection"], answer: 1, explanation: "It extracts and categorizes specific entities" },
+            { domain: DOMAINS.NLP, text: "What Azure service would you use to automatically translate a document from French to English?", options: ["Keyword Recognition (or Wake word)", "Language Detection", "Speech-to-Text (part of Azure AI Speech)", "Azure AI Translator"], answer: 3, explanation: "It provides real-time, multi-language text translation" },
+            { domain: DOMAINS.NLP, text: "Which Azure AI Language feature extracts the main talking points from a long news article?", options: ["Key Phrase Extraction", "Entity", "Named Entity Recognition (NER)", "Custom Question Answering (part of Azure AI Language)"], answer: 0, explanation: "It identifies the main concepts in the text" },
+            { domain: DOMAINS.NLP, text: "If a user types \"I want to book a flight to Paris,\" what NLP concept represents the user's overall goal (booking a flight)?", options: ["Conversational Language Understanding (CLU)", "Language Detection", "Intent", "Custom Question Answering (part of Azure AI Language)"], answer: 2, explanation: "The action or purpose the user wants to achieve" },
+            { domain: DOMAINS.NLP, text: "In the phrase \"I want to book a flight to Paris,\" what NLP concept does \"Paris\" represent?", options: ["Text-to-Speech (part of Azure AI Speech)", "Sentiment Analysis", "Entity", "Speech-to-Text (part of Azure AI Speech)"], answer: 2, explanation: "The specific item or detail the intent applies to" },
+            { domain: DOMAINS.NLP, text: "What Azure service is used to build a knowledge base of questions and answers from an existing FAQ document?", options: ["Sentiment Analysis", "Text-to-Speech (part of Azure AI Speech)", "Speech-to-Text (part of Azure AI Speech)", "Custom Question Answering (part of Azure AI Language)"], answer: 3, explanation: "It pairs questions with appropriate answers" },
+            { domain: DOMAINS.NLP, text: "Which NLP feature determines the language a document is written in (e.g., detecting that a text is in Spanish)?", options: ["Sentiment Analysis", "Keyword Recognition (or Wake word)", "Intent", "Language Detection"], answer: 3, explanation: "It identifies the primary language of the text" },
+            { domain: DOMAINS.NLP, text: "What Azure AI Language feature allows an application to recognize the intent and entities from custom spoken or typed utterances?", options: ["Key Phrase Extraction", "Custom Question Answering (part of Azure AI Language)", "Conversational Language Understanding (CLU)", "Azure AI Translator"], answer: 2, explanation: "It helps bots understand custom user inputs" },
+            { domain: DOMAINS.NLP, text: "Which feature identifies and redacts sensitive information like credit card numbers or social security numbers from text?", options: ["Keyword Recognition (or Wake word)", "Entity", "Personally Identifiable Information (PII) Detection", "Named Entity Recognition (NER)"], answer: 2, explanation: "It protects sensitive data in text" },
+            { domain: DOMAINS.NLP, text: "What Azure service converts spoken audio into written text?", options: ["Speech-to-Text (part of Azure AI Speech)", "Key Phrase Extraction", "Personally Identifiable Information (PII) Detection", "Named Entity Recognition (NER)"], answer: 0, explanation: "It transcribes audio streams into text" },
+            { domain: DOMAINS.NLP, text: "What Azure service converts written text into natural-sounding spoken audio?", options: ["An Utterance", "Custom Question Answering (part of Azure AI Language)", "Text-to-Speech (part of Azure AI Speech)", "Sentiment Analysis"], answer: 2, explanation: "It synthesizes speech from text strings" },
+            { domain: DOMAINS.BOT, text: "What Azure service provides the core framework for developing, testing, and deploying enterprise-grade chatbots?", options: ["No", "Azure Bot Service", "Azure Application Insights (part of Azure Monitor)", "Microsoft Copilot Studio (formerly Power Virtual Agents) or Bot Framework Composer"], answer: 1, explanation: "It provides the infrastructure to host and manage bots" },
+            { domain: DOMAINS.BOT, text: "What visual, no-code/low-code interface is used to design and build conversational bots in Azure?", options: ["True", "Azure OpenAI Service", "Multi-turn conversation", "Microsoft Copilot Studio (formerly Power Virtual Agents) or Bot Framework Composer"], answer: 3, explanation: "They allow visual bot creation" },
+            { domain: DOMAINS.BOT, text: "Which Azure service should you integrate with a bot so it can answer common user questions from a provided FAQ webpage?", options: ["Implement a human hand-off", "Custom Question Answering (Azure AI Language)", "To improve the bot's matching accuracy", "State Management (or maintaining context)"], answer: 1, explanation: "It serves as the knowledge base for the bot" },
+            { domain: DOMAINS.BOT, text: "In Bot Service terminology, what are the communication platforms where users interact with the bot (e.g., Microsoft Teams, Web Chat, Slack) called?", options: ["Implement a human hand-off", "Conversational Language Understanding (CLU)", "Channels", "To provide standardized, interactive visual blocks (like forms, images, and buttons) within a chat interface"], answer: 2, explanation: "They are the endpoints where bots are exposed to users" },
+            { domain: DOMAINS.BOT, text: "When a bot asks a user for a piece of information, waits for a response, and then continues the conversation, what type of conversational flow is this?", options: ["Multi-turn conversation", "Channel credentials/secrets (such as a Facebook App ID and App Secret)", "Azure Application Insights (part of Azure Monitor)", "Azure Bot Service"], answer: 0, explanation: "It involves back-and-forth interactions to gather context" },
+            { domain: DOMAINS.BOT, text: "If you want a chatbot to understand a user saying, \"Turn off the lights in the kitchen,\" what service must you integrate to parse the command?", options: ["No", "Channel credentials/secrets (such as a Facebook App ID and App Secret)", "Conversational Language Understanding (CLU)", "Custom Question Answering (Azure AI Language)"], answer: 2, explanation: "It extracts the intent 'TurnOff' and entity 'kitchen'" },
+            { domain: DOMAINS.BOT, text: "True or False: You can deploy an Azure Bot to answer customer questions on an external website using the Web Chat channel.", options: ["True", "Azure Application Insights (part of Azure Monitor)", "Multi-turn conversation", "To improve the bot's matching accuracy"], answer: 0, explanation: "Web Chat is a supported channel for embedding bots on custom websites" },
+            { domain: DOMAINS.BOT, text: "What is the primary purpose of adding a \"chit-chat\" or \"personality\" dataset to an Azure bot?", options: ["Azure Bot Service", "Channels", "To make the bot feel more conversational and handle casual, off-topic small talk smoothly.", "Channel credentials/secrets (such as a Facebook App ID and App Secret)"], answer: 2, explanation: "No explanation provided." },
+            { domain: DOMAINS.BOT, text: "If a bot cannot answer a complex question, what is the best practice for handling the situation?", options: ["Channels", "To make the bot feel more conversational and handle casual, off-topic small talk smoothly.", "Implement a human hand-off", "Azure Application Insights (part of Azure Monitor)"], answer: 2, explanation: "The bot should seamlessly transfer the user to a live human agent" },
+            { domain: DOMAINS.BOT, text: "What Azure AI service generates dynamic, highly contextual, and creative conversational responses similar to ChatGPT?", options: ["Conversational Language Understanding (CLU)", "To improve the bot's matching accuracy", "No", "Azure OpenAI Service"], answer: 3, explanation: "It provides access to advanced generative AI models" },
+            { domain: DOMAINS.BOT, text: "What is required to connect an Azure Bot Service to an external platform like Facebook Messenger?", options: ["Custom Question Answering (Azure AI Language)", "To make the bot feel more conversational and handle casual, off-topic small talk smoothly.", "Azure Bot Service", "Channel credentials/secrets (such as a Facebook App ID and App Secret)"], answer: 3, explanation: "These authorize the bot to communicate on that specific platform" },
+            { domain: DOMAINS.BOT, text: "When testing a newly created Custom Question Answering knowledge base, do you need to publish it before you can test the responses in the portal?", options: ["Microsoft Copilot Studio (formerly Power Virtual Agents) or Bot Framework Composer", "Azure Bot Service", "No", "True"], answer: 2, explanation: "You can use the built-in test pane in Language Studio before publishing it to a production endpoint" },
+            { domain: DOMAINS.WORKLOADS, text: "What AI workload predicts the likelihood of equipment failure before it happens based on sensor data?", options: ["Conversational AI / Speech Recognition", "Accountability", "Predictive Maintenance (a Machine Learning workload)", "Machine Learning (specifically, Regression)"], answer: 2, explanation: "It uses historical data to forecast future hardware faults" },
+            { domain: DOMAINS.WORKLOADS, text: "If an AI model is trained on data that overwhelmingly represents only one demographic, which Responsible AI principle is most at risk?", options: ["Accountability", "Machine Learning (specifically, Regression)", "Predictive Maintenance (a Machine Learning workload)", "Fairness"], answer: 3, explanation: "The model is likely to develop systemic bias and treat groups unfairly" },
+            { domain: DOMAINS.WORKLOADS, text: "Which Responsible AI principle requires that users be made explicitly aware they are interacting with an automated AI agent rather than a human?", options: ["Computer Vision", "Document Intelligence (formerly Form Recognizer)", "Azure Machine Learning", "Transparency"], answer: 3, explanation: "Users must understand the nature and limitations of the system they are using" },
+            { domain: DOMAINS.WORKLOADS, text: "What is the primary purpose of an anomaly detection workload in a credit card processing application?", options: ["Predictive Maintenance (a Machine Learning workload)", "Azure Machine Learning", "To identify fraudulent transactions", "Inclusiveness"], answer: 2, explanation: "It flags transactions that deviate from the user's normal spending patterns" },
+            { domain: DOMAINS.WORKLOADS, text: "Designing an AI application with support for screen readers and high-contrast modes supports which Microsoft Responsible AI principle?", options: ["Computer Vision", "Inclusiveness", "The designers and developers of the AI system", "Document Intelligence (formerly Form Recognizer)"], answer: 1, explanation: "It ensures the application is accessible to people with disabilities" },
+            { domain: DOMAINS.WORKLOADS, text: "A company implements a strict process for human reviewers to override AI-generated loan approvals. Which AI principle does this operational workflow enforce?", options: ["To identify fraudulent transactions", "Conversational AI / Speech Recognition", "Fairness", "Accountability"], answer: 3, explanation: "It ensures humans retain ultimate responsibility for AI-driven outcomes" },
+            { domain: DOMAINS.ML, text: "What machine learning technique should you use to group a company\u2019s historical sales data by geographic regions without predefined categories?", options: ["Precision", "Training data", "Clustering", "Classification (specifically, Binary Classification)"], answer: 2, explanation: "An unsupervised learning method that finds natural groupings in unlabeled data" },
+            { domain: DOMAINS.ML, text: "What specific ML technique assigns items into one of several predefined categories, such as routing IT support tickets to 'Hardware', 'Software', or 'Network' queues?", options: ["Compute Instance", "Data Anonymization (or Data Masking)", "Automated Machine Learning (AutoML)", "Multiclass Classification"], answer: 3, explanation: "It categorizes data into more than two distinct classes" },
+            { domain: DOMAINS.ML, text: "In Azure Machine Learning, what resource provides a managed, cloud-based workstation for data scientists to write and execute code?", options: ["Features", "Compute Instance", "A highly accurate model", "Validation or Test data"], answer: 1, explanation: "It acts as a primary development environment for ML tasks" },
+            { domain: DOMAINS.ML, text: "What is the process of removing or hiding personally identifiable information (PII) from a dataset before using it to train a machine learning model?", options: ["Classification (specifically, Binary Classification)", "Mean Absolute Error (MAE) or Root Mean Squared Error (RMSE)", "Data Anonymization (or Data Masking)", "Training data"], answer: 2, explanation: "It protects user privacy during the training phase" },
+            { domain: DOMAINS.ML, text: "When evaluating a regression model, what does an R-squared (Coefficient of Determination) value closer to 1 indicate?", options: ["Compute Instance", "Automated Machine Learning (AutoML)", "Data Anonymization (or Data Masking)", "A highly accurate model"], answer: 3, explanation: "It means the model's predictions closely fit the actual data variances" },
+            { domain: DOMAINS.ML, text: "In a classification model, what evaluation chart plots the true positive rate against the false positive rate?", options: ["To orchestrate and automate machine learning workflows", "Receiver Operating Characteristic (ROC) curve", "Classification (specifically, Binary Classification)", "Validation or Test data"], answer: 1, explanation: "It visualizes the performance of a binary classifier" },
+            { domain: DOMAINS.ML, text: "What is the primary purpose of creating an Azure Machine Learning Pipeline?", options: ["To orchestrate and automate machine learning workflows", "Mean Absolute Error (MAE) or Root Mean Squared Error (RMSE)", "Compute Instance", "Inference cluster (often Azure Kubernetes Service or Azure Container Instances)"], answer: 0, explanation: "It links data prep, training, and deployment steps together" },
+            { domain: DOMAINS.VISION, text: "Which Azure AI Vision feature provides the specific (X,Y) pixel coordinates to create a bounding box around a detected object?", options: ["OCR only extracts raw text, while Document Intelligence understands context and structural relationships", "Object Detection", "Face Verification", "Yes"], answer: 1, explanation: "It locates the exact position of objects within a frame" },
+            { domain: DOMAINS.VISION, text: "Which specific Azure AI service is designed to analyze video streams to detect spatial events, such as a person crossing a restricted line?", options: ["Image Classification", "Azure AI Vision Spatial Analysis", "Face Grouping", "Yes, using the Domain-Specific Models feature"], answer: 1, explanation: "It tracks movements and interactions in physical spaces via video" },
+            { domain: DOMAINS.VISION, text: "If you want to train a model to specifically detect whether a construction worker is wearing a hard hat, which service is most appropriate?", options: ["Azure AI Document Intelligence", "Face Verification", "Image Classification", "Azure AI Custom Vision (Object Detection)"], answer: 3, explanation: "It allows you to train a tailored model with your own specific images" },
+            { domain: DOMAINS.VISION, text: "What pre-trained Azure AI Document Intelligence model is specifically built to extract merchant names, transaction dates, and totals?", options: ["Image Segmentation", "The prebuilt Receipt model", "Image Description / Image Captioning", "Yes"], answer: 1, explanation: "It is optimized to pull standard data points from sales receipts" },
+            { domain: DOMAINS.VISION, text: "Which Azure AI Face service feature groups unrecognized faces together based solely on their visual similarity?", options: ["Face Grouping", "Optical Character Recognition (OCR)", "Azure AI Custom Vision (Object Detection)", "Yes"], answer: 0, explanation: "It organizes unknown faces into clusters of likely identical people" },
+            { domain: DOMAINS.VISION, text: "Can Azure AI Vision determine the predominant background and foreground colors in an uploaded photograph?", options: ["Face Grouping", "Yes", "Image Segmentation", "Face Verification"], answer: 1, explanation: "Color scheme analysis is a standard built-in feature of Image Analysis" },
+            { domain: DOMAINS.VISION, text: "Which computer vision technique is used to remove the background from an image by identifying the exact pixel outline of the main subject?", options: ["Image Segmentation", "Azure AI Custom Vision (Object Detection)", "OCR only extracts raw text, while Document Intelligence understands context and structural relationships", "Yes, using the Domain-Specific Models feature"], answer: 0, explanation: "It categorizes pixels to separate the foreground object from the background" },
+            { domain: DOMAINS.NLP, text: "Which Azure AI Language feature allows you to extract domain-specific entities, such as proprietary internal part numbers, from text?", options: ["Custom Question Answering (part of Azure AI Language)", "Intent", "Custom Named Entity Recognition (Custom NER)", "Custom Neural Voice"], answer: 2, explanation: "It extends standard NER to recognize unique, user-defined entities" },
+            { domain: DOMAINS.NLP, text: "What Azure AI Translator feature allows you to ensure specific brand names or industry jargon remain untranslated or are translated in a very specific way?", options: ["Azure AI Translator", "Custom Translator (specifically using a Custom Dictionary/Glossary)", "Custom Named Entity Recognition (Custom NER)", "Named Entity Recognition (NER)"], answer: 1, explanation: "It forces the translator to adhere to company-specific terminology" },
+            { domain: DOMAINS.NLP, text: "If an audio recording contains three different people talking, what feature of Azure AI Speech can identify who spoke which sentence?", options: ["Speaker Diarization", "An Utterance", "Custom Named Entity Recognition (Custom NER)", "Language Detection"], answer: 0, explanation: "It segments audio and attributes speech to distinct speakers" },
+            { domain: DOMAINS.NLP, text: "What feature of Azure AI Speech allows you to create a highly unique, branded synthesized voice for your company's virtual assistant?", options: ["Custom Translator (specifically using a Custom Dictionary/Glossary)", "Key Phrase Extraction", "Conversational Language Understanding (CLU)", "Custom Neural Voice"], answer: 3, explanation: "It trains a text-to-speech model using audio samples of a specific human voice actor" },
+            { domain: DOMAINS.NLP, text: "Which NLP concept refers to a specific word or phrase that a user utters to activate a voice-controlled application (e.g., \"Hey Cortana\")?", options: ["Sentiment Analysis", "Text-to-Speech (part of Azure AI Speech)", "Custom Neural Voice", "Keyword Recognition (or Wake word)"], answer: 3, explanation: "It passively listens for a trigger before actively processing audio" },
+            { domain: DOMAINS.NLP, text: "In Conversational Language Understanding (CLU), what is the technical term for the exact text phrase a user inputs, such as \"Show me my account balance\"?", options: ["Sentiment Analysis", "Entity", "An Utterance", "Custom Translator (specifically using a Custom Dictionary/Glossary)"], answer: 2, explanation: "The raw string of text or audio provided by the user" },
+            { domain: DOMAINS.BOT, text: "What is the primary function of \"Adaptive Cards\" in the Azure Bot Service framework?", options: ["To make the bot feel more conversational and handle casual, off-topic small talk smoothly.", "Azure OpenAI Service", "Implement a human hand-off", "To provide standardized, interactive visual blocks (like forms, images, and buttons) within a chat interface"], answer: 3, explanation: "They enhance the visual UX of bots" },
+            { domain: DOMAINS.BOT, text: "When configuring a Custom Question Answering knowledge base, what is the purpose of adding \"alternate phrases\" to a question?", options: ["To improve the bot's matching accuracy", "Multi-turn conversation", "True", "To provide standardized, interactive visual blocks (like forms, images, and buttons) within a chat interface"], answer: 0, explanation: "It helps the engine map different ways users might ask the exact same question" },
+            { domain: DOMAINS.BOT, text: "Which conversational bot capability ensures the bot remembers the user's destination city while subsequently asking for their travel dates?", options: ["Microsoft Copilot Studio (formerly Power Virtual Agents) or Bot Framework Composer", "Multi-turn conversation", "State Management (or maintaining context)", "True"], answer: 2, explanation: "It allows the bot to store variables across a multi-turn conversation" },
+            { domain: DOMAINS.BOT, text: "To monitor the operational performance, user traffic, and latency of your Azure Bot, which Azure service should you integrate?", options: ["Azure Application Insights (part of Azure Monitor)", "Azure OpenAI Service", "To make the bot feel more conversational and handle casual, off-topic small talk smoothly.", "Implement a human hand-off"], answer: 0, explanation: "It provides telemetry and diagnostics for the bot application" }
+        ];
+
+        // Ensure questions are uniformly dispersed
+        function shuffleArray(array) {
+            let curId = array.length, randId;
+            while (curId !== 0) {
+                randId = Math.floor(Math.random() * curId);
+                curId--;
+                [array[curId], array[randId]] = [array[randId], array[curId]];
+            }
+            return array;
+        }
+
+        // Add IDs and shuffle options inside
+        function buildQuestionBank(rawList) {
+            let processed = rawList.map((q, idx) => {
+                let optionsData = q.options.map((text, oIdx) => ({
+                    text: text,
+                    isCorrect: oIdx === q.answer
+                }));
+                // Randomize options order per user request
+                optionsData = shuffleArray(optionsData);
+                return {
+                    id: idx + 1,
+                    domain: q.domain,
+                    text: q.text,
+                    options: optionsData,
+                    explanation: q.explanation
+                };
+            });
+            // Randomize the whole exam specifically to ensure varied testing
+            return shuffleArray(processed);
+        }
+
+        /*******************************************************
+         * STATE VARIABLES
+         *******************************************************/
+        let questions = []; 
+        let currentIndex = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+        
+        let userAnswers = new Map(); // question.id -> { selectedOptionIndex, isCorrect }
+        let flaggedQuestions = new Set(); // question.id Set
+        let domainsTracking = {}; // Maps Domain String -> { total, correct, attempted }
+        
+
+        /*******************************************************
+         * INITIALIZATION 
+         *******************************************************/
+        
+
+        
+        
+        
+
+        
+
+        function finishExam(userInitiated=true) {
+            if (examFinished && userInitiated) return; // Prevent double trigger
+            examFinished = true;
+            clearInterval(timerInterval);
+            saveState();
+            
+            let score = questions.length > 0 ? Math.round((correctCount / questions.length) * 1000) : 0;
+            if(els.modalScore) els.modalScore.textContent = score + ' / 1000';
+            
+            if (els.modalStatus) {
+                if(score >= 700) {
+                    els.modalStatus.textContent = "Pass";
+                    els.modalStatus.className = "text-xl font-bold mt-1 text-green-600";
+                } else {
+                    els.modalStatus.textContent = "Fail";
+                    els.modalStatus.className = "text-xl font-bold mt-1 text-red-600";
+                }
+            }
+            
+            if(els.modalBtnWrong) els.modalBtnWrong.disabled = (wrongCount === 0);
+            if(els.modalBtnFlagged) els.modalBtnFlagged.disabled = (flaggedQuestions.size === 0);
+            
+            if(els.examModal) {
+                els.examModal.classList.remove('hidden');
+                setTimeout(() => {
+                    els.examModal.firstElementChild.classList.remove('scale-95');
+                    els.examModal.firstElementChild.classList.add('scale-100');
+                }, 10);
+            }
+        }
+
+        
+        /*******************************************************
+         * INITIALIZATION & DARK MODE
+         *******************************************************/
+        const themeBtn = document.getElementById('theme-toggle');
+        // Check local storage
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        themeBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.theme = 'dark';
+            } else {
+                localStorage.theme = 'light';
+            }
+        });
+
+        
+        function saveState() {
+            const state = {
+                questions, currentIndex, correctCount, wrongCount,
+                userAnswersArray: Array.from(userAnswers.entries()),
+                flaggedArray: Array.from(flaggedQuestions),
+                domainsTracking
+            };
+            try { localStorage.setItem('ai900_state_v2', JSON.stringify(state)); } catch(e){}
+        }
+
+        function loadState() {
+            try {
+                const s = localStorage.getItem('ai900_state_v2');
+                if (s) {
+                    const state = JSON.parse(s);
+                    if (!state || !state.questions || state.questions.length === 0 || !state.domainsTracking) return false;
+                    
+                    questions = state.questions;
+                    currentIndex = state.currentIndex || 0;
+                    correctCount = state.correctCount || 0;
+                    wrongCount = state.wrongCount || 0;
+                    userAnswers = new Map(state.userAnswersArray || []);
+                    flaggedQuestions = new Set(state.flaggedArray || []);
+                    domainsTracking = state.domainsTracking;
+                    return true;
+                }
+            } catch(e){}
+            return false;
+        }
+
+
+        function finishExam() {
+            let score = questions.length > 0 ? Math.round((correctCount / questions.length) * 1000) : 0;
+            if(els.modalScore) els.modalScore.textContent = score + ' / 1000';
+            
+            if (els.modalStatus) {
+                if(score >= 700) {
+                    els.modalStatus.textContent = "Pass";
+                    els.modalStatus.className = "text-xl font-bold mt-1 text-green-600 dark:text-green-500";
+                } else {
+                    els.modalStatus.textContent = "Fail";
+                    els.modalStatus.className = "text-xl font-bold mt-1 text-red-600 dark:text-red-500";
+                }
+            }
+            
+            if(els.modalBtnWrong) els.modalBtnWrong.disabled = (wrongCount === 0);
+            
+            if(els.examModal) {
+                els.examModal.classList.remove('hidden');
+                setTimeout(() => {
+                    els.examModal.firstElementChild.classList.remove('scale-95');
+                    els.examModal.firstElementChild.classList.add('scale-100');
+                }, 10);
+            }
+        }
+
+        function initApp() {
+            if (!loadState()) {
+                Object.values(DOMAINS).forEach(d => {
+                    domainsTracking[d] = { total: 0, correct: 0, attempted: 0 };
+                });
+
+                questions = buildQuestionBank(rawQuestions);
+                
+                questions.forEach(q => {
+                     domainsTracking[q.domain].total += 1;
+                });
+            }
+
+            renderSidebar();
+            renderPaginationDots();
+            renderQuestion();
+            
+            if (wrongCount > 0 && els.practiceWrongBtn) els.practiceWrongBtn.classList.remove('hidden');
+        }
+
+        /*******************************************************
+         * DOM ELEMENTS CACHE
+         *******************************************************/
+        const els = {
+            qNum: document.getElementById('q-num'),
+            qLabel: document.getElementById('q-stamp'),
+            domainBadge: document.getElementById('current-domain-badge'),
+            qText: document.getElementById('question-text'),
+            qTotal: document.getElementById('q-total'),
+            optContainer: document.getElementById('options-container'),
+            expBox: document.getElementById('explanation-box'),
+            expText: document.getElementById('explanation-text'),
+            
+            prevBtn: document.getElementById('prev-btn'),
+            nextBtn: document.getElementById('next-btn'),
+            flagBtn: document.getElementById('flag-btn'),
+            flagIcon: document.getElementById('flag-icon'),
+            
+            statAttempted: document.getElementById('stat-attempted'),
+            statCorrect: document.getElementById('stat-correct'),
+            statWrong: document.getElementById('stat-wrong'),
+            
+            gaugeCircle: document.getElementById('progress-gauge'),
+            gaugePercent: document.getElementById('progress-percent'),
+            gaugeFraction: document.getElementById('progress-fraction'),
+            
+            domainList: document.getElementById('domain-list'),
+            paginationDots: document.getElementById('pagination-dots'),
+            resetBtn: document.getElementById('reset-btn'),
+            practiceWrongBtn: document.getElementById('practice-wrong-btn'),
+            examModal: document.getElementById('exam-complete-modal'),
+            modalScore: document.getElementById('modal-score'),
+            modalStatus: document.getElementById('modal-status'),
+            modalBtnWrong: document.getElementById('modal-practice-wrong'),
+            closeModalBtn: document.getElementById('close-modal-btn')
+        };
+
+        /*******************************************************
+         * RENDERING LOGIC
+         *******************************************************/
+        function renderQuestion() {
+            const q = questions[currentIndex];
+            const qRealNumber = currentIndex + 1;
+            
+            els.qNum.textContent = qRealNumber;
+            els.qTotal.textContent = questions.length;
+            els.qLabel.textContent = `Q${qRealNumber}`;
+            els.domainBadge.textContent = q.domain;
+            els.qText.textContent = q.text;
+            
+            // Reset question UI specifics
+            els.expBox.classList.add('hidden');
+            els.expBox.classList.remove('animate-slide-down');
+            els.optContainer.innerHTML = '';
+            
+            const answeredState = userAnswers.get(q.id);
+
+            // Construct option buttons
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                const letter = String.fromCharCode(65 + idx); // A, B, C, D
+                
+                // Base classes
+                btn.className = `option-btn w-full text-left p-4 rounded-xl border object-left flex justify-between items-center group font-medium focus:outline-none focus:ring-2 focus:ring-azure-200 transition-colors`;
+                
+                let iconHTML = `<div class="w-6 h-6 rounded-full border-2 border-slate-300 flex items-center justify-center group-hover:bg-azure-50 group-hover:border-azure-400 group-hover:text-azure-600 transition-colors text-xs font-bold text-slate-400">
+                                   ${letter}
+                                </div>`;
+
+                // Logic if question IS ANSWERED
+                if (answeredState) {
+                    btn.disabled = true; // prevent re-clicking
+                    btn.classList.remove('option-btn'); // remove hover transforms
+                    
+                    if (answeredState.selectedOptionIndex === idx) {
+                        // User chose this option
+                        if (answeredState.isCorrect) {
+                            // Correct Choice
+                            btn.classList.add('bg-green-50', 'border-green-500', 'text-green-800', 'drop-shadow-sm');
+                            iconHTML = `<i class="fa-solid fa-circle-check text-green-500 text-xl"></i>`;
+                        } else {
+                            // Wrong Choice
+                            btn.classList.add('bg-red-50', 'border-red-500', 'text-red-800');
+                            iconHTML = `<i class="fa-solid fa-circle-xmark text-red-500 text-xl"></i>`;
+                        }
+                    } else if (opt.isCorrect) {
+                        // Not chosen, but is the correct answer (highlight in green)
+                        btn.classList.add('bg-green-50/40', 'border-green-400', 'text-green-800', 'opacity-90');
+                        iconHTML = `<i class="fa-solid fa-check text-green-600 text-lg"></i>`;
+                    } else {
+                        // Not chosen, wrong answer (fade out)
+                        btn.classList.add('bg-white', 'dark:bg-slate-800', 'transition-colors', 'border-slate-100', 'dark:border-slate-700', 'text-slate-400', 'opacity-60');
+                        iconHTML = `<div class="w-6 h-6 rounded-full border-2 border-slate-200 dark:border-slate-700 flex flex-col justify-center items-center text-xs font-bold">${letter}</div>`;
+                    }
+                } else {
+                    // Logic if question NOT YET ANSWERED
+                    btn.classList.add('bg-white', 'dark:bg-slate-800', 'transition-colors', 'border-slate-200', 'dark:border-slate-700', 'text-slate-700', 'dark:text-slate-200', 'hover:bg-azure-50', 'hover:text-azure-900', 'cursor-pointer');
+                    btn.onclick = () => selectOption(idx, opt.isCorrect, q);
+                }
+
+                btn.innerHTML = `<span class="pr-6 leading-relaxed flex-1">${opt.text}</span> <div class="shrink-0 ml-2">${iconHTML}</div>`;
+                els.optContainer.appendChild(btn);
+            });
+
+            // Display Explanation Box if answered
+            if (answeredState) {
+                // Find correct text string
+                let correctOpt = q.options.find(o => o.isCorrect).text;
+                els.expText.innerHTML = `<span class="font-bold">Correct Answer:</span> ${correctOpt}<br/><br/>${q.explanation}`;
+                els.expBox.classList.remove('hidden');
+            }
+
+            // Flag state
+            if (flaggedQuestions.has(q.id)) {
+                els.flagIcon.classList.replace('fa-regular', 'fa-solid');
+                els.flagBtn.classList.remove('border-slate-200', 'dark:border-slate-700', 'text-slate-600', 'dark:text-slate-300');
+                els.flagBtn.classList.add('border-orange-200', 'bg-orange-50', 'text-orange-600');
+            } else {
+                els.flagIcon.classList.replace('fa-solid', 'fa-regular');
+                els.flagBtn.classList.add('border-slate-200', 'dark:border-slate-700', 'text-slate-600', 'dark:text-slate-300');
+                els.flagBtn.classList.remove('border-orange-200', 'bg-orange-50', 'text-orange-600');
+            }
+
+            // Button controls
+            els.prevBtn.disabled = currentIndex === 0;
+            els.nextBtn.disabled = currentIndex === questions.length - 1;
+            
+            updatePaginationDotsUI();
+        }
+
+        function selectOption(selectedIndex, isCorrect, qNode) {
+            // Document the action
+            userAnswers.set(qNode.id, { selectedOptionIndex: selectedIndex, isCorrect });
+            
+            // Adjust metrics
+            domainsTracking[qNode.domain].attempted++;
+            if (isCorrect) {
+                correctCount++;
+                domainsTracking[qNode.domain].correct++;
+            } else {
+                wrongCount++;
+            }
+            
+            if (wrongCount > 0) {
+                els.practiceWrongBtn.classList.remove('hidden');
+            }
+            
+            // Sync View states
+            renderSidebar();
+            renderQuestion();
+            
+            // Trigger explanation animation exclusively when user clicks an answer
+            els.expBox.classList.add('animate-slide-down');
+            saveState();
+            if (userAnswers.size === questions.length) { setTimeout(() => finishExam(), 800); }
+        }
+
+        function renderSidebar() {
+            let attemptTotal = userAnswers.size;
+            let fullTotal = questions.length;
+            
+            els.statAttempted.textContent = attemptTotal;
+            els.statCorrect.textContent = correctCount;
+            els.statWrong.textContent = wrongCount;
+
+            // Gauge calculations based on 40 radius circle = 251.2 circumference
+            const perc = Math.round((attemptTotal / fullTotal) * 100);
+            els.gaugePercent.textContent = `${perc}%`;
+            els.gaugeFraction.textContent = `${attemptTotal} / ${fullTotal}`;
+            
+            const dashValue = 251.2 - ((perc / 100) * 251.2);
+            els.gaugeCircle.style.strokeDasharray = `${251.2 - dashValue}, 251.2`;
+
+            // Domains Listing
+            els.domainList.innerHTML = '';
+            Object.keys(domainsTracking).forEach(ds => {
+                let metrics = domainsTracking[ds];
+                let domPerc = metrics.total > 0 ? (metrics.correct / metrics.total) * 100 : 0;
+                
+                // Strip redundant text for clean UI
+                let shortName = ds.replace(' & Concepts', '').replace(' Concepts', '').replace(' Workloads', '');
+
+                let markup = `
+                    <div class="mb-3.5 group">
+                        <div class="flex justify-between items-end mb-1.5">
+                            <span class="text-[11px] font-semibold text-slate-700 dark:text-slate-200 truncate pr-2 group-hover:text-azure-600 transition-colors">${shortName}</span>
+                            <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 transition-colors px-1.5 py-0.5 rounded">${metrics.correct}/${metrics.total}</span>
+                        </div>
+                        <div class="w-full bg-slate-100 dark:bg-slate-700 transition-colors rounded-full h-1.5 overflow-hidden">
+                            <div class="bg-azure-500 h-1.5 rounded-full transition-all duration-700 ease-in-out" style="width: ${domPerc}%"></div>
+                        </div>
+                    </div>
+                `;
+                els.domainList.insertAdjacentHTML('beforeend', markup);
+            });
+        }
+
+        function renderPaginationDots() {
+            els.paginationDots.innerHTML = '';
+            questions.forEach((q, i) => {
+                const dot = document.createElement('button');
+                dot.id = `dot-${i}`;
+                dot.onclick = () => { currentIndex = i; renderQuestion(); };
+                dot.className = 'w-2 h-2 rounded-full cursor-pointer transition-all hover:scale-150 focus:outline-none';
+                dot.title = `Question ${i+1}`;
+                els.paginationDots.appendChild(dot);
+            });
+        }
+
+        function updatePaginationDotsUI() {
+            questions.forEach((q, i) => {
+                const dot = document.getElementById(`dot-${i}`);
+                if(!dot) return;
+                
+                // Reset Classes
+                dot.className = 'w-2.5 h-2.5 rounded-full cursor-pointer transition-all hover:scale-125 focus:outline-none shadow-sm';
+                
+                // Focus styling
+                if (i === currentIndex) {
+                    dot.classList.add('ring-2', 'ring-azure-300', 'ring-offset-1', 'scale-110');
+                }
+                
+                const answeredData = userAnswers.get(q.id);
+                const isFlagged = flaggedQuestions.has(q.id);
+                
+                // Prioritize colors: Flagged -> Correct/Wrong -> Unanswered
+                if (isFlagged) {
+                    dot.classList.add('bg-orange-400');
+                } else if (answeredData) {
+                    if (answeredData.isCorrect) dot.classList.add('bg-green-500');
+                    else dot.classList.add('bg-red-500');
+                } else {
+                    if (i === currentIndex) dot.classList.add('bg-azure-600');
+                    else dot.classList.add('bg-slate-200');
+                }
+            });
+        }
+
+        /*******************************************************
+         * EVENT LISTENERS
+         *******************************************************/
+        els.nextBtn.addEventListener('click', () => {
+            if (currentIndex < questions.length - 1) { currentIndex++; renderQuestion(); }
+        });
+
+        els.prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) { currentIndex--; renderQuestion(); }
+        });
+        
+        els.flagBtn.addEventListener('click', () => {
+            const qID = questions[currentIndex].id;
+            if (flaggedQuestions.has(qID)) flaggedQuestions.delete(qID);
+            else flaggedQuestions.add(qID);
+            renderQuestion();
+            saveState();
+        });
+        
+        els.resetBtn.addEventListener('click', () => {
+            if(confirm('Warning: This will clear all your practice progress and reload all questions. Proceed?')) {
+                localStorage.removeItem('ai900_state_v2');
+                userAnswers.clear();
+                flaggedQuestions.clear();
+                correctCount = 0;
+                wrongCount = 0;
+                currentIndex = 0;
+                
+                Object.values(DOMAINS).forEach(d => {
+                    domainsTracking[d].correct = 0;
+                    domainsTracking[d].attempted = 0;
+                    domainsTracking[d].total = 0;
+                });
+                
+                questions = buildQuestionBank(rawQuestions);
+                questions.forEach(q => {
+                     domainsTracking[q.domain].total += 1;
+                });
+                
+                renderSidebar();
+                renderPaginationDots();
+                renderQuestion();
+                els.practiceWrongBtn.classList.add('hidden');
+            }
+        });
+
+        els.practiceWrongBtn.addEventListener('click', () => {
+            let wrongQIDs = [];
+            for (let [qId, data] of userAnswers.entries()) {
+                if (!data.isCorrect) wrongQIDs.push(qId);
+            }
+            if (wrongQIDs.length === 0) {
+                alert("You don't have any wrong answers to practice!");
+                return;
+            }
+            
+            if(confirm('This will create a new practice session with only your ' + wrongQIDs.length + ' wrong answers. Proceed?')) {
+                localStorage.removeItem('ai900_state_v2');
+                let newQuestions = questions.filter(q => wrongQIDs.includes(q.id));
+                newQuestions.forEach(q => {
+                    q.options = shuffleArray(q.options);
+                });
+                questions = shuffleArray(newQuestions);
+                
+                userAnswers.clear();
+                flaggedQuestions.clear();
+                correctCount = 0;
+                wrongCount = 0;
+                currentIndex = 0;
+                
+                Object.values(DOMAINS).forEach(d => {
+                    domainsTracking[d].correct = 0;
+                    domainsTracking[d].attempted = 0;
+                    domainsTracking[d].total = 0;
+                });
+                
+                questions.forEach(q => {
+                     domainsTracking[q.domain].total += 1;
+                });
+                
+                renderSidebar();
+                renderPaginationDots();
+                renderQuestion();
+                els.practiceWrongBtn.classList.add('hidden');
+            }
+        });
+
+
+        if(els.modalBtnWrong) els.modalBtnWrong.addEventListener('click', () => { els.examModal.classList.add('hidden'); els.practiceWrongBtn.click(); });
+        if(els.closeModalBtn) els.closeModalBtn.addEventListener('click', () => els.examModal.classList.add('hidden'));
+
+        // Setup Keyboard Navigation
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' && !els.nextBtn.disabled) els.nextBtn.click();
+            if (e.key === 'ArrowLeft' && !els.prevBtn.disabled) els.prevBtn.click();
+            if (e.key.toLowerCase() === 'f') els.flagBtn.click();
+            
+            // Map 1-4 or A-D keys to options implicitly
+            const validKeys = {'1':0, '2':1, '3':2, '4':3, 'a':0, 'b':1, 'c':2, 'd':3};
+            const pressed = e.key.toLowerCase();
+            
+            if (validKeys[pressed] !== undefined) {
+                const optIdx = validKeys[pressed];
+                const answeredData = userAnswers.get(questions[currentIndex].id);
+                if (!answeredData && optIdx < questions[currentIndex].options.length) {
+                    // Try strictly clicking the option btn logic
+                    const optionBtns = els.optContainer.querySelectorAll('.option-btn');
+                    if(optionBtns[optIdx]) optionBtns[optIdx].click();
+                }
+            }
+        });
+
+        // BOOT THE APP
+        window.addEventListener('DOMContentLoaded', initApp);
+
+    </script>
+</body>
+</html>

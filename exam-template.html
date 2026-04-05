@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{EXAM_TITLE}} Dashboard</title>
+    <!-- Tailwind CSS (via CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        azure: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7', // Primary Azure Blue
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Vanilla CSS Custom Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            /* background-color: #f8fafc; Removed for dark mode */
+        }
+
+        /* SVG Circular Gauge Animation */
+        .gauge-circle {
+            transition: stroke-dasharray 0.8s ease-out;
+        }
+
+        /* Interactive Option Button Styles */
+        .option-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border-color: #bae6fd; /* azure-200 */
+        }
+        
+        /* Explanation Box Slide Down Animation */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                max-height: 500px;
+            }
+        }
+        
+        .animate-slide-down {
+            animation: slideDown 0.4s ease-out forwards;
+            overflow: hidden;
+        }
+
+        /* Custom Scrollbar for Sidebar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 flex h-screen overflow-hidden text-slate-800 dark:text-slate-100 antialiased">
+    
+    <!-- Left Sidebar (25% Width) -->
+    <aside class="w-1/4 min-w-[320px] max-w-[400px] bg-white dark:bg-slate-800 transition-colors border-r border-slate-200 dark:border-slate-700 flex flex-col shadow-sm z-10 transition-all duration-300">
+        
+        <!-- Dashboard Header -->
+        <div class="p-6 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between bg-white dark:bg-slate-800 transition-colors sticky top-0 z-20">
+            <div>
+                <h1 class="text-xl font-bold text-azure-700 tracking-tight flex items-center gap-2">
+                    <i class="fa-brands fa-microsoft text-azure-600"></i> {{EXAM_TITLE}}
+                </h1>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 font-semibold mt-1 uppercase tracking-widest">Practice Dashboard</p>
+            </div>
+            <div class="h-10 w-10 bg-azure-50 rounded-full flex items-center justify-center text-azure-600 font-bold shadow-inner border border-azure-100">
+                 <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+        </div>
+
+        <!-- Scrollable Dashboard Content -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-8">
+            
+            <!-- Study Progress Section w/ Circular Gauge -->
+            <div class="flex flex-col items-center">
+                <h2 class="text-xs font-bold text-slate-600 dark:text-slate-300 w-full mb-3 uppercase tracking-wider">Study Progress</h2>
+                <div class="relative w-44 h-44 drop-shadow-sm">
+                    <svg class="w-full h-full" viewBox="0 0 100 100">
+                        <circle class="text-slate-100 stroke-current" stroke-width="8" cx="50" cy="50" r="40" fill="transparent"></circle>
+                        <circle id="progress-gauge" class="text-azure-500 gauge-circle stroke-current" stroke-width="8" stroke-linecap="round" cx="50" cy="50" r="40" fill="transparent" stroke-dasharray="0, 251.2" transform="rotate(-90 50 50)"></circle>
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <span id="progress-percent" class="text-3xl font-bold text-slate-800 dark:text-slate-100">0%</span>
+                        <span id="progress-fraction" class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1 bg-slate-100 dark:bg-slate-700 transition-colors px-2 py-1 rounded-full">0 / 90</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scoreboard -->
+            <div>
+                <h2 class="text-xs font-bold text-slate-600 dark:text-slate-300 mb-3 uppercase tracking-wider">Scoreboard</h2>
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="bg-slate-50 dark:bg-slate-900 transition-colors border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-center transition hover:bg-slate-100 dark:bg-slate-700 transition-colors hover:border-slate-300">
+                        <div class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase mb-1">Attempted</div>
+                        <div id="stat-attempted" class="text-xl font-bold text-slate-700 dark:text-slate-200">0</div>
+                    </div>
+                    <div class="bg-green-50 border border-green-200 rounded-xl p-3 text-center transition hover:bg-green-100">
+                        <div class="text-[10px] text-green-700 font-bold uppercase mb-1">Correct</div>
+                        <div id="stat-correct" class="text-xl font-bold text-green-700">0</div>
+                    </div>
+                    <div class="bg-red-50 border border-red-200 rounded-xl p-3 text-center transition hover:bg-red-100">
+                        <div class="text-[10px] text-red-700 font-bold uppercase mb-1">Wrong</div>
+                        <div id="stat-wrong" class="text-xl font-bold text-red-700">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI-900 Domains List & Progress -->
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Domains</h2>
+                    <span class="text-[10px] font-medium text-slate-400">Score</span>
+                </div>
+                <div class="space-y-4" id="domain-list">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="pt-4 border-t border-slate-100 dark:border-slate-700 pb-4">
+                <button id="practice-wrong-btn" class="hidden w-full mb-3 py-2.5 px-4 bg-white dark:bg-slate-800 transition-colors border border-red-300 shadow-sm text-red-600 rounded-lg text-sm font-medium hover:bg-red-50 hover:text-red-800 transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-red-200">
+                    <i class="fa-solid fa-bullseye"></i> Practice Wrong Questions
+                </button>
+                
+                <button id="reset-btn" class="w-full py-2.5 px-4 bg-white dark:bg-slate-800 transition-colors border border-slate-300 shadow-sm text-slate-600 dark:text-slate-300 rounded-lg text-sm font-medium hover:bg-slate-50 dark:bg-slate-900 transition-colors hover:text-slate-800 dark:text-slate-100 transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-slate-200">
+                    <i class="fa-solid fa-rotate-right"></i> Reset Dashboard
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Right Main Panel (75% Width) -->
+    <main class="flex-1 flex flex-col relative bg-slate-50 dark:bg-slate-900 transition-colors relative selection:bg-azure-200 selection:text-azure-900">
+        
+        <!-- Top Status Bar -->
+        <header class="h-16 bg-white dark:bg-slate-800 transition-colors border-b border-slate-200 dark:border-slate-700 px-6 md:px-10 flex items-center justify-between shadow-sm sticky top-0 z-20">
+            <div class="flex items-center gap-4">
+                <span class="bg-azure-100 text-azure-800 border border-azure-200 text-[11px] font-bold px-3 py-1.5 rounded-full tracking-wide truncate max-w-[200px] md:max-w-xs" id="current-domain-badge">
+                    Domain
+                </span>
+                <span class="text-slate-500 dark:text-slate-400 font-medium text-sm">Question <strong class="text-slate-800", "dark:text-slate-100" id="q-num">1</strong> of <span id="q-total">90</span></span>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="theme-toggle" class="w-9 h-9 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors focus:outline-none">
+                    <i class="fa-solid fa-moon text-lg dark:hidden"></i>
+                    <i class="fa-solid fa-sun text-lg hidden dark:block"></i>
+                </button>
+            
+            <button id="flag-btn" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold border transition-all duration-200 hover:bg-slate-50 dark:bg-slate-900 transition-colors focus:outline-none border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 shadow-sm">
+                <i class="fa-regular fa-flag" id="flag-icon"></i>
+                <span id="flag-text" class="hidden sm:inline">Flag for Review</span>
+            </button>
+        </header>
+
+        <!-- Exam Console -->
+        <div class="flex-1 overflow-y-auto p-4 sm:p-8 lg:p-12 pb-32">
+            <div class="max-w-3xl mx-auto w-full">
+                
+                <!-- Main Question Card -->
+                <div class="bg-white dark:bg-slate-800 transition-colors rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-8 sm:p-10 transition-all duration-300 relative" id="question-card">
+                    
+                    <!-- Question Marker -->
+                    <div class="absolute -top-4 -left-4 w-10 h-10 bg-azure-600 text-white rounded-xl shadow-lg flex items-center justify-center font-bold text-lg rotate-[-5deg]" id="q-stamp">
+                        Q1
+                    </div>
+
+                    <!-- Question Text -->
+                    <h2 class="text-lg sm:text-xl md:text-2xl font-semibold text-slate-800 dark:text-slate-100 leading-relaxed mb-8 mt-2" id="question-text">
+                        Loading your practice question...
+                    </h2>
+
+                    <!-- Multiple Choice Options -->
+                    <div class="space-y-3" id="options-container">
+                        <!-- Rendered via JavaScript -->
+                    </div>
+
+                    <!-- Explanation Alert Box (Hidden Initially) -->
+                    <div id="explanation-box" class="hidden mt-6 bg-slate-50 dark:bg-slate-900 transition-colors border border-slate-200 dark:border-slate-700 shadow-sm rounded-xl p-5 relative overflow-hidden">
+                        <!-- Left Accent Bar -->
+                        <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-azure-500"></div>
+                        
+                        <div class="flex items-start gap-4">
+                            <div class="mt-0.5 bg-azure-100 text-azure-600 rounded-full w-8 h-8 flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-lightbulb"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm mb-1.5 text-slate-800 dark:text-slate-100">Explanation</h4>
+                                <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-300" id="explanation-text"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Footer -->
+        <footer class="absolute bottom-0 left-0 right-0 h-20 bg-white dark:bg-slate-800 transition-colors border-t border-slate-200 dark:border-slate-700 px-6 md:px-10 flex items-center justify-between shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-20">
+            <button id="prev-btn" class="px-5 py-2.5 rounded-lg font-semibold text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-slate-300 hover:bg-slate-50 dark:bg-slate-900 transition-colors transition-colors flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-slate-200 disabled:opacity-40 disabled:pointer-events-none shadow-sm">
+                <i class="fa-solid fa-arrow-left text-sm"></i> Previous
+            </button>
+            
+            <!-- Quick Jump Pagination Dots (Desktop only) -->
+            <div id="pagination-dots" class="hidden md:flex flex-wrap max-w-sm justify-center gap-1.5">
+                <!-- Populated dynamically via JS -->
+            </div>
+            
+            <button id="next-btn" class="px-6 py-2.5 rounded-lg font-semibold bg-azure-600 text-white hover:bg-azure-700 shadow-md hover:shadow-lg transition-all flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-azure-500 disabled:opacity-40 disabled:pointer-events-none transform active:scale-95">
+                Next <i class="fa-solid fa-arrow-right text-sm"></i>
+            </button>
+        </footer>
+    </main>
+
+
+    <!-- Exam Complete Modal -->
+    <div id="exam-complete-modal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-lg p-8 relative transform scale-95 transition-transform duration-300">
+            <div class="absolute top-4 right-4 cursor-pointer text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" id="close-modal-btn">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </div>
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-azure-100 dark:bg-azure-900 border border-azure-200 dark:border-azure-700 text-azure-600 dark:text-azure-400 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 bg-gradient-to-br from-azure-100 to-azure-200 shadow-sm">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Exam Complete!</h2>
+                <p class="text-slate-500 dark:text-slate-400 mt-1">Here is how you performed.</p>
+            </div>
+            
+            <div class="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-6 border border-slate-200 dark:border-slate-700 mb-6 flex flex-col items-center shadow-inner">
+                <div class="text-4xl font-black text-slate-800 dark:text-white" id="modal-score">0 / 1000</div>
+                <div class="text-sm font-semibold mt-1" id="modal-status">Pending</div>
+            </div>
+            
+            <button id="modal-practice-wrong" class="w-full py-2.5 px-4 bg-red-50 dark:bg-red-400/10 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30 font-semibold rounded-lg hover:bg-red-100 dark:hover:bg-red-400/20 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                <i class="fa-solid fa-bullseye"></i> Practice Wrong Questions
+            </button>
+        </div>
+    </div>
+
+    <!-- Single File Vanilla JavaScript Application Logic -->
+    <script>
+        /*******************************************************
+         * DATA LAYER
+         *******************************************************/
+        const DOMAINS = {{DOMAINS_JS}};
+
+        // 40 Comprehensive AI-900 Style Questions
+        const rawQuestions = {{QUESTIONS_JS}};
+
+        // Ensure questions are uniformly dispersed
+        function shuffleArray(array) {
+            let curId = array.length, randId;
+            while (curId !== 0) {
+                randId = Math.floor(Math.random() * curId);
+                curId--;
+                [array[curId], array[randId]] = [array[randId], array[curId]];
+            }
+            return array;
+        }
+
+        // Add IDs and shuffle options inside
+        function buildQuestionBank(rawList) {
+            let processed = rawList.map((q, idx) => {
+                let optionsData = q.options.map((text, oIdx) => ({
+                    text: text,
+                    isCorrect: oIdx === q.answer
+                }));
+                // Randomize options order per user request
+                optionsData = shuffleArray(optionsData);
+                return {
+                    id: idx + 1,
+                    domain: q.domain,
+                    text: q.text,
+                    options: optionsData,
+                    explanation: q.explanation
+                };
+            });
+            // Randomize the whole exam specifically to ensure varied testing
+            return shuffleArray(processed);
+        }
+
+        /*******************************************************
+         * STATE VARIABLES
+         *******************************************************/
+        let questions = []; 
+        let currentIndex = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+        
+        let userAnswers = new Map(); // question.id -> { selectedOptionIndex, isCorrect }
+        let flaggedQuestions = new Set(); // question.id Set
+        let domainsTracking = {}; // Maps Domain String -> { total, correct, attempted }
+        
+
+        /*******************************************************
+         * INITIALIZATION 
+         *******************************************************/
+        
+
+        
+        
+        
+
+        
+
+        function finishExam(userInitiated=true) {
+            if (examFinished && userInitiated) return; // Prevent double trigger
+            examFinished = true;
+            clearInterval(timerInterval);
+            saveState();
+            
+            let score = questions.length > 0 ? Math.round((correctCount / questions.length) * 1000) : 0;
+            if(els.modalScore) els.modalScore.textContent = score + ' / 1000';
+            
+            if (els.modalStatus) {
+                if(score >= 700) {
+                    els.modalStatus.textContent = "Pass";
+                    els.modalStatus.className = "text-xl font-bold mt-1 text-green-600";
+                } else {
+                    els.modalStatus.textContent = "Fail";
+                    els.modalStatus.className = "text-xl font-bold mt-1 text-red-600";
+                }
+            }
+            
+            if(els.modalBtnWrong) els.modalBtnWrong.disabled = (wrongCount === 0);
+            if(els.modalBtnFlagged) els.modalBtnFlagged.disabled = (flaggedQuestions.size === 0);
+            
+            if(els.examModal) {
+                els.examModal.classList.remove('hidden');
+                setTimeout(() => {
+                    els.examModal.firstElementChild.classList.remove('scale-95');
+                    els.examModal.firstElementChild.classList.add('scale-100');
+                }, 10);
+            }
+        }
+
+        
+        /*******************************************************
+         * INITIALIZATION & DARK MODE
+         *******************************************************/
+        const themeBtn = document.getElementById('theme-toggle');
+        // Check local storage
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        themeBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.theme = 'dark';
+            } else {
+                localStorage.theme = 'light';
+            }
+        });
+
+        
+        function saveState() {
+            const state = {
+                questions, currentIndex, correctCount, wrongCount,
+                userAnswersArray: Array.from(userAnswers.entries()),
+                flaggedArray: Array.from(flaggedQuestions),
+                domainsTracking
+            };
+            try { localStorage.setItem('ai900_state_v2', JSON.stringify(state)); } catch(e){}
+        }
+
+        function loadState() {
+            try {
+                const s = localStorage.getItem('ai900_state_v2');
+                if (s) {
+                    const state = JSON.parse(s);
+                    if (!state || !state.questions || state.questions.length === 0 || !state.domainsTracking) return false;
+                    
+                    questions = state.questions;
+                    currentIndex = state.currentIndex || 0;
+                    correctCount = state.correctCount || 0;
+                    wrongCount = state.wrongCount || 0;
+                    userAnswers = new Map(state.userAnswersArray || []);
+                    flaggedQuestions = new Set(state.flaggedArray || []);
+                    domainsTracking = state.domainsTracking;
+                    return true;
+                }
+            } catch(e){}
+            return false;
+        }
+
+
+        function finishExam() {
+            let score = questions.length > 0 ? Math.round((correctCount / questions.length) * 1000) : 0;
+            if(els.modalScore) els.modalScore.textContent = score + ' / 1000';
+            
+            if (els.modalStatus) {
+                if(score >= 700) {
+                    els.modalStatus.textContent = "Pass";
+                    els.modalStatus.className = "text-xl font-bold mt-1 text-green-600 dark:text-green-500";
+                } else {
+                    els.modalStatus.textContent = "Fail";
+                    els.modalStatus.className = "text-xl font-bold mt-1 text-red-600 dark:text-red-500";
+                }
+            }
+            
+            if(els.modalBtnWrong) els.modalBtnWrong.disabled = (wrongCount === 0);
+            
+            if(els.examModal) {
+                els.examModal.classList.remove('hidden');
+                setTimeout(() => {
+                    els.examModal.firstElementChild.classList.remove('scale-95');
+                    els.examModal.firstElementChild.classList.add('scale-100');
+                }, 10);
+            }
+        }
+
+        function initApp() {
+            if (!loadState()) {
+                Object.values(DOMAINS).forEach(d => {
+                    domainsTracking[d] = { total: 0, correct: 0, attempted: 0 };
+                });
+
+                questions = buildQuestionBank(rawQuestions);
+                
+                questions.forEach(q => {
+                     domainsTracking[q.domain].total += 1;
+                });
+            }
+
+            renderSidebar();
+            renderPaginationDots();
+            renderQuestion();
+            
+            if (wrongCount > 0 && els.practiceWrongBtn) els.practiceWrongBtn.classList.remove('hidden');
+        }
+
+        /*******************************************************
+         * DOM ELEMENTS CACHE
+         *******************************************************/
+        const els = {
+            qNum: document.getElementById('q-num'),
+            qLabel: document.getElementById('q-stamp'),
+            domainBadge: document.getElementById('current-domain-badge'),
+            qText: document.getElementById('question-text'),
+            qTotal: document.getElementById('q-total'),
+            optContainer: document.getElementById('options-container'),
+            expBox: document.getElementById('explanation-box'),
+            expText: document.getElementById('explanation-text'),
+            
+            prevBtn: document.getElementById('prev-btn'),
+            nextBtn: document.getElementById('next-btn'),
+            flagBtn: document.getElementById('flag-btn'),
+            flagIcon: document.getElementById('flag-icon'),
+            
+            statAttempted: document.getElementById('stat-attempted'),
+            statCorrect: document.getElementById('stat-correct'),
+            statWrong: document.getElementById('stat-wrong'),
+            
+            gaugeCircle: document.getElementById('progress-gauge'),
+            gaugePercent: document.getElementById('progress-percent'),
+            gaugeFraction: document.getElementById('progress-fraction'),
+            
+            domainList: document.getElementById('domain-list'),
+            paginationDots: document.getElementById('pagination-dots'),
+            resetBtn: document.getElementById('reset-btn'),
+            practiceWrongBtn: document.getElementById('practice-wrong-btn'),
+            examModal: document.getElementById('exam-complete-modal'),
+            modalScore: document.getElementById('modal-score'),
+            modalStatus: document.getElementById('modal-status'),
+            modalBtnWrong: document.getElementById('modal-practice-wrong'),
+            closeModalBtn: document.getElementById('close-modal-btn')
+        };
+
+        /*******************************************************
+         * RENDERING LOGIC
+         *******************************************************/
+        function renderQuestion() {
+            const q = questions[currentIndex];
+            const qRealNumber = currentIndex + 1;
+            
+            els.qNum.textContent = qRealNumber;
+            els.qTotal.textContent = questions.length;
+            els.qLabel.textContent = `Q${qRealNumber}`;
+            els.domainBadge.textContent = q.domain;
+            els.qText.textContent = q.text;
+            
+            // Reset question UI specifics
+            els.expBox.classList.add('hidden');
+            els.expBox.classList.remove('animate-slide-down');
+            els.optContainer.innerHTML = '';
+            
+            const answeredState = userAnswers.get(q.id);
+
+            // Construct option buttons
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                const letter = String.fromCharCode(65 + idx); // A, B, C, D
+                
+                // Base classes
+                btn.className = `option-btn w-full text-left p-4 rounded-xl border object-left flex justify-between items-center group font-medium focus:outline-none focus:ring-2 focus:ring-azure-200 transition-colors`;
+                
+                let iconHTML = `<div class="w-6 h-6 rounded-full border-2 border-slate-300 flex items-center justify-center group-hover:bg-azure-50 group-hover:border-azure-400 group-hover:text-azure-600 transition-colors text-xs font-bold text-slate-400">
+                                   ${letter}
+                                </div>`;
+
+                // Logic if question IS ANSWERED
+                if (answeredState) {
+                    btn.disabled = true; // prevent re-clicking
+                    btn.classList.remove('option-btn'); // remove hover transforms
+                    
+                    if (answeredState.selectedOptionIndex === idx) {
+                        // User chose this option
+                        if (answeredState.isCorrect) {
+                            // Correct Choice
+                            btn.classList.add('bg-green-50', 'border-green-500', 'text-green-800', 'drop-shadow-sm');
+                            iconHTML = `<i class="fa-solid fa-circle-check text-green-500 text-xl"></i>`;
+                        } else {
+                            // Wrong Choice
+                            btn.classList.add('bg-red-50', 'border-red-500', 'text-red-800');
+                            iconHTML = `<i class="fa-solid fa-circle-xmark text-red-500 text-xl"></i>`;
+                        }
+                    } else if (opt.isCorrect) {
+                        // Not chosen, but is the correct answer (highlight in green)
+                        btn.classList.add('bg-green-50/40', 'border-green-400', 'text-green-800', 'opacity-90');
+                        iconHTML = `<i class="fa-solid fa-check text-green-600 text-lg"></i>`;
+                    } else {
+                        // Not chosen, wrong answer (fade out)
+                        btn.classList.add('bg-white', 'dark:bg-slate-800', 'transition-colors', 'border-slate-100', 'dark:border-slate-700', 'text-slate-400', 'opacity-60');
+                        iconHTML = `<div class="w-6 h-6 rounded-full border-2 border-slate-200 dark:border-slate-700 flex flex-col justify-center items-center text-xs font-bold">${letter}</div>`;
+                    }
+                } else {
+                    // Logic if question NOT YET ANSWERED
+                    btn.classList.add('bg-white', 'dark:bg-slate-800', 'transition-colors', 'border-slate-200', 'dark:border-slate-700', 'text-slate-700', 'dark:text-slate-200', 'hover:bg-azure-50', 'hover:text-azure-900', 'cursor-pointer');
+                    btn.onclick = () => selectOption(idx, opt.isCorrect, q);
+                }
+
+                btn.innerHTML = `<span class="pr-6 leading-relaxed flex-1">${opt.text}</span> <div class="shrink-0 ml-2">${iconHTML}</div>`;
+                els.optContainer.appendChild(btn);
+            });
+
+            // Display Explanation Box if answered
+            if (answeredState) {
+                // Find correct text string
+                let correctOpt = q.options.find(o => o.isCorrect).text;
+                els.expText.innerHTML = `<span class="font-bold">Correct Answer:</span> ${correctOpt}<br/><br/>${q.explanation}`;
+                els.expBox.classList.remove('hidden');
+            }
+
+            // Flag state
+            if (flaggedQuestions.has(q.id)) {
+                els.flagIcon.classList.replace('fa-regular', 'fa-solid');
+                els.flagBtn.classList.remove('border-slate-200', 'dark:border-slate-700', 'text-slate-600', 'dark:text-slate-300');
+                els.flagBtn.classList.add('border-orange-200', 'bg-orange-50', 'text-orange-600');
+            } else {
+                els.flagIcon.classList.replace('fa-solid', 'fa-regular');
+                els.flagBtn.classList.add('border-slate-200', 'dark:border-slate-700', 'text-slate-600', 'dark:text-slate-300');
+                els.flagBtn.classList.remove('border-orange-200', 'bg-orange-50', 'text-orange-600');
+            }
+
+            // Button controls
+            els.prevBtn.disabled = currentIndex === 0;
+            els.nextBtn.disabled = currentIndex === questions.length - 1;
+            
+            updatePaginationDotsUI();
+        }
+
+        function selectOption(selectedIndex, isCorrect, qNode) {
+            // Document the action
+            userAnswers.set(qNode.id, { selectedOptionIndex: selectedIndex, isCorrect });
+            
+            // Adjust metrics
+            domainsTracking[qNode.domain].attempted++;
+            if (isCorrect) {
+                correctCount++;
+                domainsTracking[qNode.domain].correct++;
+            } else {
+                wrongCount++;
+            }
+            
+            if (wrongCount > 0) {
+                els.practiceWrongBtn.classList.remove('hidden');
+            }
+            
+            // Sync View states
+            renderSidebar();
+            renderQuestion();
+            
+            // Trigger explanation animation exclusively when user clicks an answer
+            els.expBox.classList.add('animate-slide-down');
+            saveState();
+            if (userAnswers.size === questions.length) { setTimeout(() => finishExam(), 800); }
+        }
+
+        function renderSidebar() {
+            let attemptTotal = userAnswers.size;
+            let fullTotal = questions.length;
+            
+            els.statAttempted.textContent = attemptTotal;
+            els.statCorrect.textContent = correctCount;
+            els.statWrong.textContent = wrongCount;
+
+            // Gauge calculations based on 40 radius circle = 251.2 circumference
+            const perc = Math.round((attemptTotal / fullTotal) * 100);
+            els.gaugePercent.textContent = `${perc}%`;
+            els.gaugeFraction.textContent = `${attemptTotal} / ${fullTotal}`;
+            
+            const dashValue = 251.2 - ((perc / 100) * 251.2);
+            els.gaugeCircle.style.strokeDasharray = `${251.2 - dashValue}, 251.2`;
+
+            // Domains Listing
+            els.domainList.innerHTML = '';
+            Object.keys(domainsTracking).forEach(ds => {
+                let metrics = domainsTracking[ds];
+                let domPerc = metrics.total > 0 ? (metrics.correct / metrics.total) * 100 : 0;
+                
+                // Strip redundant text for clean UI
+                let shortName = ds.replace(' & Concepts', '').replace(' Concepts', '').replace(' Workloads', '');
+
+                let markup = `
+                    <div class="mb-3.5 group">
+                        <div class="flex justify-between items-end mb-1.5">
+                            <span class="text-[11px] font-semibold text-slate-700 dark:text-slate-200 truncate pr-2 group-hover:text-azure-600 transition-colors">${shortName}</span>
+                            <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 transition-colors px-1.5 py-0.5 rounded">${metrics.correct}/${metrics.total}</span>
+                        </div>
+                        <div class="w-full bg-slate-100 dark:bg-slate-700 transition-colors rounded-full h-1.5 overflow-hidden">
+                            <div class="bg-azure-500 h-1.5 rounded-full transition-all duration-700 ease-in-out" style="width: ${domPerc}%"></div>
+                        </div>
+                    </div>
+                `;
+                els.domainList.insertAdjacentHTML('beforeend', markup);
+            });
+        }
+
+        function renderPaginationDots() {
+            els.paginationDots.innerHTML = '';
+            questions.forEach((q, i) => {
+                const dot = document.createElement('button');
+                dot.id = `dot-${i}`;
+                dot.onclick = () => { currentIndex = i; renderQuestion(); };
+                dot.className = 'w-2 h-2 rounded-full cursor-pointer transition-all hover:scale-150 focus:outline-none';
+                dot.title = `Question ${i+1}`;
+                els.paginationDots.appendChild(dot);
+            });
+        }
+
+        function updatePaginationDotsUI() {
+            questions.forEach((q, i) => {
+                const dot = document.getElementById(`dot-${i}`);
+                if(!dot) return;
+                
+                // Reset Classes
+                dot.className = 'w-2.5 h-2.5 rounded-full cursor-pointer transition-all hover:scale-125 focus:outline-none shadow-sm';
+                
+                // Focus styling
+                if (i === currentIndex) {
+                    dot.classList.add('ring-2', 'ring-azure-300', 'ring-offset-1', 'scale-110');
+                }
+                
+                const answeredData = userAnswers.get(q.id);
+                const isFlagged = flaggedQuestions.has(q.id);
+                
+                // Prioritize colors: Flagged -> Correct/Wrong -> Unanswered
+                if (isFlagged) {
+                    dot.classList.add('bg-orange-400');
+                } else if (answeredData) {
+                    if (answeredData.isCorrect) dot.classList.add('bg-green-500');
+                    else dot.classList.add('bg-red-500');
+                } else {
+                    if (i === currentIndex) dot.classList.add('bg-azure-600');
+                    else dot.classList.add('bg-slate-200');
+                }
+            });
+        }
+
+        /*******************************************************
+         * EVENT LISTENERS
+         *******************************************************/
+        els.nextBtn.addEventListener('click', () => {
+            if (currentIndex < questions.length - 1) { currentIndex++; renderQuestion(); }
+        });
+
+        els.prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) { currentIndex--; renderQuestion(); }
+        });
+        
+        els.flagBtn.addEventListener('click', () => {
+            const qID = questions[currentIndex].id;
+            if (flaggedQuestions.has(qID)) flaggedQuestions.delete(qID);
+            else flaggedQuestions.add(qID);
+            renderQuestion();
+            saveState();
+        });
+        
+        els.resetBtn.addEventListener('click', () => {
+            if(confirm('Warning: This will clear all your practice progress and reload all questions. Proceed?')) {
+                localStorage.removeItem('ai900_state_v2');
+                userAnswers.clear();
+                flaggedQuestions.clear();
+                correctCount = 0;
+                wrongCount = 0;
+                currentIndex = 0;
+                
+                Object.values(DOMAINS).forEach(d => {
+                    domainsTracking[d].correct = 0;
+                    domainsTracking[d].attempted = 0;
+                    domainsTracking[d].total = 0;
+                });
+                
+                questions = buildQuestionBank(rawQuestions);
+                questions.forEach(q => {
+                     domainsTracking[q.domain].total += 1;
+                });
+                
+                renderSidebar();
+                renderPaginationDots();
+                renderQuestion();
+                els.practiceWrongBtn.classList.add('hidden');
+            }
+        });
+
+        els.practiceWrongBtn.addEventListener('click', () => {
+            let wrongQIDs = [];
+            for (let [qId, data] of userAnswers.entries()) {
+                if (!data.isCorrect) wrongQIDs.push(qId);
+            }
+            if (wrongQIDs.length === 0) {
+                alert("You don't have any wrong answers to practice!");
+                return;
+            }
+            
+            if(confirm('This will create a new practice session with only your ' + wrongQIDs.length + ' wrong answers. Proceed?')) {
+                localStorage.removeItem('ai900_state_v2');
+                let newQuestions = questions.filter(q => wrongQIDs.includes(q.id));
+                newQuestions.forEach(q => {
+                    q.options = shuffleArray(q.options);
+                });
+                questions = shuffleArray(newQuestions);
+                
+                userAnswers.clear();
+                flaggedQuestions.clear();
+                correctCount = 0;
+                wrongCount = 0;
+                currentIndex = 0;
+                
+                Object.values(DOMAINS).forEach(d => {
+                    domainsTracking[d].correct = 0;
+                    domainsTracking[d].attempted = 0;
+                    domainsTracking[d].total = 0;
+                });
+                
+                questions.forEach(q => {
+                     domainsTracking[q.domain].total += 1;
+                });
+                
+                renderSidebar();
+                renderPaginationDots();
+                renderQuestion();
+                els.practiceWrongBtn.classList.add('hidden');
+            }
+        });
+
+
+        if(els.modalBtnWrong) els.modalBtnWrong.addEventListener('click', () => { els.examModal.classList.add('hidden'); els.practiceWrongBtn.click(); });
+        if(els.closeModalBtn) els.closeModalBtn.addEventListener('click', () => els.examModal.classList.add('hidden'));
+
+        // Setup Keyboard Navigation
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' && !els.nextBtn.disabled) els.nextBtn.click();
+            if (e.key === 'ArrowLeft' && !els.prevBtn.disabled) els.prevBtn.click();
+            if (e.key.toLowerCase() === 'f') els.flagBtn.click();
+            
+            // Map 1-4 or A-D keys to options implicitly
+            const validKeys = {'1':0, '2':1, '3':2, '4':3, 'a':0, 'b':1, 'c':2, 'd':3};
+            const pressed = e.key.toLowerCase();
+            
+            if (validKeys[pressed] !== undefined) {
+                const optIdx = validKeys[pressed];
+                const answeredData = userAnswers.get(questions[currentIndex].id);
+                if (!answeredData && optIdx < questions[currentIndex].options.length) {
+                    // Try strictly clicking the option btn logic
+                    const optionBtns = els.optContainer.querySelectorAll('.option-btn');
+                    if(optionBtns[optIdx]) optionBtns[optIdx].click();
+                }
+            }
+        });
+
+        // BOOT THE APP
+        window.addEventListener('DOMContentLoaded', initApp);
+
+    </script>
+</body>
+</html>

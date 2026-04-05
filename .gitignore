@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+
+# IDEs and OS files
+.vscode/
+.idea/
+.DS_Store
+
+# Ignore question banks by default to prevent accidental upload of copyrighted materials
+*.txt
+*.md
+!README.md
+!exam_format_guide.md
+
+# Ignoring backup files
+*.bak
