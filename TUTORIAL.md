@@ -73,7 +73,11 @@ All data stays in your browser's **localStorage** — nothing is uploaded to any
 
 ## 4. Creating Your First Exam File
 
-Create a `.md` (Markdown) or `.txt` file with your questions. Here's the format:
+Create a `.md` (Markdown) or `.txt` file with your questions. 
+
+### 🚀 Quick Access to Format Guide
+
+**In the Dashboard:** Click the **❓ Format** button in the header to view an interactive format guide with examples and downloadable sample files.
 
 ### Basic Structure
 
@@ -168,6 +172,20 @@ Which data type is immutable in Python?
 
 ---
 
+## 📥 Download Example Files
+
+Ready-to-use example files are available in the dashboard:
+
+1. **Click the "❓ Format" button** in the header (top navigation)
+2. **Download examples** from the modal:
+   - `example-format-markdown.md` — Real questions in Markdown format
+   - `example-format-text.txt` — Same questions in plain text format
+   - `FORMAT_GUIDE.md` — Complete format reference
+
+You can upload these immediately to see how they work with the dashboard!
+
+---
+
 ## 5. Adding Exams to the Dashboard
 
 ### Method 1: Drag & Drop
@@ -243,14 +261,12 @@ If you close the browser mid-exam, your progress is saved. When you return:
 - Your flagged questions are remembered
 - You'll see **"Resume Exam?"** with Resume/Reset options
 
-### Dark/Light Theme
-Toggle with the **🌙 / ☀️** button (top-right). Saves automatically.
-
 ---
 
 ## 9. Troubleshooting
 
 ### "Questions won't load after uploading"
+- **First:** Click the **❓ Format** button to see the interactive guide
 - Verify each question has exactly 4 options (A, B, C, D)
 - Check the `**Correct answer:**` line matches one of the options
 - Open browser console (F12) for error messages
@@ -259,6 +275,7 @@ Toggle with the **🌙 / ☀️** button (top-right). Saves automatically.
 - Make sure the file is `.md` or `.txt` (not `.docx` or `.pdf`)
 - Check that question headers use `### Q1` format (three hashes)
 - Ensure no HTML tags in the file
+- **Tip:** Download the example files from the Format Guide to see working examples
 
 ### "My progress is gone"
 - Clearing browser data removes localStorage
@@ -270,21 +287,40 @@ Toggle with the **🌙 / ☀️** button (top-right). Saves automatically.
 - They just need to upload them to their own dashboard
 - The question files are completely independent of the app
 
+### "Where do I find the format guide?"
+- **In the app:** Click the **❓ Format** button in the top navigation bar
+- **In the repo:** See `FORMAT_GUIDE.md`, `example-format-markdown.md`, `example-format-text.txt`
+
 ---
 
 ## 📁 File Structure
 
 ```
 exam-quiz-dashboard/
-├── exam-hub.html          ← Main dashboard (open this!)
-├── index.html             ← Auto-redirects to exam-hub.html
-├── exam_format_guide.md   ← Quick format reference
-├── TUTORIAL.md            ← This file
-├── README.md              ← Project overview
-├── LICENSE                ← MIT License
-├── .gitignore             ← Git ignore rules
-└── tools/                 ← Python utilities (optional)
+├── exam-hub.html                    ← Main dashboard (open this!)
+├── index.html                       ← Auto-redirects to exam-hub.html
+├── FORMAT_GUIDE.md                  ← Complete format reference
+├── example-format-markdown.md       ← Sample .md format file
+├── example-format-text.txt          ← Sample .txt format file
+├── TUTORIAL.md                      ← This file
+├── README.md                        ← Project overview
+├── LICENSE                          ← MIT License
+├── .gitignore                       ← Git ignore rules
+└── tools/                           ← Python utilities (optional)
 ```
+
+---
+
+## 🎨 Customization
+
+### Colors
+Click the **🎨 Colors** button in the header to switch between 4 color themes:
+- **Purple** (default) — Modern and professional
+- **Blue** — Cool and tech-focused
+- **Green** — Calm and soothing
+- **Orange** — Warm and energetic
+
+Theme preference is saved automatically in your browser.
 
 ---
 

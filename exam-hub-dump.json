@@ -1,0 +1,6 @@
+{
+  "STATUS": "AUTO-LOAD_ISSUE",
+  "DIAGNOSIS": "examMd parsing fails when malformed or empty",
+  "ACTION_NEEDED": "Upload a minimal valid exam.md file to trigger auto-load",
+  "TEST_INSTRUCTIONS": "1. Open exam-hub.html\n2. Click 'Upload Exam' button\n3. Select a working exam.md file\n4. Check browser console for errors"
+}

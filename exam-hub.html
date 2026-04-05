@@ -8,119 +8,279 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script>
-tailwind.config={darkMode:'class',theme:{extend:{fontFamily:{sans:['Inter','sans-serif']},colors:{brand:{50:'#f0f9ff',100:'#e0f2fe',200:'#bae6fd',300:'#7dd3fc',400:'#38bdf8',500:'#0ea5e9',600:'#0284c7',700:'#0369a1',800:'#075985',900:'#0c4a6e'}}}}}
+tailwind.config={darkMode:'class',theme:{extend:{fontFamily:{sans:['Inter','sans-serif']},colors:{brand:{50:'#f0f9ff',100:'#e0f2fe',200:'#bae6fd',300:'#7dd3fc',400:'#38bdf8',500:'#0ea5e9',600:'#0284c7',700:'#0369a1',800:'#075985',900:'#0c4a6e'},accent:{50:'#fef2f2',100:'#fee2e2',200:'#fecaca',300:'#fca5a5',400:'#f87171',500:'#ef4444',600:'#dc2626',700:'#b91c1c'},primary:{50:'#f5f3ff',100:'#ede9fe',200:'#ddd6fe',300:'#c4b5fd',400:'#a78bfa',500:'#8b5cf6',600:'#7c3aed',700:'#6d28d9'}}}}}
 </script>
 <style>
+:root {
+  /* Color Mode: Dark (default) */
+  --bg-primary: linear-gradient(135deg,#0a0e27 0%,#1a1f3a 50%,#0d1117 100%);
+  --bg-secondary: #0a0f1e;
+  --bg-card: rgba(15,23,42,.95);
+  --text-primary: #e2e8f0;
+  --text-secondary: #cbd5e1;
+  --border-color: rgba(255,255,255,.1);
+  
+  /* Default Purple Theme */
+  --color-primary-400: #c084fc;
+  --color-primary-500: #a78bfa;
+  --color-primary-600: #9333ea;
+  --color-primary-700: #7e22ce;
+  --color-secondary-400: #60a5fa;
+  --color-secondary-500: #3b82f6;
+  --color-secondary-600: #2563eb;
+  --color-glow-1: rgba(139,92,246,.08);
+  --color-glow-2: rgba(59,130,246,.06);
+  --color-border: rgba(139,92,246,.25);
+  --color-border-hover: rgba(139,92,246,.5);
+}
+
+/* Simplified Themes - 4 main options */
+
+/* Purple Theme (default) - already set above */
+
+:root[data-theme="blue"] {
+  --color-primary-400: #38bdf8;
+  --color-primary-500: #0ea5e9;
+  --color-primary-600: #0284c7;
+  --color-primary-700: #0369a1;
+  --color-secondary-400: #06b6d4;
+  --color-secondary-500: #0891b2;
+  --color-secondary-600: #0e7490;
+  --color-glow-1: rgba(59,130,246,.1);
+  --color-glow-2: rgba(34,197,94,.06);
+  --color-border: rgba(59,130,246,.25);
+  --color-border-hover: rgba(38,189,248,.5);
+}
+
+:root[data-theme="green"] {
+  --color-primary-400: #4ade80;
+  --color-primary-500: #22c55e;
+  --color-primary-600: #16a34a;
+  --color-primary-700: #15803d;
+  --color-secondary-400: #10b981;
+  --color-secondary-500: #059669;
+  --color-secondary-600: #047857;
+  --color-glow-1: rgba(34,197,94,.1);
+  --color-glow-2: rgba(16,185,129,.06);
+  --color-border: rgba(34,197,94,.25);
+  --color-border-hover: rgba(52,211,153,.5);
+}
+
+:root[data-theme="orange"] {
+  --color-primary-400: #fbbf24;
+  --color-primary-500: #f59e0b;
+  --color-primary-600: #d97706;
+  --color-primary-700: #b45309;
+  --color-secondary-400: #f97316;
+  --color-secondary-500: #ea580c;
+  --color-secondary-600: #c2410c;
+  --color-glow-1: rgba(245,158,11,.1);
+  --color-glow-2: rgba(249,115,22,.06);
+  --color-border: rgba(245,158,11,.25);
+  --color-border-hover: rgba(251,191,36,.5);
+}
+
+:root[data-theme="pink"] {
+  --color-primary-400: #f472b6;
+  --color-primary-500: #ec4899;
+  --color-primary-600: #db2777;
+  --color-primary-700: #be123c;
+  --color-secondary-400: #f43f5e;
+  --color-secondary-500: #e11d48;
+  --color-secondary-600: #be123c;
+  --color-glow-1: rgba(236,72,153,.1);
+  --color-glow-2: rgba(225,29,72,.06);
+  --color-border: rgba(236,72,153,.25);
+  --color-border-hover: rgba(244,63,94,.5);
+}
+
+:root[data-theme="cyan"] {
+  --color-primary-400: #22d3ee;
+  --color-primary-500: #06b6d4;
+  --color-primary-600: #0891b2;
+  --color-primary-700: #0e7490;
+  --color-secondary-400: #00d9ff;
+  --color-secondary-500: #00bcd4;
+  --color-secondary-600: #0097a7;
+  --color-glow-1: rgba(34,211,238,.1);
+  --color-glow-2: rgba(6,182,212,.06);
+  --color-border: rgba(34,211,238,.25);
+  --color-border-hover: rgba(34,211,238,.5);
+}
+
+:root[data-theme="indigo"] {
+  --color-primary-400: #818cf8;
+  --color-primary-500: #6366f1;
+  --color-primary-600: #4f46e5;
+  --color-primary-700: #4338ca;
+  --color-secondary-400: #60a5fa;
+  --color-secondary-500: #3b82f6;
+  --color-secondary-600: #2563eb;
+  --color-glow-1: rgba(99,102,241,.1);
+  --color-glow-2: rgba(79,70,229,.06);
+  --color-border: rgba(99,102,241,.25);
+  --color-border-hover: rgba(99,102,241,.5);
+}
+
 *{font-family:'Inter',sans-serif;}
-body{background:#0a0f1e;}
-/* Library bg */
-#lib-screen{background:linear-gradient(160deg,#0a0f1e 0%,#0d1b35 50%,#0a1628 100%);min-height:100vh;}
-/* Drop zone */
-.drop-zone{border:2px dashed rgba(56,189,248,.35);transition:all .3s;background:rgba(14,165,233,.07);}
-.drop-zone.drag-over{border-color:#38bdf8;background:rgba(14,165,233,.18);transform:scale(1.01);}
-/* Exam card */
-.exam-card{background:linear-gradient(135deg,rgba(255,255,255,.06) 0%,rgba(255,255,255,.03) 100%);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.1);transition:all .3s;cursor:pointer;}
-.exam-card:hover{border-color:rgba(56,189,248,.5);transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,.4);}
-/* Score ring */
+body{background:var(--bg-primary);color:var(--text-primary);transition:all .3s ease;}
+
+/* Library bg - Enhanced gradient */
+#lib-screen{background:linear-gradient(135deg,#0a0e27 0%,#1a1f3a 25%,#0f1629 50%,#1a1f3a 75%,#0a0e27 100%);min-height:100vh;position:relative;}
+#lib-screen::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 20% 50%,var(--color-glow-1) 0%,transparent 50%),radial-gradient(circle at 80% 80%,var(--color-glow-2) 0%,transparent 50%);pointer-events:none;}
+/* Drop zone - Enhanced */
+.drop-zone{border:2px dashed var(--color-border);transition:all .3s cubic-bezier(.34,.1,.68,.55);background:linear-gradient(135deg,var(--color-glow-1) 0%,var(--color-glow-2) 100%);position:relative;overflow:hidden;}
+.drop-zone::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 50% 50%,var(--color-glow-1) 0%,transparent 70%);opacity:0;transition:opacity .3s;}
+.drop-zone.drag-over{border-color:var(--color-primary-500);background:linear-gradient(135deg,rgba(var(--color-primary-500),.15) 0%,rgba(var(--color-secondary-500),.1) 100%);transform:scale(1.02);box-shadow:0 20px 60px var(--color-border);}
+.drop-zone.drag-over::before{opacity:1;}
+/* Exam card - Modern glass design */
+.exam-card{background:linear-gradient(135deg,var(--color-glow-1) 0%,var(--color-glow-2) 50%,rgba(var(--color-primary-500),.06) 100%);backdrop-filter:blur(20px);border:1.5px solid var(--color-border);transition:all .4s cubic-bezier(.34,.1,.68,.55);cursor:pointer;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.3);}
+.exam-card::before{content:'';position:absolute;top:-50%;right:-50%;width:100%;height:100%;background:radial-gradient(circle,var(--color-glow-1) 0%,transparent 70%);opacity:0;transition:opacity .4s;pointer-events:none;}
+.exam-card:hover{border-color:var(--color-border-hover);transform:translateY(-8px);box-shadow:0 24px 64px var(--color-border);background:linear-gradient(135deg,rgba(var(--color-primary-500),.18) 0%,rgba(var(--color-secondary-500),.12) 50%,rgba(var(--color-primary-500),.1) 100%);}
+.exam-card:hover::before{opacity:1;}
+/* Score ring enhancement */
 .ring-svg .track{stroke:rgba(255,255,255,.1);}
-.ring-svg .fill{transition:stroke-dasharray .8s ease;}
+.ring-svg .fill{transition:stroke-dasharray .8s cubic-bezier(.34,.1,.68,.55);filter:drop-shadow(0 0 8px rgba(0,0,0,.3));}
 /* Domain bar */
 .domain-bar{transition:width .7s ease;}
-/* Option button */
-.opt-btn{transition:all .2s;border:1.5px solid;}
-.opt-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.15);}
+/* Option button - Enhanced */
+.opt-btn{transition:all .2s cubic-bezier(.34,.1,.68,.55);border:1.5px solid;position:relative;overflow:hidden;}
+.opt-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);transition:left .5s;}
+.opt-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.25);}
+.opt-btn:hover:not(:disabled)::before{left:100%;}
 /* Animations */
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
 .fade-up{animation:fadeUp .5s ease forwards;}
 @keyframes slideDown{from{opacity:0;max-height:0;}to{opacity:1;max-height:600px;}}
 .slide-down{animation:slideDown .4s ease forwards;overflow:hidden;}
-@keyframes pulse-glow{0%,100%{box-shadow:0 0 0 0 rgba(14,165,233,.4);}50%{box-shadow:0 0 0 8px rgba(14,165,233,0);}}
+@keyframes pulse-glow{0%,100%{box-shadow:0 0 0 0 var(--color-primary-500);}50%{box-shadow:0 0 0 12px transparent;}}
 .pulse-glow{animation:pulse-glow 2s ease infinite;}
-/* Scrollbar */
-::-webkit-scrollbar{width:5px;}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.shimmer{animation:shimmer 2s infinite;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.1),rgba(255,255,255,0));background-size:200% 100%;}
+/* Scrollbar - Modern */
+::-webkit-scrollbar{width:8px;height:8px;}
 ::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:#334155;border-radius:99px;}
-/* Exam sidebar */
-#exam-sidebar{background:linear-gradient(180deg,#0f172a 0%,#0d1b35 100%);border-right:1px solid rgba(255,255,255,.08);}
-.dark #exam-sidebar{background:linear-gradient(180deg,#020817 0%,#0a0f1e 100%);}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--color-primary-400),var(--color-secondary-500));border-radius:99px;border:2px solid transparent;background-clip:padding-box;opacity:0.6;transition:opacity .2s;}
+::-webkit-scrollbar-thumb:hover{opacity:1;}
+/* Exam sidebar - Modern gradient */
+#exam-sidebar{background:linear-gradient(180deg,rgba(15,23,42,.95) 0%,rgba(13,27,53,.95) 100%);border-right:1px solid var(--color-border);backdrop-filter:blur(10px);}
+.dark #exam-sidebar{background:linear-gradient(180deg,rgba(2,8,23,.95) 0%,rgba(10,15,30,.95) 100%);border-right:1px solid var(--color-border);}
+/* Buttons - Enhanced */
+button{position:relative;overflow:hidden;}
+button::after{content:'';position:absolute;top:50%;left:50%;width:0;height:0;background:rgba(255,255,255,.1);border-radius:50%;transform:translate(-50%,-50%);transition:width .6s,height .6s;}
+button:active::after{width:300px;height:300px;}
+/* Theme dropdown animation */
+.group:hover > div { animation: slideDown .2s ease forwards; }
 </style>
 </head>
 <body class="text-white antialiased">
 
 <!-- ═══ SCREEN 1: LIBRARY ═══ -->
 <div id="lib-screen">
-  <!-- Top nav -->
-  <nav class="sticky top-0 z-30 border-b border-white/[.07] bg-[#0a0f1e]/80 backdrop-blur-xl px-6 py-4 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-xl bg-brand-500/20 border border-brand-500/30 flex items-center justify-center text-brand-400"><i class="fa-solid fa-graduation-cap text-sm"></i></div>
-      <span class="text-lg font-black tracking-tight text-white">Exam <span class="text-brand-400">Hub</span></span>
+  <!-- Top nav - Enhanced -->
+  <nav class="sticky top-0 z-30 border-b border-purple-500/20 bg-gradient-to-r from-slate-950/90 via-purple-950/50 to-slate-950/90 backdrop-blur-2xl px-6 py-5 flex items-center justify-between shadow-2xl">
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500/30 to-blue-500/20 border border-purple-500/40 flex items-center justify-center text-purple-300 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 transition-all"><i class="fa-solid fa-graduation-cap text-lg"></i></div>
+      <div>
+        <span class="text-2xl font-black tracking-tighter text-white">Exam <span class="bg-gradient-to-r from-purple-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">Hub</span></span>
+        <p class="text-xs text-slate-400 font-medium">Master your learning</p>
+      </div>
     </div>
-    <div class="flex items-center gap-3">
-      <span id="lib-count" class="text-xs text-slate-400 font-medium bg-white/5 px-3 py-1.5 rounded-full border border-white/10">0 exams loaded</span>
-      <label for="lib-file-input" class="cursor-pointer flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40">
+    <div class="flex items-center gap-4">
+      <span id="lib-count" class="text-xs text-slate-300 font-bold bg-gradient-to-r from-purple-500/20 to-blue-500/20 px-4 py-2 rounded-full border border-purple-500/30 backdrop-blur-sm">📊 0 exams loaded</span>
+      
+      <!-- Theme Switcher Dropdown -->
+      <div class="relative group">
+        <button class="flex items-center gap-2 bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 text-white text-sm font-bold px-4 py-2.5 rounded-xl transition-all shadow-lg shadow-slate-500/20 hover:shadow-xl hover:shadow-slate-500/30 transform hover:scale-105">
+          <i class="fa-solid fa-palette"></i> <span class="hidden sm:inline">Colors</span>
+        </button>
+        <!-- Dropdown Menu - Simplified to 4 themes -->
+        <div class="absolute right-0 mt-2 w-44 bg-gradient-to-b from-slate-800 to-slate-900 border border-slate-700/50 rounded-2xl shadow-xl shadow-black/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 backdrop-blur-xl">
+          <div class="p-3 space-y-2">
+            <button onclick="setTheme('purple')" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold text-slate-200 bg-purple-500/20 hover:bg-purple-500/40 border border-purple-500/30 transition flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-purple-500"></span> Purple</button>
+            <button onclick="setTheme('blue')" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold text-slate-200 bg-blue-500/20 hover:bg-blue-500/40 border border-blue-500/30 transition flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-blue-500"></span> Blue</button>
+            <button onclick="setTheme('green')" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold text-slate-200 bg-green-500/20 hover:bg-green-500/40 border border-green-500/30 transition flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-green-500"></span> Green</button>
+            <button onclick="setTheme('orange')" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold text-slate-200 bg-orange-500/20 hover:bg-orange-500/40 border border-orange-500/30 transition flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-orange-500"></span> Orange</button>
+          </div>
+        </div>
+      </div>
+
+      <button id="format-guide-btn" onclick="openFormatGuide()" class="flex items-center gap-2 bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 text-white text-sm font-bold px-4 py-2.5 rounded-xl transition-all shadow-lg shadow-slate-500/20 hover:shadow-xl hover:shadow-slate-500/30 transform hover:scale-105" title="View format guide for creating exams">
+        <i class="fa-solid fa-question-circle"></i> <span class="hidden sm:inline">Format</span>
+      </button>
+
+      <button id="add-exam-btn" class="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white text-sm font-bold px-6 py-2.5 rounded-xl transition-all shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/50 transform hover:scale-105">
         <i class="fa-solid fa-plus"></i> Add Exam
-      </label>
-      <input type="file" id="lib-file-input" accept=".md,.txt,.text" class="hidden" multiple>
+      </button>
+      <input type="file" id="lib-file-input" accept=".md,.txt,.text,text/plain,text/markdown" class="hidden" multiple>
     </div>
   </nav>
 
-  <!-- Hero / drop zone -->
-  <div id="lib-drop-zone" class="drop-zone mx-6 mt-6 rounded-2xl p-8 text-center" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleLibDrop(event)">
-    <i class="fa-solid fa-cloud-arrow-up text-3xl text-brand-400 mb-2 block"></i>
-    <p class="text-white font-semibold">Drag &amp; drop <code class="bg-white/10 px-1.5 py-0.5 rounded text-brand-300 text-sm">.md</code> or <code class="bg-white/10 px-1.5 py-0.5 rounded text-brand-300 text-sm">.txt</code> files here to add exams</p>
-    <p class="text-slate-400 text-sm mt-1">Multiple files supported — each becomes a separate exam card</p>
+  <!-- Hero / drop zone - Enhanced -->
+  <div id="lib-drop-zone" class="drop-zone mx-6 mt-8 rounded-3xl p-12 text-center relative group" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleLibDrop(event)">
+    <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-purple-600/0 via-transparent to-blue-600/0 group-hover:from-purple-600/5 group-hover:to-blue-600/5 transition-all duration-300 pointer-events-none"></div>
+    <i class="fa-solid fa-cloud-arrow-up text-5xl bg-gradient-to-b from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4 block drop-shadow-lg"></i>
+    <p class="text-white font-bold text-lg mb-2">Upload Your Exams</p>
+    <p class="text-slate-300 text-sm mb-4">Drag & drop <span class="bg-gradient-to-r from-purple-500/30 to-blue-500/30 px-2 py-1 rounded-lg border border-purple-500/50 inline-block font-mono font-bold">.md</span> or <span class="bg-gradient-to-r from-purple-500/30 to-blue-500/30 px-2 py-1 rounded-lg border border-purple-500/50 inline-block font-mono font-bold">.txt</span> files</p>
+    <p class="text-slate-500 text-xs mt-2">📦 Multiple files supported — organize your learning perfectly</p>
   </div>
 
-  <!-- Error bar -->
-  <div id="lib-error" class="hidden mx-6 mt-3 bg-red-500/15 border border-red-500/30 text-red-300 text-sm rounded-xl px-4 py-3 flex items-center gap-2">
-    <i class="fa-solid fa-triangle-exclamation"></i><span id="lib-error-text"></span>
+  <!-- Error bar - Enhanced -->
+  <div id="lib-error" class="hidden mx-6 mt-4 bg-gradient-to-r from-red-500/20 to-pink-500/20 border border-red-500/50 text-red-200 text-sm rounded-2xl px-5 py-3 flex items-center gap-3 shadow-lg shadow-red-500/10">
+    <i class="fa-solid fa-circle-exclamation text-lg"></i><span id="lib-error-text" class="font-medium"></span>
   </div>
 
   <!-- Exam grid -->
-  <div id="exam-grid" class="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
+  <div id="exam-grid" class="p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
 
-  <!-- Empty state -->
-  <div id="empty-state" class="hidden flex-col items-center justify-center py-24 text-center px-6">
-    <div class="w-20 h-20 rounded-2xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-brand-400 text-3xl mb-5 mx-auto">
+  <!-- Empty state - Enhanced -->
+  <div id="empty-state" class="hidden flex-col items-center justify-center py-32 text-center px-6">
+    <div class="w-24 h-24 rounded-3xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 border border-purple-500/30 flex items-center justify-center text-gradient bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent text-5xl mb-6 mx-auto shadow-lg shadow-purple-500/20">
       <i class="fa-solid fa-book-open"></i>
     </div>
-    <h2 class="text-xl font-bold text-white mb-2">No exams yet</h2>
-    <p class="text-slate-400 text-sm max-w-xs">Drop a <code class="text-brand-400">.md</code> or <code class="text-brand-400">.txt</code> file above, or click <strong class="text-white">Add Exam</strong> to get started.</p>
+    <h2 class="text-2xl font-black text-white mb-3">No exams yet</h2>
+    <p class="text-slate-400 text-sm max-w-sm mb-6">Drop a <span class="bg-gradient-to-r from-purple-500/30 to-blue-500/30 px-2 py-1 rounded font-mono font-bold">.md</span> or <span class="bg-gradient-to-r from-purple-500/30 to-blue-500/30 px-2 py-1 rounded font-mono font-bold">.txt</span> file above, or click the <strong class="text-white">Add Exam</strong> button to begin.</p>
   </div>
+
+  <!-- Footer - Enhanced -->
+  <footer class="border-t border-purple-500/20 px-6 py-4 flex items-center justify-center gap-3 bg-gradient-to-r from-slate-950/50 via-purple-950/30 to-slate-950/50">
+    <i class="fa-solid fa-shield-check text-sm bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent"></i>
+    <span class="text-xs text-slate-400 font-semibold">💾 Your progress is saved locally in this browser</span>
+  </footer>
 </div>
 
 
 <!-- ═══ SCREEN 2: EXAM ═══ -->
-<div id="exam-screen" class="hidden h-screen overflow-hidden flex bg-[#0a0f1e]">
+<div id="exam-screen" class="hidden h-screen overflow-hidden flex bg-gradient-to-br from-slate-950 via-purple-950/30 to-slate-950">
 
-  <!-- Sidebar -->
-  <aside id="exam-sidebar" class="w-72 shrink-0 flex flex-col overflow-hidden">
-    <!-- Sidebar header -->
-    <div class="px-5 py-4 border-b border-white/[.07] flex items-center gap-3">
-      <button id="back-btn" title="Back to Library" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-brand-500/20 hover:text-brand-400 text-slate-400 flex items-center justify-center transition-colors focus:outline-none">
-        <i class="fa-solid fa-chevron-left text-xs"></i>
+  <!-- Sidebar - Enhanced -->
+  <aside id="exam-sidebar" class="w-72 shrink-0 flex flex-col overflow-hidden shadow-2xl">
+    <!-- Sidebar header - Enhanced -->
+    <div class="px-5 py-5 border-b border-purple-500/20 flex items-center gap-3 bg-gradient-to-r from-slate-900/80 to-purple-900/30 backdrop-blur-sm">
+      <button id="back-btn" title="Back to Library" class="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 hover:from-purple-500/40 hover:to-blue-500/30 text-slate-300 hover:text-purple-300 flex items-center justify-center transition-all focus:outline-none transform hover:scale-110">
+        <i class="fa-solid fa-chevron-left text-sm"></i>
       </button>
       <div class="flex-1 min-w-0">
         <h1 id="sidebar-title" class="text-sm font-bold text-white truncate leading-tight">Practice Exam</h1>
-        <p class="text-[10px] text-slate-500 font-semibold uppercase tracking-widest mt-0.5">Practice Dashboard</p>
+        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5 bg-gradient-to-r from-purple-400/50 to-blue-400/50 bg-clip-text text-transparent">📊 Dashboard</p>
       </div>
-      <button id="theme-btn" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 flex items-center justify-center transition-colors focus:outline-none">
-        <i class="fa-solid fa-moon dark:hidden text-xs"></i><i class="fa-solid fa-sun hidden dark:block text-xs"></i>
+      <button id="theme-btn" class="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 hover:from-purple-500/40 hover:to-blue-500/30 text-slate-300 flex items-center justify-center transition-all focus:outline-none transform hover:scale-110">
+        <i class="fa-solid fa-moon dark:hidden text-sm"></i><i class="fa-solid fa-sun hidden dark:block text-sm"></i>
       </button>
     </div>
 
-    <div class="flex-1 overflow-y-auto px-5 py-4 space-y-6">
-      <!-- Score ring -->
+    <div class="flex-1 overflow-y-auto px-5 py-5 space-y-7">
+      <!-- Score ring - Enhanced -->
       <div class="flex flex-col items-center">
-        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 w-full">Progress</p>
-        <div class="relative w-32 h-32">
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 w-full">⚡ Progress</p>
+        <div class="relative w-32 h-32 drop-shadow-xl">
           <svg class="ring-svg w-full h-full -rotate-90" viewBox="0 0 100 100">
             <circle class="track" stroke-width="8" cx="50" cy="50" r="40" fill="transparent"/>
-            <circle id="gauge-fill" class="fill text-brand-400 stroke-current" stroke-width="8" stroke-linecap="round" cx="50" cy="50" r="40" fill="transparent" stroke-dasharray="0 251.2"/>
+            <circle id="gauge-fill" class="fill text-brand-400 stroke-current" stroke-width="8" stroke-linecap="round" cx="50" cy="50" r="40" fill="transparent" stroke-dasharray="0 251.2" filter="drop-shadow(0 0 12px rgba(139,92,246,.3))"/>
           </svg>
           <div class="absolute inset-0 flex flex-col items-center justify-center">
-            <span id="gauge-pct" class="text-2xl font-black text-white">0%</span>
-            <span id="gauge-frac" class="text-[10px] text-slate-500 font-semibold mt-0.5 bg-white/5 px-2 py-0.5 rounded-full">0/0</span>
+            <span id="gauge-pct" class="text-3xl font-black bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">0%</span>
+            <span id="gauge-frac" class="text-[10px] text-slate-400 font-bold mt-1 bg-gradient-to-r from-purple-500/20 to-blue-500/20 px-3 py-1 rounded-full border border-purple-500/30">0/0</span>
           </div>
         </div>
         <!-- Score stats -->
@@ -148,8 +308,30 @@ body{background:#0a0f1e;}
 
       <!-- Actions -->
       <div class="space-y-2 pb-4">
+        <!-- Timer toggle -->
+        <div class="flex items-center gap-2">
+          <button id="timer-toggle-btn" class="flex-1 py-2 px-3 text-xs font-semibold rounded-xl border border-orange-500/30 text-orange-400 bg-orange-500/10 hover:bg-orange-500/20 transition flex items-center justify-center gap-2 focus:outline-none">
+            <i class="fa-solid fa-clock"></i> <span id="timer-toggle-label">Start Timer</span>
+          </button>
+          <select id="timer-duration" class="bg-white/5 border border-white/10 text-xs text-slate-300 rounded-xl px-2 py-1 focus:outline-none">
+            <option value="30">30m</option>
+            <option value="45">45m</option>
+            <option value="60" selected>60m</option>
+            <option value="90">90m</option>
+            <option value="120">120m</option>
+          </select>
+        </div>
+        <!-- Shuffle toggle -->
+        <label class="flex items-center justify-between py-2 px-3 text-xs font-semibold rounded-xl border border-white/10 text-slate-400 bg-white/5 cursor-pointer hover:bg-white/10 transition">
+          <span class="flex items-center gap-2"><i class="fa-solid fa-shuffle"></i> Shuffle Questions</span>
+          <input type="checkbox" id="shuffle-toggle" class="hidden">
+          <span id="shuffle-indicator" class="w-8 h-4 rounded-full bg-white/20 flex items-center transition-colors"><span id="shuffle-knob" class="w-3 h-3 rounded-full bg-white/80 ml-0.5 transition-all"></span></span>
+        </label>
         <button id="practice-wrong-btn" class="hidden w-full py-2 px-3 text-xs font-semibold rounded-xl border border-red-500/30 text-red-400 bg-red-500/10 hover:bg-red-500/20 transition flex items-center justify-center gap-2 focus:outline-none">
           <i class="fa-solid fa-bullseye"></i> Practice Wrong Only
+        </button>
+        <button id="download-results-btn" class="hidden w-full py-2 px-3 text-xs font-semibold rounded-xl border border-brand-500/30 text-brand-300 bg-brand-500/10 hover:bg-brand-500/20 transition flex items-center justify-center gap-2 focus:outline-none">
+          <i class="fa-solid fa-download"></i> Download Results
         </button>
         <button id="reset-btn" class="w-full py-2 px-3 text-xs font-semibold rounded-xl border border-white/10 text-slate-400 bg-white/5 hover:bg-white/10 transition flex items-center justify-center gap-2 focus:outline-none">
           <i class="fa-solid fa-rotate-right"></i> Reset Exam
@@ -158,71 +340,361 @@ body{background:#0a0f1e;}
     </div>
   </aside>
 
-  <!-- Main panel -->
-  <main class="flex-1 flex flex-col bg-[#0d1427] overflow-hidden">
-    <!-- Top bar -->
-    <header class="shrink-0 h-14 bg-[#0a0f1e]/80 border-b border-white/[.07] px-6 flex items-center justify-between backdrop-blur-sm z-20">
-      <div class="flex items-center gap-3">
-        <span id="domain-badge" class="bg-brand-500/15 text-brand-300 border border-brand-500/25 text-[10px] font-bold px-3 py-1.5 rounded-full tracking-wide max-w-[200px] truncate">Domain</span>
-        <span class="text-slate-500 text-sm">Q <strong id="q-num" class="text-white">1</strong> / <span id="q-total" class="text-white">0</span></span>
+  <!-- Main panel - Enhanced -->
+  <main class="flex-1 flex flex-col bg-gradient-to-b from-slate-950/50 via-purple-950/20 to-slate-950 overflow-hidden">
+    <!-- Top bar - Enhanced -->
+    <header class="shrink-0 h-16 bg-gradient-to-r from-slate-900/80 via-purple-900/30 to-slate-900/80 border-b border-purple-500/20 px-8 flex items-center justify-between backdrop-blur-xl z-20 shadow-lg">
+      <div class="flex items-center gap-4">
+        <span id="domain-badge" class="bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-purple-300 border border-purple-500/40 text-[10px] font-bold px-4 py-2 rounded-xl tracking-wide max-w-[200px] truncate shadow-lg shadow-purple-500/10">Domain</span>
+        <span class="text-slate-400 text-sm font-semibold">📖 Question <strong id="q-num" class="text-purple-300 ml-1">1</strong> <span class="text-slate-500">of</span> <span id="q-total" class="text-purple-300 ml-1">0</span></span>
+        <!-- Timer -->
+        <span id="timer-display" class="hidden items-center gap-2 text-orange-300 text-sm font-mono font-bold bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/40 px-4 py-2 rounded-xl shadow-lg shadow-orange-500/10"><i class="fa-solid fa-hourglass-end text-base"></i> <span id="timer-text">60:00</span></span>
+        <!-- Shuffle badge -->
+        <span id="shuffle-badge" class="hidden bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-300 border border-purple-500/40 text-[10px] font-bold px-3 py-2 rounded-xl tracking-wide shadow-lg shadow-purple-500/10"><i class="fa-solid fa-shuffle mr-1.5"></i>Shuffled</span>
       </div>
-      <button id="flag-btn" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold border border-white/10 text-slate-400 hover:bg-white/5 transition focus:outline-none">
-        <i id="flag-icon" class="fa-regular fa-flag"></i><span class="hidden sm:inline">Flag</span>
-      </button>
+      <div class="flex items-center gap-3">
+        <button id="flag-btn" class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-slate-300 border border-purple-500/30 hover:border-purple-500/60 bg-gradient-to-r from-purple-500/10 to-transparent hover:from-purple-500/20 transition transform hover:scale-105 focus:outline-none">
+          <i id="flag-icon" class="fa-regular fa-flag"></i><span class="hidden sm:inline">Flag</span>
+        </button>
+        <button onclick="openAnalytics(curExam.id)" class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-cyan-300 border border-cyan-500/40 hover:border-cyan-500/70 bg-gradient-to-r from-cyan-500/10 to-transparent hover:from-cyan-500/20 transition transform hover:scale-105 focus:outline-none">
+          <i class="fa-solid fa-chart-line"></i><span class="hidden sm:inline">Analytics</span>
+        </button>
+      </div>
     </header>
 
-    <!-- Question -->
-    <div class="flex-1 overflow-y-auto p-6 lg:p-10 pb-28">
-      <div class="max-w-3xl mx-auto">
-        <div id="question-card" class="relative bg-[#111827]/80 border border-white/[.07] rounded-2xl p-8 shadow-2xl">
-          <div id="q-stamp" class="absolute -top-4 -left-4 w-10 h-10 bg-brand-500 text-white rounded-xl shadow-lg flex items-center justify-center font-black text-sm rotate-[-5deg]">Q1</div>
-          <h2 id="q-text" class="text-lg font-semibold text-white leading-relaxed mt-2 mb-8">Loading...</h2>
-          <div id="opts-container" class="space-y-3"></div>
-          <div id="exp-box" class="hidden mt-6 bg-brand-500/5 border border-brand-500/20 rounded-xl p-5 relative overflow-hidden">
-            <div class="absolute left-0 top-0 bottom-0 w-1 bg-brand-500 rounded-l-xl"></div>
+    <!-- Question - Enhanced -->
+    <div class="flex-1 overflow-y-auto px-8 py-8 pb-32">
+      <div class="max-w-4xl mx-auto">
+        <div id="question-card" class="relative bg-gradient-to-br from-slate-900/60 via-purple-900/20 to-slate-900/60 border border-purple-500/30 rounded-3xl p-10 shadow-2xl backdrop-blur-sm">
+          <div id="q-stamp" class="absolute -top-5 -left-5 w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-600 text-white rounded-2xl shadow-xl flex items-center justify-center font-black text-lg rotate-[-8deg] shadow-purple-500/50">Q1</div>
+          <h2 id="q-text" class="text-xl font-bold text-white leading-relaxed mt-4 mb-10 tracking-tight">Loading...</h2>
+          <div id="opts-container" class="space-y-4"></div>
+          <div id="exp-box" class="hidden mt-8 bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10 border border-purple-500/30 rounded-2xl p-6 relative overflow-hidden">
+            <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-purple-500 to-blue-500 rounded-l-2xl"></div>
             <div class="flex gap-4 items-start ml-2">
-              <div class="mt-0.5 bg-brand-500/20 text-brand-400 rounded-full w-8 h-8 flex items-center justify-center shrink-0"><i class="fa-solid fa-lightbulb text-sm"></i></div>
-              <div><h4 class="font-bold text-sm mb-1 text-white">Explanation</h4><p id="exp-text" class="text-sm leading-relaxed text-slate-300"></p></div>
+              <div class="mt-1 bg-gradient-to-br from-purple-500/30 to-blue-500/20 text-purple-300 rounded-xl w-10 h-10 flex items-center justify-center shrink-0 shadow-lg shadow-purple-500/20"><i class="fa-solid fa-lightbulb text-base"></i></div>
+              <div><h4 class="font-bold text-sm mb-2 text-purple-200">💡 Explanation</h4><p id="exp-text" class="text-sm leading-relaxed text-slate-300"></p></div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Nav footer -->
-    <footer class="shrink-0 bg-[#0a0f1e]/90 border-t border-white/[.07] px-6 py-4 flex items-center justify-between backdrop-blur-sm z-20">
-      <button id="prev-btn" class="px-4 py-2 rounded-xl font-semibold text-sm text-slate-400 border border-white/10 bg-white/5 hover:bg-white/10 transition flex items-center gap-2 focus:outline-none disabled:opacity-30 disabled:pointer-events-none">
-        <i class="fa-solid fa-arrow-left text-xs"></i> Prev
-      </button>
-      <div id="pag-dots" class="hidden md:flex flex-wrap max-w-xs justify-center gap-1.5"></div>
-      <button id="next-btn" class="px-5 py-2 rounded-xl font-semibold text-sm bg-brand-500 hover:bg-brand-600 text-white shadow-lg shadow-brand-500/30 transition flex items-center gap-2 focus:outline-none disabled:opacity-30 disabled:pointer-events-none">
-        Next <i class="fa-solid fa-arrow-right text-xs"></i>
-      </button>
+    <!-- Nav footer - Enhanced -->
+    <footer class="shrink-0 bg-gradient-to-r from-slate-900/80 via-purple-900/30 to-slate-900/80 border-t border-purple-500/20 px-8 py-4 flex items-center justify-between backdrop-blur-xl z-20 shadow-2xl">
+      <div class="flex items-center gap-3">
+        <button id="prev-btn" class="px-6 py-2.5 rounded-xl font-bold text-sm text-slate-300 border border-purple-500/30 bg-gradient-to-r from-purple-500/10 to-transparent hover:from-purple-500/20 hover:border-purple-500/60 transition transform hover:scale-105 focus:outline-none disabled:opacity-30 disabled:pointer-events-none flex items-center gap-2">
+          <i class="fa-solid fa-arrow-left text-xs"></i> Prev
+        </button>
+      </div>
+      <div id="pag-dots" class="flex items-center gap-2.5 select-none"></div>
+      <div class="flex items-center gap-3">
+        <button id="view-answer-btn" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-300 border border-amber-500/40 hover:from-amber-500/30 hover:to-orange-500/30 hover:border-amber-500/60 transition transform hover:scale-105 flex items-center gap-2 focus:outline-none shadow-lg shadow-amber-500/10">
+          <i class="fa-solid fa-lightbulb text-xs"></i> <span class="hidden sm:inline">View Answer</span>
+        </button>
+        <button id="next-btn" class="px-6 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/50 transition transform hover:scale-105 flex items-center gap-2 focus:outline-none disabled:opacity-40 disabled:pointer-events-none disabled:shadow-none">
+          Next <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+      </div>
     </footer>
   </main>
 </div>
 
 
 <!-- ═══ MODAL: EXAM COMPLETE ═══ -->
-<div id="complete-modal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-  <div class="bg-[#111827] border border-white/10 rounded-2xl shadow-2xl w-full max-w-md p-8 relative scale-95 transition-transform duration-300">
-    <button id="close-modal" class="absolute top-4 right-4 text-slate-500 hover:text-white transition"><i class="fa-solid fa-xmark text-lg"></i></button>
-    <div class="text-center mb-6">
-      <div class="w-16 h-16 rounded-2xl bg-brand-500/15 border border-brand-500/25 text-brand-400 text-3xl flex items-center justify-center mx-auto mb-4"><i class="fa-solid fa-trophy"></i></div>
-      <h2 class="text-2xl font-bold text-white">Exam Complete!</h2>
-      <p class="text-slate-400 text-sm mt-1">Here's how you did.</p>
+<div id="complete-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-lg flex items-center justify-center p-4">
+  <div class="bg-gradient-to-br from-slate-900 via-purple-900/30 to-slate-900 border border-purple-500/40 rounded-3xl shadow-2xl w-full max-w-md p-10 relative scale-95 transition-transform duration-300">
+    <button id="close-modal" class="absolute top-5 right-5 text-slate-400 hover:text-white transition transform hover:scale-110"><i class="fa-solid fa-xmark text-xl"></i></button>
+    <div class="text-center mb-8">
+      <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500/30 to-blue-500/20 border border-purple-500/40 text-purple-300 text-4xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-500/20"><i class="fa-solid fa-trophy"></i></div>
+      <h2 class="text-3xl font-black bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-2">Exam Complete!</h2>
+      <p class="text-slate-400 text-sm">Great job! Let's see your results.</p>
     </div>
-    <div class="bg-white/5 border border-white/10 rounded-xl p-6 text-center mb-5">
-      <div id="modal-score" class="text-4xl font-black text-white mb-1">0/1000</div>
-      <div id="modal-status" class="text-sm font-bold">Pending</div>
+    <div class="bg-gradient-to-br from-purple-500/15 via-transparent to-blue-500/15 border border-purple-500/30 rounded-2xl p-8 text-center mb-6 shadow-lg shadow-purple-500/10">
+      <div id="modal-score" class="text-5xl font-black bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-2">0/1000</div>
+      <div id="modal-status" class="text-sm font-bold text-slate-400">Pending Results</div>
+    </div>
+    <div class="grid grid-cols-2 gap-3 mb-4">
+      <button id="modal-wrong-btn" class="py-3 px-4 bg-gradient-to-r from-red-500/20 to-pink-500/20 text-red-300 border border-red-500/40 font-bold rounded-xl hover:from-red-500/30 hover:to-pink-500/30 hover:border-red-500/60 transition text-sm disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none transform hover:scale-105"><i class="fa-solid fa-dumbbell mr-2"></i>Practice Wrong</button>
+      <button id="modal-library-btn" class="py-3 px-4 bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-purple-300 border border-purple-500/40 font-bold rounded-xl hover:from-purple-500/30 hover:to-blue-500/30 hover:border-purple-500/60 transition text-sm focus:outline-none transform hover:scale-105"><i class="fa-solid fa-home mr-2"></i>My Library</button>
     </div>
     <div class="grid grid-cols-2 gap-3">
-      <button id="modal-wrong-btn" class="py-2.5 px-4 bg-red-500/10 text-red-400 border border-red-500/25 font-semibold rounded-xl hover:bg-red-500/20 transition text-sm disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none"><i class="fa-solid fa-bullseye mr-2"></i>Practice Wrong</button>
-      <button id="modal-library-btn" class="py-2.5 px-4 bg-brand-500/15 text-brand-300 border border-brand-500/25 font-semibold rounded-xl hover:bg-brand-500/25 transition text-sm focus:outline-none"><i class="fa-solid fa-list mr-2"></i>My Exams</button>
+      <button id="modal-download-btn" class="py-3 px-4 bg-gradient-to-r from-emerald-500/20 to-green-500/20 text-emerald-300 border border-emerald-500/40 font-bold rounded-xl hover:from-emerald-500/30 hover:to-green-500/30 hover:border-emerald-500/60 transition text-sm focus:outline-none transform hover:scale-105"><i class="fa-solid fa-download mr-2"></i>Export</button>
+      <button id="modal-print-btn" class="py-3 px-4 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-cyan-300 border border-cyan-500/40 font-bold rounded-xl hover:from-cyan-500/30 hover:to-blue-500/30 hover:border-cyan-500/60 transition text-sm focus:outline-none transform hover:scale-105"><i class="fa-solid fa-print mr-2"></i>Print</button>
     </div>
   </div>
 </div>
 
+<!-- ═══ SCREEN 3: ANALYTICS ═══ -->
+<div id="analytics-screen" class="hidden h-screen overflow-y-auto bg-gradient-to-br from-slate-950 via-purple-950/30 to-slate-950 text-white p-10">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-10">
+      <div>
+        <h1 id="analytics-title" class="text-4xl font-black bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-2">📊 Performance Analytics</h1>
+        <p class="text-slate-400 text-lg">Advanced insights into your learning journey</p>
+      </div>
+      <button onclick="closeAnalytics()" class="px-6 py-3 bg-gradient-to-r from-purple-500/20 to-blue-500/20 hover:from-purple-500/40 hover:to-blue-500/40 border border-purple-500/40 rounded-xl text-white font-bold transition transform hover:scale-105">
+        ← Back to Library
+      </button>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+      <div class="bg-gradient-to-br from-slate-900/60 via-purple-900/20 to-slate-900/60 border border-purple-500/30 rounded-2xl p-7 shadow-lg shadow-purple-500/10">
+        <div class="text-4xl font-black bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-2" id="stat-score">0%</div>
+        <div class="text-xs text-slate-400 uppercase tracking-wider">Overall Score</div>
+      </div>
+      <div class="bg-white/5 border border-white/10 rounded-xl p-6">
+        <div class="text-3xl font-black text-green-400 mb-2" id="stat-correct">0</div>
+        <div class="text-xs text-slate-400 uppercase tracking-wider">Correct Answers</div>
+      </div>
+      <div class="bg-white/5 border border-white/10 rounded-xl p-6">
+        <div class="text-3xl font-black text-yellow-400 mb-2" id="stat-attempted">0</div>
+        <div class="text-xs text-slate-400 uppercase tracking-wider">Questions Attempted</div>
+      </div>
+      <div class="bg-white/5 border border-white/10 rounded-xl p-6">
+        <div class="text-3xl font-black text-red-400 mb-2" id="stat-review">0</div>
+        <div class="text-xs text-slate-400 uppercase tracking-wider">Due for Review</div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <!-- Score Trend -->
+      <div class="bg-white/5 border border-white/10 rounded-xl p-6">
+        <h2 class="text-lg font-bold text-white mb-4">Score Trend</h2>
+        <div id="trend-chart" class="h-40 flex items-end gap-1">
+          <!-- Chart bars will be generated here -->
+        </div>
+        <p id="trend-text" class="text-xs text-slate-500 mt-3 text-center">Last 10 attempts</p>
+      </div>
+
+      <!-- Domain Breakdown -->
+      <div class="bg-white/5 border border-white/10 rounded-xl p-6">
+        <h2 class="text-lg font-bold text-white mb-4">Domain Performance</h2>
+        <div id="domain-chart" class="space-y-3">
+          <!-- Domain bars will be generated here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Difficulty Breakdown -->
+    <div class="bg-white/5 border border-white/10 rounded-xl p-6 mb-8">
+      <h2 class="text-lg font-bold text-white mb-4">Question Difficulty Distribution</h2>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="text-center">
+          <div class="text-2xl font-black text-green-400 mb-2" id="diff-easy">0</div>
+          <div class="text-xs text-slate-400">Easy</div>
+          <div class="text-xs text-slate-500 mt-1">≥66% accuracy</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-black text-yellow-400 mb-2" id="diff-medium">0</div>
+          <div class="text-xs text-slate-400">Medium</div>
+          <div class="text-xs text-slate-500 mt-1">33-66% accuracy</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-black text-red-400 mb-2" id="diff-hard">0</div>
+          <div class="text-xs text-slate-400">Hard</div>
+          <div class="text-xs text-slate-500 mt-1">&lt;33% accuracy</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Review Queue -->
+    <div class="bg-white/5 border border-white/10 rounded-xl p-6">
+      <h2 class="text-lg font-bold text-white mb-4">📚 Questions Due for Review</h2>
+      <div id="review-queue" class="space-y-2 max-h-64 overflow-y-auto">
+        <!-- Review queue items -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: FORMAT GUIDE ═══ -->
+<div id="format-guide-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-lg flex items-center justify-center p-4 overflow-y-auto">
+  <div class="bg-gradient-to-br from-slate-900 to-slate-950 border border-purple-500/20 rounded-2xl shadow-2xl w-full max-w-2xl my-8">
+    <!-- Header -->
+    <div class="sticky top-0 bg-gradient-to-r from-slate-900/95 to-slate-950/95 border-b border-purple-500/20 px-8 py-6 flex items-center justify-between backdrop-blur-xl">
+      <div>
+        <h2 class="text-2xl font-black text-white flex items-center gap-2">
+          <i class="fa-solid fa-file-lines bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent"></i>
+          Question Format Guide
+        </h2>
+        <p class="text-xs text-slate-400 font-semibold mt-2 flex items-center gap-2">
+          <i class="fa-solid fa-circle-info"></i> Create exam files with .md or .txt format
+        </p>
+      </div>
+      <button onclick="closeFormatGuide()" class="text-slate-400 hover:text-white transition transform hover:scale-110 w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center">
+        <i class="fa-solid fa-xmark text-xl"></i>
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div class="px-8 py-6 space-y-6 max-h-96 overflow-y-auto">
+      <!-- Quick Start -->
+      <div>
+        <h3 class="text-lg font-bold text-purple-300 mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-rocket"></i> Quick Start
+        </h3>
+        <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4 text-sm text-slate-300">
+          <p class="mb-2">Every exam file needs:</p>
+          <ul class="space-y-1 list-disc list-inside text-xs">
+            <li><strong class="text-purple-300"># Exam Title</strong> — file title (one # hash)</li>
+            <li><strong class="text-purple-300">## Module Name</strong> — domain/topic (two ## hashes)</li>
+            <li><strong class="text-purple-300">### Q1, Q2, Q3...</strong> — questions (three ### hashes)</li>
+            <li><strong class="text-purple-300">4 options (A, B, C, D)</strong> — exactly 4 choices</li>
+            <li><strong class="text-purple-300">Correct answer: B</strong> — which option is right</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Format Examples -->
+      <div>
+        <h3 class="text-lg font-bold text-blue-300 mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-code"></i> Markdown Example
+        </h3>
+        <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4 font-mono text-xs text-slate-300 overflow-x-auto">
+          <pre>
+# Azure Fundamentals Exam
+
+## Cloud Concepts
+
+### Q1
+What is cloud computing?
+
+- **A.** Using physical servers
+- **B.** Internet-based services
+- **C.** Local storage only
+- **D.** Install software locally
+
+**Correct answer:** B
+
+**Explanation:** Cloud computing delivers computing services over the internet.</pre>
+        </div>
+      </div>
+
+      <!-- Text Format -->
+      <div>
+        <h3 class="text-lg font-bold text-blue-300 mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-file-alt"></i> Text (.txt) Format
+        </h3>
+        <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4 font-mono text-xs text-slate-300 overflow-x-auto">
+          <pre>
+# Python Quiz
+
+## Data Types
+
+### Q1
+Which is immutable?
+
+- A. List
+- B. Dictionary
+- C. Tuple
+- D. Set
+
+**Answer:** C
+
+**Explanation:** Tuples cannot be modified after creation.</pre>
+        </div>
+      </div>
+
+      <!-- Format Variations -->
+      <div>
+        <h3 class="text-lg font-bold text-green-300 mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-check-double"></i> Accepted Formats
+        </h3>
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="bg-green-500/10 border border-green-500/30 rounded-lg p-2 text-slate-300">
+            <div class="font-bold text-green-300 mb-1">Options</div>
+            <ul class="space-y-0.5">
+              <li>- **A.** text</li>
+              <li>- A. text</li>
+              <li>A) text</li>
+            </ul>
+          </div>
+          <div class="bg-green-500/10 border border-green-500/30 rounded-lg p-2 text-slate-300">
+            <div class="font-bold text-green-300 mb-1">Answer</div>
+            <ul class="space-y-0.5">
+              <li>**Correct answer:** B</li>
+              <li>**Answer:** B</li>
+              <li>Answer: B</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Important Notes -->
+      <div>
+        <h3 class="text-lg font-bold text-orange-300 mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-lightbulb"></i> Important Rules
+        </h3>
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="bg-green-500/10 border border-green-500/30 rounded-lg p-2">
+            <div class="font-bold text-green-300 mb-1.5">✅ Do This</div>
+            <ul class="space-y-1 text-slate-300">
+              <li>✓ Use .md or .txt</li>
+              <li>✓ Exactly 4 options</li>
+              <li>✓ Plain text only</li>
+              <li>✓ Add explanations</li>
+            </ul>
+          </div>
+          <div class="bg-red-500/10 border border-red-500/30 rounded-lg p-2">
+            <div class="font-bold text-red-300 mb-1.5">❌ Avoid This</div>
+            <ul class="space-y-1 text-slate-300">
+              <li>✗ HTML tags</li>
+              <li>✗ Fewer than 4 options</li>
+              <li>✗ .docx or .pdf files</li>
+              <li>✗ Missing answers</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Example Files -->
+      <div>
+        <h3 class="text-lg font-bold text-indigo-300 mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-download"></i> Example Files
+        </h3>
+        <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4 text-sm">
+          <p class="text-slate-300 mb-3">Download these ready-to-use example files:</p>
+          <div class="flex gap-2 flex-wrap">
+            <a href="example-format-markdown.md" download class="inline-flex items-center gap-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/40 px-3 py-2 rounded-lg text-xs font-bold transition">
+              <i class="fa-solid fa-file-download"></i> Markdown Example
+            </a>
+            <a href="example-format-text.txt" download class="inline-flex items-center gap-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-500/40 px-3 py-2 rounded-lg text-xs font-bold transition">
+              <i class="fa-solid fa-file-download"></i> Text Example
+            </a>
+            <a href="FORMAT_GUIDE.md" download class="inline-flex items-center gap-2 bg-slate-700/50 hover:bg-slate-700/70 text-slate-300 border border-slate-600/50 px-3 py-2 rounded-lg text-xs font-bold transition">
+              <i class="fa-solid fa-book-open"></i> Full Guide
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="bg-gradient-to-r from-slate-950 to-slate-900 border-t border-purple-500/20 px-8 py-4 flex items-center justify-between">
+      <p class="text-xs text-slate-400">📚 Need detailed help? Check TUTORIAL.md in the repo</p>
+      <button onclick="closeFormatGuide()" class="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-bold rounded-lg transition transform hover:scale-105">
+        Got It!
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: BATCH UPLOAD ═══ -->
+<div id="batch-upload-modal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="bg-[#111827] border border-white/10 rounded-2xl shadow-2xl w-full max-w-md p-8">
+    <h2 class="text-xl font-bold text-white mb-4">Batch Upload Exams</h2>
+    <p class="text-sm text-slate-400 mb-4">Select multiple .md or .txt files to upload at once</p>
+    <input type="file" id="batch-file-input" accept=".md,.txt,.text,text/plain,text/markdown" multiple class="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-brand-500 file:text-white hover:file:bg-brand-600 cursor-pointer mb-4">
+    <div class="flex gap-2">
+      <button onclick="closeBatchUpload()" class="flex-1 py-2 px-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold rounded-xl transition">Cancel</button>
+      <button onclick="processBatchUpload()" class="flex-1 py-2 px-4 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl transition">Upload</button>
+    </div>
+  </div>
+</div>
 
 <!-- ═══ JAVASCRIPT ═══ -->
 <script>
@@ -230,9 +702,25 @@ body{background:#0a0f1e;}
 
 /* ─── STORAGE ─── */
 const STORE = 'examHub_v2';
+const THEME_STORE = 'examHub_theme';
 function loadStore() { try { return JSON.parse(localStorage.getItem(STORE)) || []; } catch { return []; } }
 function saveStore(data) { localStorage.setItem(STORE, JSON.stringify(data)); }
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+
+/* ─── THEME SWITCHING ─── */
+function setTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem(THEME_STORE, theme);
+}
+
+function loadTheme() {
+  const savedTheme = localStorage.getItem(THEME_STORE) || 'purple';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+}
+
+// Load theme on page load
+document.addEventListener('DOMContentLoaded', loadTheme);
+loadTheme();
 
 let library = loadStore(); // array of exam objects
 
@@ -318,9 +806,126 @@ function parseMarkdown(md) {
   return {examTitle,domainsMap,questions};
 }
 
+/* ─── XSS SANITIZATION ─── */
+function escHtml(str) {
+  if (!str) return '';
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
 /* ─── DOMAIN COLORS ─── */
 const DCOLS=['#0ea5e9','#8b5cf6','#f59e0b','#10b981','#ef4444','#ec4899','#06b6d4','#f97316'];
 function getDomainColor(idx){return DCOLS[idx%DCOLS.length];}
+
+/* ─── DIFFICULTY CALCULATION ─── */
+function calculateQuestionDifficulty(exam, questionId) {
+  if(!exam.question_difficulty) exam.question_difficulty={};
+  if(!questionId) return {level:'easy',color:'#334155',pct:0};
+  if(!exam.question_difficulty[questionId]) exam.question_difficulty[questionId]={attempts:0,correct:0};
+  const qd=exam.question_difficulty[questionId];
+  const pct=qd.attempts>0?(qd.correct/qd.attempts)*100:0;
+  // Easy: >66% correct, Medium: 33-66%, Hard: <33%
+  if(pct>=66) return {level:'easy',color:'#10b981',pct};
+  if(pct>=33) return {level:'medium',color:'#f59e0b',pct};
+  return {level:'hard',color:'#ef4444',pct};
+}
+
+/* ─── SPACED REPETITION ─── */
+function getQuestionKey(q) {
+  return q.id || (q.text ? q.text.substring(0, 100) : 'unknown');
+}
+
+function initSpacedRepetition(exam,qkey) {
+  if(!exam.spaced_rep) exam.spaced_rep={};
+  if(!exam.spaced_rep[qkey]) exam.spaced_rep[qkey]={last_review:null,interval:1,ef:2.5,repetitions:0,next_review:new Date().toISOString()};
+}
+
+function updateSpacedRepetition(exam,qkey,correct) {
+  initSpacedRepetition(exam,qkey);
+  const sr=exam.spaced_rep[qkey];
+  sr.last_review=new Date().toISOString();
+  sr.repetitions=(sr.repetitions||0)+1;
+  
+  // SM-2 algorithm
+  if(!correct) sr.ef=Math.max(1.3,sr.ef-0.2);
+  else sr.ef=sr.ef+(0.1-(5-5)*(0.08+(5-5)*0.02));
+  
+  if(sr.repetitions===1) sr.interval=1;
+  else if(sr.repetitions===2) sr.interval=3;
+  else sr.interval=Math.round(sr.interval*sr.ef);
+  
+  const nextDate=new Date();
+  nextDate.setDate(nextDate.getDate()+sr.interval);
+  sr.next_review=nextDate.toISOString();
+}
+
+function getDaysUntilReview(exam,qkey) {
+  initSpacedRepetition(exam,qkey);
+  const nextReview=new Date(exam.spaced_rep[qkey].next_review);
+  const today=new Date();
+  const days=Math.ceil((nextReview-today)/(1000*60*60*24));
+  return Math.max(0,days);
+}
+
+function getReviewQueue(exam) {
+  const queue=[];
+  if(!exam.questions) return queue;
+  exam.questions.forEach(q=>{
+    const qkey=getQuestionKey(q);
+    const days=getDaysUntilReview(exam,qkey);
+    if(days===0) queue.push({...q,qkey,days});
+  });
+  return queue.sort((a,b)=>a.days-b.days);
+}
+
+/* ─── PERFORMANCE ANALYTICS ─── */
+function calculateExamStats(exam) {
+  const ans=exam.answers||{};
+  const total=exam.questions?.length||0;
+  const attempted=Object.keys(ans).length;
+  const correct=Object.values(ans).filter(v=>v.isCorrect).length;
+  const score=attempted>0?Math.round((correct/attempted)*100):0;
+  
+  // Domain breakdown
+  const domainStats={};
+  if(exam.questions && exam.questions.length>0){
+    Object.entries(exam.domainsMap||{}).forEach(([k,label])=>{
+      const qInDom=exam.questions.filter(q=>q.domain===k).length;
+      const ansInDom=exam.questions.filter(q=>{
+        const qid=q.id||q.text;
+        return q.domain===k && ans[qid];
+      }).length;
+      const corrInDom=exam.questions.filter(q=>{
+        const qid=q.id||q.text;
+        return q.domain===k && ans[qid]?.isCorrect;
+      }).length;
+      domainStats[k]={label,total:qInDom,attempted:ansInDom,correct:corrInDom,accuracy:ansInDom>0?Math.round((corrInDom/ansInDom)*100):0};
+    });
+  }
+  
+  return {total,attempted,correct,score,domainStats,completionPct:total>0?Math.round((attempted/total)*100):0};
+}
+
+function addPerformanceHistory(exam) {
+  if(!exam.history) exam.history=[];
+  const stats=calculateExamStats(exam);
+  exam.history.push({timestamp:new Date().toISOString(),score:stats.score,attempted:stats.attempted,correct:stats.correct});
+}
+
+function getPerformanceTrend(exam) {
+  return (exam.history||[]).slice(-10).map(h=>({date:new Date(h.timestamp).toLocaleDateString(),score:h.score}));
+}
+
+/* ─── BATCH UPLOAD & CATEGORIES ─── */
+function initExamCategories() {
+  if(!localStorage.examCategories) localStorage.examCategories=JSON.stringify({});
+  return JSON.parse(localStorage.examCategories);
+}
+
+function saveCategories(cats) {
+  localStorage.examCategories=JSON.stringify(cats);
+}
 
 /* ─── LIBRARY UI ─── */
 function renderLibrary() {
@@ -345,11 +950,39 @@ function buildCard(exam,i) {
   const domains=Object.values(exam.domainsMap);
   const status=attempted===0?'Not started':attempted===total?'Completed':'In progress';
   const statusCol=attempted===0?'text-slate-500':attempted===total?'text-green-400':'text-brand-400';
-  return `<div class="exam-card rounded-2xl p-5 fade-up" style="animation-delay:${i*0.06}s" onclick="openExam('${exam.id}')">
+  
+  // Calculate average difficulty
+  let hardCount=0, mediumCount=0, easyCount=0;
+  if(exam.questions && exam.questions.length>0){
+    exam.questions.forEach(q=>{
+      const qid=q.id||q.text;
+      const diff=calculateQuestionDifficulty(exam,qid);
+      if(diff.level==='hard') hardCount++;
+      else if(diff.level==='medium') mediumCount++;
+      else easyCount++;
+    });
+  }
+  const avgDiff=hardCount>mediumCount?'hard':mediumCount>easyCount?'medium':'easy';
+  const diffColor=avgDiff==='hard'?'#ef4444':avgDiff==='medium'?'#f59e0b':'#10b981';
+  
+  // Check review queue (safely)
+  let reviewCount=0;
+  try {
+    const reviewQueue=getReviewQueue(exam);
+    reviewCount=reviewQueue.length;
+  } catch(e) {
+    console.log('Review queue error:', e);
+  }
+  
+  return `<div class="exam-card rounded-2xl p-5 fade-up" style="animation-delay:${i*0.06}s">
     <div class="flex items-start justify-between mb-4">
       <div class="flex-1 min-w-0 pr-3">
         <h3 class="font-bold text-white text-sm leading-tight mb-1 truncate" title="${exam.title}">${exam.title}</h3>
-        <span class="text-xs font-semibold ${statusCol}">${status}</span>
+        <div class="flex gap-2 items-center flex-wrap">
+          <span class="text-xs font-semibold ${statusCol}">${status}</span>
+          <span class="text-[9px] font-bold px-2 py-0.5 rounded-full" style="background:${diffColor}33;color:${diffColor};border:1px solid ${diffColor}80">${avgDiff.toUpperCase()}</span>
+          ${reviewCount>0?`<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-amber-500/30 text-amber-400 border border-amber-500/50">📚 ${reviewCount}</span>`:''}
+        </div>
       </div>
       <div class="relative w-14 h-14 shrink-0">
         <svg class="-rotate-90 w-full h-full" viewBox="0 0 80 80">
@@ -367,9 +1000,15 @@ function buildCard(exam,i) {
     <div class="w-full bg-white/5 rounded-full h-1.5 mb-4 overflow-hidden">
       <div class="h-1.5 rounded-full bg-brand-500 transition-all duration-700" style="width:${pct}%"></div>
     </div>
-    <div class="flex items-center justify-between">
-      <button onclick="event.stopPropagation();openExam('${exam.id}')" class="text-xs font-bold bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-lg transition shadow shadow-brand-500/30 focus:outline-none">
-        ${attempted===0?'Start Exam':attempted===total?'Review':'Continue'} <i class="fa-solid fa-arrow-right ml-1"></i>
+    <div class="flex items-center justify-between gap-2">
+      <button onclick="event.stopPropagation();openExam('${exam.id}')" class="text-xs font-bold bg-brand-500 hover:bg-brand-600 text-white px-3 py-2 rounded-lg transition shadow shadow-brand-500/30 focus:outline-none flex-1">
+        ${attempted===0?'Start':attempted===total?'Review':'Continue'} <i class="fa-solid fa-arrow-right ml-1"></i>
+      </button>
+      <button onclick="event.stopPropagation();openAnalytics('${exam.id}')" class="w-8 h-8 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/25 text-cyan-400 flex items-center justify-center transition focus:outline-none" title="Analytics">
+        <i class="fa-solid fa-chart-line text-xs"></i>
+      </button>
+      <button onclick="event.stopPropagation();renameExam('${exam.id}')" class="w-8 h-8 rounded-lg bg-yellow-500/10 hover:bg-yellow-500/25 text-yellow-400 flex items-center justify-center transition focus:outline-none" title="Rename">
+        <i class="fa-solid fa-pen text-xs"></i>
       </button>
       <button onclick="event.stopPropagation();deleteExam('${exam.id}')" class="w-8 h-8 rounded-lg bg-red-500/10 hover:bg-red-500/25 text-red-400 flex items-center justify-center transition focus:outline-none" title="Remove">
         <i class="fa-solid fa-trash text-xs"></i>
@@ -383,6 +1022,106 @@ function deleteExam(id) {
   library=library.filter(e=>e.id!==id); saveStore(library); renderLibrary();
 }
 
+function renameExam(id) {
+  const exam=library.find(e=>e.id===id);
+  if(!exam) return;
+  const newName=prompt('Rename exam:',exam.title);
+  if(newName && newName.trim()){
+    exam.title=newName.trim();
+    saveStore(library);
+    renderLibrary();
+  }
+}
+
+function openAnalytics(id) {
+  curExamIdx=library.findIndex(e=>e.id===id);
+  if(curExamIdx<0) return;
+  curExam=library[curExamIdx];
+  addPerformanceHistory(curExam);
+  saveStore(library);
+  document.getElementById('lib-screen').classList.add('hidden');
+  document.getElementById('analytics-screen').classList.remove('hidden');
+  renderAnalytics();
+}
+
+function closeAnalytics() {
+  document.getElementById('analytics-screen').classList.add('hidden');
+  document.getElementById('lib-screen').classList.remove('hidden');
+  renderLibrary();
+}
+
+function renderAnalytics() {
+  if(!curExam) return;
+  const stats=calculateExamStats(curExam);
+  const trend=getPerformanceTrend(curExam);
+  const reviewQueue=getReviewQueue(curExam);
+  
+  document.getElementById('analytics-title').textContent=escHtml(curExam.title)+' - Performance Analytics';
+  document.getElementById('stat-score').textContent=stats.score+'%';
+  document.getElementById('stat-correct').textContent=stats.correct;
+  document.getElementById('stat-attempted').textContent=stats.attempted;
+  document.getElementById('stat-review').textContent=reviewQueue.length;
+  
+  // Trend chart
+  const maxScore=Math.max(...trend.map(t=>t.score),100);
+  const tc=document.getElementById('trend-chart');
+  tc.innerHTML=trend.length===0?'<p class="text-xs text-slate-500 w-full text-center">No attempt history yet</p>':
+    trend.map(t=>`<div class="flex-1 bg-brand-500/30 rounded-t-lg relative group" style="height:${(t.score/maxScore)*100}%"><div class="absolute -top-6 left-0 right-0 text-center"><span class="text-[10px] font-bold text-white opacity-0 group-hover:opacity-100 transition">${t.score}%</span></div></div>`).join('');
+  
+  // Domain breakdown
+  const dc=document.getElementById('domain-chart');
+  dc.innerHTML=Object.entries(stats.domainStats).map(([k,d])=>{
+    const col=getDomainColor(parseInt(k.substring(1))-1);
+    return `<div><div class="flex justify-between items-center mb-1"><span class="text-xs font-semibold">${d.label}</span><span class="text-[10px] text-slate-400">${d.correct}/${d.attempted}</span></div><div class="w-full bg-white/5 rounded-full h-2 overflow-hidden"><div class="h-2 rounded-full" style="width:${d.accuracy}%;background:${col}"></div></div></div>`;
+  }).join('');
+  
+  // Difficulty breakdown
+  let easyCount=0,mediumCount=0,hardCount=0;
+  curExam.questions.forEach(q=>{
+    const diff=calculateQuestionDifficulty(curExam,q.id||q.text);
+    if(diff.level==='easy') easyCount++;
+    else if(diff.level==='medium') mediumCount++;
+    else hardCount++;
+  });
+  document.getElementById('diff-easy').textContent=easyCount;
+  document.getElementById('diff-medium').textContent=mediumCount;
+  document.getElementById('diff-hard').textContent=hardCount;
+  
+  // Review queue
+  const rq=document.getElementById('review-queue');
+  rq.innerHTML=reviewQueue.length===0?'<p class="text-sm text-slate-400">No questions due for review! 🎉</p>':
+    reviewQueue.map(q=>`<div class="bg-white/5 border border-amber-500/30 rounded-lg p-3"><p class="text-sm text-white mb-1 line-clamp-2">${escHtml(q.text)}</p><span class="text-xs text-amber-400">📌 Review today</span></div>`).join('');
+}
+
+function openBatchUpload() {
+  document.getElementById('batch-upload-modal').classList.remove('hidden');
+}
+
+function closeBatchUpload() {
+  document.getElementById('batch-upload-modal').classList.add('hidden');
+  document.getElementById('batch-file-input').value='';
+}
+
+function processBatchUpload() {
+  const files=document.getElementById('batch-file-input').files;
+  if(files.length===0) return;
+  let uploaded=0;
+  [...files].forEach(f=>{
+    loadExamFile(f);
+    uploaded++;
+  });
+  showLibSuccess(`✅ Batch uploaded: ${uploaded} file(s)`);
+  closeBatchUpload();
+}
+
+function openFormatGuide() {
+  document.getElementById('format-guide-modal').classList.remove('hidden');
+}
+
+function closeFormatGuide() {
+  document.getElementById('format-guide-modal').classList.add('hidden');
+}
+
 function showLibError(msg){
   const b=document.getElementById('lib-error');
   document.getElementById('lib-error-text').textContent=msg;
@@ -394,54 +1133,263 @@ function handleLibDrop(e){
   e.preventDefault(); document.getElementById('lib-drop-zone').classList.remove('drag-over');
   [...e.dataTransfer.files].forEach(loadExamFile);
 }
-document.getElementById('lib-file-input').addEventListener('change',function(){
-  [...this.files].forEach(loadExamFile); this.value='';
+document.getElementById('add-exam-btn').addEventListener('click',function() {
+  var input = document.getElementById('lib-file-input');
+  input.value = '';
+  input.click();
 });
 
+// Handle both change and input events for better compatibility
+function handleFileInputChange() {
+  console.log('File input change triggered. Files:', this.files ? this.files.length : 'none');
+  if(!this.files || this.files.length === 0) { showLibError('No file selected'); return; }
+  [...this.files].forEach(function(f) { console.log('Processing file:', f.name, f.type, f.size); loadExamFile(f); });
+  this.value='';
+}
+
+document.getElementById('lib-file-input').addEventListener('change', handleFileInputChange);
+document.getElementById('lib-file-input').addEventListener('input', handleFileInputChange);
+
 function loadExamFile(file) {
-  if(!file.name.match(/\.(md|txt|text)$/i)){showLibError('Only .md, .txt, .text files supported: '+file.name);return;}
-  const reader=new FileReader();
-  reader.onload=e=>{
+  var input = document.getElementById('lib-file-input');
+  if(!file) { console.log('No file provided'); return; }
+  if(!file.name.match(/\.(md|txt|text)$/i)){
+    var err2 = 'Only .md, .txt, .text files supported. Got: '+file.name + '\nFile type: '+file.type;
+    showLibError(err2);
+    console.error('File rejected:', file.name, file.type);
+    return;
+  }
+  console.log('Loading exam file:', file.name, 'size:', file.size, 'type:', file.type);
+  showLibSuccess('Reading '+file.name+' ('+file.size+' bytes)...');
+  var reader=new FileReader();
+  reader.onload=function(e) {
+    console.log('File loaded, content length:', e.target.result.length,
+      '\nFirst 200 chars:', e.target.result.substring(0,200));
     try {
-      const parsed=parseMarkdown(e.target.result);
+      var parsed=parseMarkdown(e.target.result);
+      console.log('Parsed:', parsed.questions.length, 'questions, title:', parsed.examTitle);
       if(parsed.questions.length===0){showLibError('No questions found in: '+file.name);return;}
-      const exam={id:uid(),title:parsed.examTitle,domainsMap:parsed.domainsMap,
+      var exam={id:uid(),title:parsed.examTitle,domainsMap:parsed.domainsMap,
         questions:parsed.questions,addedAt:new Date().toISOString(),answers:{},flagged:[]};
       library.push(exam); saveStore(library); renderLibrary();
-    } catch(err){showLibError('Parse error in '+file.name+': '+err.message);}
+      showLibSuccess('✅ Added '+parsed.questions.length+' questions from '+file.name);
+    } catch(err){
+      var emsg='Parse error: '+err.message+' at line: '+(err.lineNumber||'?');
+      showLibError(emsg);
+      console.error('Parse error:', err);
+    }
   };
+  reader.onerror=function() { showLibError('Failed to read: '+file.name); console.error('FileReader error'); };
   reader.readAsText(file);
 }
 
+function showLibSuccess(msg){
+  const zone=document.getElementById('lib-drop-zone');
+  let fb=document.getElementById('lib-feedback');
+  if(!fb){fb=document.createElement('div');fb.id='lib-feedback';fb.className='mt-3 text-sm text-center';zone.appendChild(fb);}
+  fb.innerHTML=`<span class="text-green-400">${escHtml(msg)}</span>`;
+  setTimeout(()=>fb.textContent='',4000);
+}
+
 /* ─── EXAM STATE ─── */
-let curExam=null, curExamIdx=-1, questions=[], curIdx=0, examDone=false;
+let curExam=null, curExamIdx=-1, questions=[], curIdx=0, examDone=false; // keyboard shortcuts
 
-function openExam(id) {
-  curExamIdx=library.findIndex(e=>e.id===id);
-  if(curExamIdx<0) return;
-  curExam=library[curExamIdx];
-  // Build shuffled questions preserving answer state
-  let processed=curExam.questions.map((q,i)=>{
-    let opts=q.options.map((text,oi)=>({text,isCorrect:oi===q.answer}));
-    // shuffle options deterministically based on question id so reshuffling is stable on reopen
-    const seed=q.text.length; let arr=[...opts];
-    for(let i=arr.length-1;i>0;i--){const j=(seed*(i+1))%arr.length;[arr[i],arr[j]]=[arr[j],arr[i]];}
-    return {id:q.text.slice(0,40),domain:q.domain,text:q.text,options:arr,explanation:q.explanation};
+/* ─── TIMER ─── */
+let timerInterval=null, timerSeconds=0;
+
+/* ─── KEYBOARD SHORTCUTS ─── */
+document.addEventListener('keydown', (e) => {
+  if (document.getElementById('exam-screen').classList.contains('hidden')) return;
+  const m = document.getElementById('complete-modal');
+  if (m && !m.classList.contains('hidden')) return;
+  const tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+  
+  const key = e.key.toLowerCase();
+  // A/B/C/D to answer
+  if (['a','b','c','d','e'].includes(key) && !e.repeat) {
+    const idx = key.charCodeAt(0) - 97;
+    const opts = document.querySelectorAll('#opts-container .opt-btn');
+    if (idx < opts.length && !opts[idx].disabled) opts[idx].click();
+  }
+  // Space to flag
+  if (e.code === 'Space' && !e.repeat) { e.preventDefault(); document.getElementById('flag-btn').click(); }
+  // Arrow keys to navigate
+  if (e.key === 'ArrowLeft' && curIdx > 0) { curIdx--; renderQuestion(); }
+  if (e.key === 'ArrowRight' && curIdx < questions.length - 1) { curIdx++; renderQuestion(); }
+  // Escape to go back
+  if (e.key === 'Escape') { document.getElementById('back-btn').click(); }
+});
+
+/* ─── TIMER FUNCTIONS ─── */
+function startTimer() {
+  const sel = document.getElementById('timer-duration');
+  const mins = parseInt(sel.value, 10);
+  if (isNaN(mins) || mins <= 0) return;
+  stopTimer();
+  timerSeconds = mins * 60;
+  const td = document.getElementById('timer-display');
+  td.classList.remove('hidden'); td.classList.add('flex');
+  document.getElementById('timer-toggle-label').textContent = 'Stop Timer';
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+    if (timerSeconds <= 0) {
+      stopTimer();
+      if (confirm('⏰ Time is up! Finish exam?')) finishExam();
+      return;
+    }
+    updateTimerDisplay();
+    if (timerSeconds <= 60) td.querySelector('i').classList.add('animate-pulse');
+  }, 1000);
+}
+
+function stopTimer() {
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  const td = document.getElementById('timer-display');
+  td.classList.add('hidden'); td.classList.remove('flex');
+  document.getElementById('timer-toggle-label').textContent = 'Start Timer';
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(Math.abs(timerSeconds) / 60);
+  const s = Math.abs(timerSeconds) % 60;
+  document.getElementById('timer-text').textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+}
+
+/* ─── SHUFFLE FUNCTION ─── */
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ─── DOWNLOAD RESULTS ─── */
+function downloadResults() {
+  if (!curExam) return;
+  const ans = curExam.answers || {};
+  const total = questions.length;
+  const attempted = Object.keys(ans).length;
+  const correct = Object.values(ans).filter(v => v.isCorrect).length;
+  const score = attempted > 0 ? Math.round((correct / attempted) * 100) : 0;
+  let text = '═══════════════════════════════════════════\n';
+  text += '  Exam Results: ' + curExam.title + '\n';
+  text += '  Date: ' + new Date().toLocaleString() + '\n';
+  text += '═══════════════════════════════════════════\n\n';
+  text += '  Score: ' + score + '% (' + correct + '/' + attempted + ' attempted / ' + total + ' total)\n\n';
+  const wrong = questions.filter(q => ans[q.id] && !ans[q.id].isCorrect);
+  if (wrong.length > 0) {
+    text += '─── WRONG ANSWERS (Review These) ───\n\n';
+    wrong.forEach((q, i) => {
+      const sel = ans[q.id]?.selectedOptionIndex;
+      text += 'Q' + (i+1) + '. ' + q.text + '\n';
+      text += '  Your answer: ' + (q.options[sel]?.text || 'N/A') + '\n';
+      const cOpt = q.options.find(o => o.isCorrect);
+      text += '  Correct answer: ' + (cOpt?.text || 'N/A') + '\n';
+      if (q.explanation) text += '  Explanation: ' + q.explanation + '\n';
+      text += '\n';
+    });
+  }
+  text += '═══════════════════════════════════════════\n';
+  const blob = new Blob([text], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = curExam.title.replace(/[^a-zA-Z0-9]/g, '_') + '_Results.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ─── PRINT RESULTS ─── */
+function printResults() {
+  if (!curExam) return;
+  const ans = curExam.answers || {};
+  const total = questions.length;
+  const attempted = Object.keys(ans).length;
+  const correct = Object.values(ans).filter(v => v.isCorrect).length;
+  const score = attempted > 0 ? Math.round((correct / attempted) * 100) : 0;
+  let rows = '';
+  questions.forEach((q, i) => {
+    const a = ans[q.id];
+    if (!a) return;
+    const yourAnswer = (q.options[a.selectedOptionIndex]?.text || 'N/A').substring(0, 60);
+    const correctOpt = (q.options.find(o => o.isCorrect)?.text || 'N/A').substring(0, 60);
+    const cls = a.isCorrect ? 'correct' : 'incorrect';
+    rows += '<tr><td>' + (i+1) + '</td><td>' + escHtml(q.text.substring(0, 100)) + '</td><td class="' + cls + '">' + escHtml(yourAnswer) + '</td><td>' + escHtml(correctOpt) + '</td><td class="' + cls + '">' + (a.isCorrect ? '✓' : '✗') + '</td></tr>';
   });
-  questions=processed;
-  curIdx=0; examDone=false;
+  const html = '<!DOCTYPE html><html><head><title>Results: ' + escHtml(curExam.title) + '</title>' +
+    '<style>body{font-family:system-ui,sans-serif;padding:40px;color:#1a1a1a;}' +
+    '.score{font-size:36px;font-weight:900;text-align:center;margin:20px 0;}' +
+    '.pass{color:#10b981;}.fail{color:#ef4444;}' +
+    'table{width:100%;border-collapse:collapse;margin:20px 0;}' +
+    'th,td{padding:8px 12px;border:1px solid #e5e5e5;text-align:left;font-size:12px;}' +
+    'th{background:#f3f4f6;font-weight:600;}' +
+    '.correct{color:#10b981;font-weight:600;}.incorrect{color:#ef4444;font-weight:600;}' +
+    '@media print{body{padding:15px;}}</style></head><body>' +
+    '<h1>' + escHtml(curExam.title) + '</h1>' +
+    '<p class="score ' + (score >= 70 ? 'pass' : 'fail') + '">' + (score >= 70 ? '✓ PASS' : '✗ FAIL') + ' — ' + score + '% (' + correct + '/' + attempted + ')</p>' +
+    '<table><tr><th>#</th><th>Question</th><th>Your Answer</th><th>Correct Answer</th><th></th></tr>' +
+    rows + '</table></body></html>';
+  const w = window.open('', '_blank');
+  w.document.write(html);
+  w.document.close();
+  w.print();
+}
 
-  // Re-sync correct/wrong counts from saved answers
+/* ─── FIX: Open Exam with Shuffle Support ─── */
+function openExam(id) {
+  curExamIdx = library.findIndex(e => e.id === id);
+  if (curExamIdx < 0) return;
+  curExam = library[curExamIdx];
+  stopTimer();
+  
+  // Build questions with shuffled options (deterministic per question)
+  let baseQuestions = curExam.questions.map((q, i) => {
+    let opts = q.options.map((text, oi) => ({ text, isCorrect: oi === q.answer }));
+    const seed = (q.text.length * 31) + (i + 1);
+    for (let j = opts.length - 1; j > 0; j--) {
+      const k = (seed * (j + 1) * 7) % opts.length;
+      [opts[j], opts[k]] = [opts[k], opts[j]];
+    }
+    return { id: q.text.slice(0, 40) + '_' + i, domain: q.domain, text: q.text, options: opts, explanation: q.explanation };
+  });
+  
+  // Shuffle question order if toggle is on
+  const shuffleOn = document.getElementById('shuffle-toggle')?.checked;
+  questions = shuffleOn ? shuffleArray(baseQuestions) : baseQuestions;
+  
+  document.getElementById('shuffle-badge').classList.toggle('hidden', !shuffleOn);
+  
+  // Re-derive answer map for shuffled questions
+  const remap = {};
+  questions.forEach(q => {
+    for (const [oldId, val] of Object.entries(curExam.answers || {})) {
+      if (q.text === oldId || q.id.startsWith(oldId)) {
+        remap[q.id] = val;
+      }
+    }
+  });
+  // Revert the mapped answers
+  questions.forEach(q => {
+    if (remap[q.id]) {
+      if (!curExam.answers) curExam.answers = {};
+      curExam.answers[q.id] = remap[q.id];
+    }
+  });
+  
+  curIdx = 0; examDone = false; answerRevealed = {};
   updateScoreCounts();
-
-  document.getElementById('sidebar-title').textContent=curExam.title;
-  document.title=curExam.title+' — Exam Hub';
+  document.getElementById('sidebar-title').textContent = curExam.title;
+  document.title = curExam.title + ' — Exam Hub';
   document.getElementById('lib-screen').classList.add('hidden');
   document.getElementById('exam-screen').classList.remove('hidden');
   renderSidebar(); renderDots(); renderQuestion();
 }
 
-let correctCount=0,wrongCount=0;
+let correctCount=0,wrongCount=0,answerRevealed={};
 function updateScoreCounts(){
   const vals=Object.values(curExam.answers||{});
   correctCount=vals.filter(v=>v.isCorrect).length;
@@ -459,6 +1407,7 @@ function renderQuestion(){
   document.getElementById('exp-box').classList.add('hidden');
   const oc=document.getElementById('opts-container'); oc.innerHTML='';
   const ans=curExam.answers[q.id];
+  const revealed=answerRevealed[q.id]||false;
   const flagged=(curExam.flagged||[]).includes(q.id);
   const fi=document.getElementById('flag-icon');
   const fb=document.getElementById('flag-btn');
@@ -470,24 +1419,43 @@ function renderQuestion(){
     const letter=String.fromCharCode(65+idx);
     btn.className='opt-btn w-full text-left p-4 rounded-xl flex justify-between items-center text-sm font-medium focus:outline-none';
     let icon=`<div class="w-6 h-6 rounded-full border-2 border-white/20 flex items-center justify-center text-xs font-bold text-slate-400 shrink-0">${letter}</div>`;
+    
     if(ans){
+      // User has answered - disable and show results
       btn.disabled=true;
       if(ans.selectedOptionIndex===idx){
         if(ans.isCorrect){btn.classList.add('bg-green-500/10','border-green-500/50','text-green-300');icon=`<i class="fa-solid fa-circle-check text-green-400 text-lg shrink-0"></i>`;}
         else{btn.classList.add('bg-red-500/10','border-red-500/50','text-red-300');icon=`<i class="fa-solid fa-circle-xmark text-red-400 text-lg shrink-0"></i>`;}
-      } else if(opt.isCorrect){btn.classList.add('bg-green-500/5','border-green-500/30','text-green-400','opacity-80');icon=`<i class="fa-solid fa-check text-green-400 text-sm shrink-0"></i>`;}
-      else{btn.classList.add('border-white/5','text-slate-600','opacity-40');icon=`<div class="w-6 h-6 rounded-full border border-white/10 flex items-center justify-center text-xs shrink-0">${letter}</div>`;}
+      } else if(opt.isCorrect){
+        btn.classList.add('bg-green-500/10','border-green-500/50','text-green-300');
+        icon=`<i class="fa-solid fa-circle-check text-green-400 text-lg shrink-0"></i>`;
+      }
+      else{
+        btn.classList.add('border-white/5','text-slate-600','opacity-40');
+        icon=`<div class="w-6 h-6 rounded-full border border-white/10 flex items-center justify-center text-xs shrink-0">${letter}</div>`;
+      }
+    } else if(revealed){
+      // Answer revealed but not answered - show correct answer, keep clickable
+      if(opt.isCorrect){
+        btn.classList.add('bg-green-500/10','border-green-500/50','text-green-300','cursor-pointer','hover:bg-green-500/20');
+        icon=`<i class="fa-solid fa-circle-check text-green-400 text-lg shrink-0"></i>`;
+      } else {
+        btn.classList.add('border-white/10','text-slate-200','bg-white/[.03]','cursor-pointer','hover:bg-white/10');
+      }
+      btn.onclick=()=>selectOpt(idx,opt.isCorrect,q);
     } else {
+      // No answer, not revealed - show clickable options
       btn.classList.add('border-white/10','text-slate-200','bg-white/[.03]','hover:bg-brand-500/10','hover:border-brand-500/40','hover:text-white','cursor-pointer');
       btn.onclick=()=>selectOpt(idx,opt.isCorrect,q);
     }
-    btn.innerHTML=`<span class="pr-4 leading-relaxed flex-1">${opt.text}</span>${icon}`;
+    btn.innerHTML=`<span class="pr-4 leading-relaxed flex-1">${escHtml(opt.text)}</span>${icon}`;
     oc.appendChild(btn);
   });
 
-  if(ans){
+  // Show explanation if answered or revealed
+  if(ans || revealed){
     const co=q.options.find(o=>o.isCorrect).text;
-    document.getElementById('exp-text').innerHTML=`<span class="font-bold text-white">Correct: </span>${co}<br><br>${q.explanation}`;
+    document.getElementById('exp-text').innerHTML=`<span class="font-bold text-white">Correct: </span>${escHtml(co)}<br><br>${escHtml(q.explanation)}`;
     document.getElementById('exp-box').classList.remove('hidden');
     document.getElementById('exp-box').classList.add('slide-down');
   }
@@ -499,10 +1467,23 @@ function renderQuestion(){
 function selectOpt(si,isCorrect,q){
   if(!curExam.answers) curExam.answers={};
   curExam.answers[q.id]={selectedOptionIndex:si,isCorrect};
+  
+  // Track difficulty
+  if(!curExam.question_difficulty) curExam.question_difficulty={};
+  if(!curExam.question_difficulty[q.id]) curExam.question_difficulty[q.id]={attempts:0,correct:0};
+  curExam.question_difficulty[q.id].attempts++;
+  if(isCorrect) curExam.question_difficulty[q.id].correct++;
+  
+  // Track spaced repetition with stable key
+  const qkey=getQuestionKey(q);
+  updateSpacedRepetition(curExam,qkey,isCorrect);
+  
+  // Track domain
   if(!curExam.domain_tracking) curExam.domain_tracking={};
   if(!curExam.domain_tracking[q.domain]) curExam.domain_tracking[q.domain]={correct:0,wrong:0};
   if(isCorrect) curExam.domain_tracking[q.domain].correct++;
   else curExam.domain_tracking[q.domain].wrong++;
+  
   updateScoreCounts();
   library[curExamIdx]=curExam; saveStore(library);
   if(wrongCount>0) document.getElementById('practice-wrong-btn').classList.remove('hidden');
@@ -521,7 +1502,8 @@ function renderSidebar(){
   document.getElementById('s-correct').textContent=correctCount;
   document.getElementById('s-wrong').textContent=wrongCount;
 
-  const dl=document.getElementById('domain-list'); dl.innerHTML='';
+  const dl=document.getElementById('domain-list'); 
+  dl.innerHTML='';
   Object.entries(curExam.domainsMap).forEach(([k,label],i)=>{
     const dt=curExam.domain_tracking||{}; const d=dt[k]||{correct:0,wrong:0};
     const qInDomain=questions.filter(q=>q.domain===k).length;
@@ -558,9 +1540,15 @@ function updateDots(){
     d.className='w-2 h-2 rounded-full cursor-pointer transition-all hover:scale-125 focus:outline-none';
     if(i===curIdx) d.classList.add('ring-2','ring-brand-400','ring-offset-1','ring-offset-[#0a0f1e]','scale-110');
     const ans=curExam.answers[q.id];
+    const revealed=answerRevealed[q.id];
+    const diff=calculateQuestionDifficulty(curExam,q.id);
+    
+    // Color by answer status first
     if(ans) d.style.background=ans.isCorrect?'#10b981':'#ef4444';
     else if((curExam.flagged||[]).includes(q.id)) d.style.background='#f97316';
-    else d.style.background=i===curIdx?'#0ea5e9':'#334155';
+    else if(revealed) d.style.background='#f59e0b';
+    // Then by difficulty if unanswered
+    else d.style.background=i===curIdx?'#0ea5e9':diff.level==='hard'?'#ef4444':diff.level==='medium'?'#f59e0b':'#334155';
   });
 }
 
@@ -594,6 +1582,7 @@ document.getElementById('flag-btn').onclick=()=>{
 document.getElementById('reset-btn').onclick=()=>{
   if(!confirm('Reset all answers for this exam?')) return;
   curExam.answers={}; curExam.flagged=[]; curExam.domain_tracking={};
+  answerRevealed={};
   correctCount=0; wrongCount=0; curIdx=0;
   document.getElementById('practice-wrong-btn').classList.add('hidden');
   library[curExamIdx]=curExam; saveStore(library);
@@ -612,6 +1601,21 @@ document.getElementById('modal-library-btn').onclick=()=>{
   document.getElementById('back-btn').click();
 };
 document.getElementById('close-modal').onclick=()=>document.getElementById('complete-modal').classList.add('hidden');
+document.getElementById('modal-download-btn').onclick=()=>downloadResults();
+document.getElementById('modal-print-btn').onclick=()=>printResults();
+document.getElementById('timer-toggle-btn').onclick=()=>{
+  if(timerInterval) stopTimer();
+  else startTimer();
+};
+document.getElementById('view-answer-btn').onclick=()=>{
+  const q=questions[curIdx];
+  if(!answerRevealed[q.id]){
+    answerRevealed[q.id]=true;
+  } else {
+    answerRevealed[q.id]=false;
+  }
+  renderQuestion();
+};
 document.getElementById('theme-btn').onclick=()=>{
   document.documentElement.classList.toggle('dark');
   localStorage.theme=document.documentElement.classList.contains('dark')?'dark':'light';
@@ -621,12 +1625,12 @@ document.getElementById('theme-btn').onclick=()=>{
 if(localStorage.theme==='dark') document.documentElement.classList.add('dark');
 
 // One-time cleanup: remove junk test exams (keep only 60-question bundled exam)
-var CLEAN_V2 = 'hubClean_v2';
+const CLEAN_V2 = 'hubClean_v2';
 if(!localStorage.getItem(CLEAN_V2)) {
   try {
-    var d = JSON.parse(localStorage.getItem(STORE) || '[]');
-    d = d.filter(function(e) { return e.questions && e.questions.length >= 60; });
-    localStorage.setItem(STORE, JSON.stringify(d));
+    const existing = JSON.parse(localStorage.getItem(STORE) || '[]');
+    const filtered = existing.filter(e => e.questions && e.questions.length >= 60);
+    localStorage.setItem(STORE, JSON.stringify(filtered));
     localStorage.setItem(CLEAN_V2, '1');
   } catch(e) {}
 }
@@ -636,7 +1640,7 @@ renderLibrary();
 
 <!-- AUTO-LOAD EXAM -->
 <script>
-const examMd = '## PRACTICE TEST 1 (Exam #1) - 60 Questions\n\n### Q1\nA multinational corporation needs an internal tool to help employees draft, summarize, and translate emails and reports in English and other languages. The project requires optimization of data storage, processing, and NLP workloads. Which Azure service should be used to build the core functionality efficiently?\n\n- **A.** Azure Bot Services, to create a bot for assisting in email drafting and summarization, using Azure Cosmos DB for data storage.\n- **B.** Azure AI Language Service, utilizing its pre-built models for language understanding, summarization, and translation, with Azure Blob Storage for storing documents.\n\n**Correct answer:** B\n**Explanation:** Azure AI Language Service provides pre-built models for language understanding, summarization, and translation, making it ideal for drafting and summarizing emails in multiple languages. Azure Blob Storage efficiently stores documents.\n\n### Q2\nYour organization plans to use Microsoft Azure\'s Health Bot service to create a virtual health assistant that provides users with information about various health topics. Which feature of Azure Health Bot is key to this functionality?\n\n- **A.** Text Analytics API\n- **B.** Azure QnA Maker\n- **C.** Language Understanding Intelligent Service (LUIS)\n- **D.** Built-in medical intelligence\n\n**Correct answer:** D\n**Explanation:** Built-in medical intelligence provides medical knowledge and expertise, allowing the bot to answer complex medical inquiries, suggest actions based on symptoms, and direct users to resources.\n\n### Q3\nYou are optimizing a machine learning model to predict customer purchase behavior based on browsing history and demographics. Which Azure services should you use for storage, processing, and model deployment?\n\n- **A.** Azure Table Storage, Azure Data Lake Analytics, Azure Cognitive Services\n- **B.** Azure Blob Storage, Azure Functions, Azure Machine Learning\n- **C.** Azure SQL Database, Azure HDInsight, Azure Kubernetes Service\n- **D.** Azure File Storage, Azure Batch, Azure Container Instances\n\n**Correct answer:** B\n**Explanation:** Azure Blob Storage is cost-effective for unstructured data. Azure Functions provide serverless compute. Azure Machine Learning offers comprehensive model deployment platform.\n\n### Q4\nAs a data scientist using Azure Machine Learning\'s AutoML for regression, you want to constrain model complexity to prevent overfitting. Which setting allows you to control complexity?\n\n- **A.** Metric Threshold\n- **B.** Validation Size\n- **C.** Block Algorithms\n- **D.** Experiment Exit Criterion\nE) Concurrent Iterations\n\n**Correct answer:** C\n**Explanation:** Blocking algorithms limits the complexity of models generated, preventing overly complex models that may overfit.\n\n### Q5\nAn advertising firm plans digital billboards showing personalized ads based on demographics. The system should detect faces, estimate age/gender, and analyze emotion. Which Azure service is most suitable?\n\n- **A.** Azure Video Indexer\n- **B.** Azure Custom Vision\n- **C.** Azure Form Recognizer\n- **D.** Azure Face API\n\n**Correct answer:** D\n**Explanation:** Azure Face API is designed for face detection, age/gender estimation, and emotion analysis.\n\n### Q6\nWhich best describes the primary use of Azure ML\'s AutoML feature?\n\n- **A.** To automate hyperparameter tuning for deep learning models only.\n- **B.** To enable users to create ML models without any coding or configuration.\n- **C.** To deploy ML models to multiple Azure regions simultaneously.\n- **D.** To automatically select the most appropriate ML algorithm and optimize it based on the dataset.\n\n**Correct answer:** D\n**Explanation:** AutoML automates model selection, feature engineering, and hyperparameter tuning by analyzing datasets.\n\n### Q7\nYou are working on an Azure-based project integrating AI for visual data processing. Which Azure tools best support a scalable, low-latency solution for image classification?\n\n- **A.** Azure SQL Database with Azure Databricks\n- **B.** Azure Cosmos DB with Azure Machine Learning and Azure Cognitive Services\n- **C.** Azure Blob Storage with Azure Machine Learning\n- **D.** Azure Table Storage with Azure Cognitive Services\n\n**Correct answer:** B\n**Explanation:** Cosmos DB provides high availability and low latency. Combined with Azure ML and Cognitive Services, it supports scalable image classification.\n\n### Q8\nA bank wants to predict loan defaults (binary classification) with interpretable models. Which ML model is LEAST suitable?\n\n- **A.** Logistic Regression\n- **B.** Random Forests\n- **C.** Decision Trees\n- **D.** Neural Networks\n\n**Correct answer:** D\n**Explanation:** Neural Networks are black box models, not easily interpretable. This goes against the requirement for interpretable models.\n\n### Q9\nYou developed an ML model to predict product demand in retail. The model processes large data in real-time and needs frequent updates. Which deployment strategy is best?\n\n- **A.** Azure Databricks cluster\n- **B.** Azure Container Instances (ACI)\n- **C.** Azure Virtual Machine\n- **D.** Azure Kubernetes Service (AKS) with Azure Pipelines for retraining\n\n**Correct answer:** D\n**Explanation:** AKS allows scalability, high availability, and efficient real-time processing. Azure Pipelines ensures frequent model updates.\n\n### Q10\nYou developed an ML model predicting equipment failures. The model processes large volumes of real-time data and must be robust against failures. Recommended deployment?\n\n- **A.** Azure Kubernetes Service (AKS)\n- **B.** Azure Container Instance (ACI)\n- **C.** Local on-premises server\n- **D.** Azure Databricks\n\n**Correct answer:** A\n**Explanation:** AKS provides scalability, reliability, and efficient management of containerized applications.\n\n### Q11\nWhich feature of Azure ML is most beneficial for managing large-scale generative AI experiments?\n\n- **A.** Managed feature store\n- **B.** Experiment tracking\n- **C.** Model interpretability tools\n- **D.** MLOps integration\n\n**Correct answer:** B\n**Explanation:** Experiment tracking helps manage different training runs, parameters, and outcomes for generative AI experiments.\n\n### Q12\nA multinational wants to analyze sentiments in customer reviews from different regions globally. Which Azure service is most suitable?\n\n- **A.** Azure QnA Maker\n- **B.** Azure Text Analytics\n- **C.** Azure Computer Vision\n- **D.** Azure Bot Service\n\n**Correct answer:** B\n**Explanation:** Azure Text Analytics provides sentiment analysis, key phrase extraction, language detection for multi-language reviews.\n\n### Q13\nWhich best exemplifies the principle of fairness in AI?\n\n- **A.** Avoiding collecting personal user data\n- **B.** Ensuring equal accuracy across all demographic groups\n- **C.** Prioritizing user satisfaction and response time\n- **D.** Implementing encryption for data\n\n**Correct answer:** B\n**Explanation:** Fairness means ensuring AI does not disproportionately benefit or harm any group. Equal accuracy across demographics is key.\n\n### Q14\nYour company develops an AI credit risk assessment system. Which is LEAST associated with maintaining accountability?\n\n- **A.** Clear procedures for responsibility\n- **B.** Providing customers with detailed explanations\n- **C.** Utilizing the most cutting-edge deep learning model\n- **D.** Regular auditing of performance and data\n\n**Correct answer:** C\n**Explanation:** Using advanced deep learning models relates to accuracy, not accountability.\n\n### Q15\nYou are optimizing NLP workload for a customer support chatbot. Which approach best leverages language modeling?\n\n- **A.** Increasing database storage capacity\n- **B.** Implementing a rule-based system\n- **C.** Implementing a pre-trained language model like GPT-3\n- **D.** Upgrading network infrastructure\n\n**Correct answer:** C\n**Explanation:** Pre-trained language models like GPT-3 can generate accurate, contextually relevant responses.\n\n### Q16\nYou need to monitor ML model performance and be notified when accuracy degrades. Which Azure service?\n\n- **A.** Azure Advisor\n- **B.** Azure Model Management\n- **C.** Azure ML Model Monitoring\n- **D.** Azure Monitor\n\n**Correct answer:** C\n**Explanation:** Azure ML Model Monitoring tracks model metrics, detects data drift, and sets up alerts.\n\n### Q17\nYou are developing an ML solution to group customers into segments based on purchasing patterns. Which technique is most appropriate?\n\n- **A.** K-means clustering\n- **B.** Decision trees\n- **C.** Logistic regression\n- **D.** Linear regression\n\n**Correct answer:** A\n**Explanation:** K-means clustering is an unsupervised algorithm for grouping data points into clusters based on similarities.\n\n### Q18\nYou are using Azure AI Video Indexer for educational videos. Which capability helps students efficiently search for specific topics?\n\n- **A.** Speaker recognition\n- **B.** Visual content moderation\n- **C.** Brand detection\n- **D.** Audio effects identification\n\n**Correct answer:** A\n**Explanation:** Speaker recognition distinguishes and tags different speakers, helping users navigate to specific content.\n\n### Q19\nYou use Azure Text Analytics API for key phrase extraction but some domain-specific phrases aren\'t recognized. How to improve?\n\n- **A.** Deploy multiple instances of Text Analytics API\n- **B.** Preprocess data using third-party NLP library\n- **C.** Use Text Analytics for health\n- **D.** Develop a custom Named Entity Recognition model\n\n**Correct answer:** D\n**Explanation:** A custom NER model trained with domain-specific data recognizes important phrases in your domain.\n\n### Q20\nYour organization wants a smart search feature using natural language that suggests products based on search history. Which combination?\n\n- **A.** Azure Bot Service + Azure Text Analytics\n- **B.** Azure QnA Maker + Azure Cognitive Search\n- **C.** Azure Cognitive Search + Azure Personalizer\n- **D.** Azure LUIS + Azure Machine Learning\n\n**Correct answer:** C\n**Explanation:** Cognitive Search enables full-text search; Personalizer provides\n\n## PRACTICE TEST 1 (continued - Questions 21-30)\n\n### Q21\nA company plans to deploy an AI solution for analyzing customer feedback from email, social media, and calls, using sentiment analysis, keyword extraction, and categorization to provide insights to the customer service team. To ensure fairness in the AI solution, what should be the company\'s first step, considering responsible AI principles?\n\n- **A.** Use only customer service call data for training the AI model, as it is the most detailed feedback channel.\n- **B.** Limit the AI analysis to positive feedback to ensure that the AI solution has a positive impact on customer service.\n- **C.** Deploy the solution immediately to all customer channels to gather as much data as possible.\n- **D.** Train the AI model on a dataset that includes diverse demographics to ensure it can accurately understand sentiment across different customer groups.\n\n**Correct answer:** D\n**Explanation:** Training the model on a diverse dataset helps to mitigate biases and ensures the AI solution treats all customer groups fairly.\n\n### Q22\nYour organization is designing a large-scale AI solution using Azure Machine Learning. The application will be used globally and you have strict requirements on the system\'s latency, efficiency, and model update frequency. Which of the following practices is the most effective to meet these requirements?\n\n- **A.** Set up an automatic retraining pipeline with the use of Azure Machine Learning Pipelines.\n- **B.** Manually tune hyperparameters after each model training.\n- **C.** Deploy all models in a single region for easier management.\n- **D.** Use distributed deep learning, such as Horovod, to accelerate training.\n\n**Correct answer:** A\n**Explanation:** Setting up an automatic retraining pipeline with Azure Machine Learning Pipelines would allow for frequent model updates, better efficiency, and lower latency.\n\n### Q23\nYou are working on a project that involves predicting housing prices based on various features such as location, size, and number of bedrooms. You need to choose the most appropriate Azure machine learning technique to optimize and troubleshoot data storage and processing for this scenario. Which technique would you use?\n\n- **A.** Reinforcement Learning\n- **B.** Clustering\n- **C.** Linear Regression\n- **D.** Classification\n\n**Correct answer:** C\n**Explanation:** Linear regression is ideal for this scenario as it predicts a quantitative response based on predictor variables, fitting well with housing price predictions based on features like location and size.\n\n### Q24\nYou are developing a real-time transcription system for a multinational corporation that often hosts multilingual meetings. The system needs to convert spoken language from different languages into written text. You decide to use Azure\'s Speech service for this task. Which approach would be the most effective?\n\n- **A.** Use Azure Text Analytics for speech recognition and transcription.\n- **B.** Use Azure\'s translation service to convert all speech to English first, then use Azure\'s pre-built Speech to Text service.\n- **C.** Use the pre-built Speech to Text service provided by Azure without any modification.\n- **D.** Train a custom speech-to-text model using Azure\'s Custom Speech service, utilizing past recorded meetings as training data.\n\n**Correct answer:** D\n**Explanation:** Training a custom model using Azure\'s Custom Speech service with past recorded meetings as the training data would provide the most accurate results, as the model would learn to understand the specific accents, languages, and terminology used in the company\'s meetings.\n\n### Q25\nYour company wants an Azure-based image classification system that can handle large volumes of images in various categories and adapt to changes in classes without extensive retraining. Which Azure image classification feature should you focus on to meet this requirement?\n\n- **A.** Multiclass Classification\n- **B.** Anomaly Detection\n- **C.** Multilabel Classification\n- **D.** Transfer Learning\n\n**Correct answer:** D\n**Explanation:** Transfer Learning allows for leveraging a pre-trained model, which has learned from a large volume of data, to a new related task. This enables the model to adapt to new classes with minimal additional training, thus providing the flexibility needed.\n\n### Q26\nYour company is developing an AI solution to automate fruit inspection in a packaging plant. The system should analyze fruit images, identify types (apples, bananas, oranges), and assess ripeness. It should improve accuracy over time. Which Azure service should you use?\n\n- **A.** Azure Custom Vision\n- **B.** Azure Text Analytics\n- **C.** Azure Bot Service\n- **D.** Azure Logic Apps\n\n**Correct answer:** A\n**Explanation:** Azure Custom Vision allows you to build, deploy, and improve your own image classifiers, making it an ideal choice for an image-based inspection process. It can differentiate between different types of fruits and their ripeness based on the provided training images and can continually learn and improve over time.\n\n### Q27\nA financial institution plans to use Azure Machine Learning to predict loan default risk based on historical data, including features like loan amount, term, income, credit score, and employment status. The target variable is loan default status. Which correctly identifies the features and labels for machine learning?\n\n- **A.** Features: Loan default risk; Label: Loan amount, term, applicant\'s income, credit score, employment status.\n- **B.** Features: Loan term; Label: Applicant\'s income, credit score, employment status, loan default risk.\n- **C.** Features: Loan amount, term, applicant\'s income, credit score, employment status; Label: Loan default risk.\n- **D.** Features: Credit score, employment status; Label: Loan amount, term, applicant\'s income.\n\n**Correct answer:** C\n**Explanation:** The features are input variables that are used to predict the outcome. The label is the target variable that the model will predict, which in this case is the loan default risk.\n\n### Q28\nIn a scenario where you are developing a machine learning model to predict customer behavior based on large datasets stored in Azure, you need to optimize data storage and processing while adhering to core machine learning concepts and implementing MLOps practices for continuous integration and delivery. Which of the following approaches would best align with these requirements?\n\n- **A.** Implement Azure Data Lake Storage Gen2 with hierarchical namespace enabled, to store big data efficiently and optimize data processing operations.\n- **B.** Store all data in Azure SQL Database to leverage relational data storage for machine learning.\n- **C.** Use Azure Table Storage for all data needs to simplify operations and reduce costs.\n- **D.** Rely exclusively on Azure Cache for Redis to ensure data is quickly accessible for real-time predictions.\n\n**Correct answer:** A\n**Explanation:** Azure Data Lake Storage Gen2 is designed for big data analytics, supports hierarchical namespace, and is optimized for performance, making it ideal for storing and processing large datasets in machine learning scenarios.\n\n### Q29\nA retail company wants to use facial analysis to gather insights about customer demographics and emotions in their stores. The data will be used to adjust marketing strategies and product placements in real time. They need a system capable of analyzing multiple faces simultaneously, identifying gender, age, emotion, and other attributes. Which Azure AI service would be most suitable for this task?\n\n- **A.** Azure Custom Vision\n- **B.** Azure Face API\n- **C.** Azure Form Recognizer\n- **D.** Azure Video Indexer\n\n**Correct answer:** B\n**Explanation:** Azure Face API is a powerful service for face detection and recognition, as well as additional features like emotion detection, age estimation, gender identification, etc. It can also handle multiple faces in an image or video frame, making it ideal for this scenario.\n\n### Q30\nIn a scenario where a retail company aims to enhance customer experience by implementing a computer vision solution to recognize products in real-time within their stores, which combination of Microsoft Azure services should be used to optimize and troubleshoot data storage, data processing, and effectively handle computer vision workloads?\n\n- **A.** Azure SQL Database for structured data storage, Azure Functions for executing serverless code, and Azure HDInsight for big data analytics.\n- **B.** Azure Virtual Machines to manually process images, Azure Files for file sharing, and Azure Cognitive Services without specifying the use of the Computer Vision API.\n- **C.** Azure Machine Learning for building custom vision models, Azure Queue Storage for message queuing, and Azure Data Lake Storage for storing unstructured data.\n- **D.** Azure Cognitive Services (Computer Vision API) for real-time product recognition, Azure Blob Storage for storing images, and Azure Stream Analytics for processing data streams.\n\n**Correct answer:** D\n**Explanation:** This solution efficiently handles computer vision workloads by using Azure Cognitive Services\' Computer Vision API for real-time product recognition. Azure Blob Storage is ideal for storing large volumes of image data, and Azure Stream Analytics is capable of processing data streams in real time, making it suitable for analyzing video feeds or image data directly from store cameras.\n\n### Q31\nA retail company wants to implement a system to automatically classify customer inquiries into categories like orders, returns, complaints, and feedback, while identifying sentiment to prioritize responses. The solution requires efficient data processing, storage optimization, and advanced NLP workloads. Which Azure service combination is best for this solution?\n\n- **A.** Deploy Azure Cognitive Search for extracting, classifying, and analyzing sentiment from inquiries, using Azure Cosmos DB for storing the inquiries.\n- **B.** Utilize Azure AI Language Service for text classification and sentiment analysis, combined with Azure Blob Storage for storing customer inquiries.\n- **C.** Implement Azure Machine Learning to train custom models for inquiry classification and sentiment analysis, with Azure Table Storage for data storage.\n- **D.** Apply Azure Databricks for data processing and NLP tasks on customer inquiries, with Azure Data Lake Storage for data storage.\n\n**Correct answer:** B\n**Explanation:** Azure AI Language Service offers sophisticated NLP capabilities, including text classification and sentiment analysis, which directly addresses the need to categorize customer inquiries and assess their sentiment. Azure Blob Storage is well-suited for storing large volumes of unstructured data like customer inquiries.\n\n### Q32\nWhat is the main advantage of using Azure Machine Learning pipelines?\n\n- **A.** They offer pre-built models for common machine learning tasks, reducing the need for custom training.\n- **B.** They allow you to train models faster by parallelizing computations across multiple GPUs.\n- **C.** They provide a cloud-based graphical interface for building machine learning models without coding.\n- **D.** They enable the automation and orchestration of machine learning workflows, such as data preprocessing, training, and deployment.\n\n**Correct answer:** D\n**Explanation:** Azure Machine Learning pipelines are designed to orchestrate the various steps involved in a machine learning workflow, including data preparation, feature engineering, model training, evaluation, and deployment.\n\n### Q33\nWhich Azure service is best for optimizing and troubleshooting data storage and processing on a content-driven website with user-generated content, while supporting AI workloads like content moderation and personalization?\n\n- **A.** Azure Machine Learning\n- **B.** Azure Cosmos DB\n- **C.** Azure SQL Database\n- **D.** Azure Cognitive Services\n\n**Correct answer:** D\n**Explanation:** Azure Cognitive Services provides a suite of AI services and APIs that enable applications to see, hear, speak, understand, and interpret human needs using natural methods of communication. It includes services for content moderation and personalization.\n\n### Q34\nA financial institution is leveraging machine learning to predict whether a loan applicant will default based on a variety of factors such as credit score, income, age, etc. This prediction will then influence the decision to approve or reject the loan application. Which of the following machine learning concepts is least relevant in this scenario?\n\n- **A.** Unsupervised Learning\n- **B.** Overfitting\n- **C.** Feature Engineering\n- **D.** Classification\n\n**Correct answer:** A\n**Explanation:** Unsupervised learning is a type of machine learning that looks for previously undetected patterns in a dataset with no pre-existing labels and with a minimum of human supervision. It\'s not directly relevant to this problem.\n\n### Q35\nYour organization monitors real-time telemetry from thousands of IoT devices across multiple locations. Recently, unexpected device failures have occurred. You need a solution to analyze telemetry data in real time and detect anomalies indicating potential device failures. Which Azure service should you use?\n\n- **A.** Azure Form Recognizer\n- **B.** Azure Cognitive Search\n- **C.** Azure Text Analytics\n- **D.** Azure Anomaly Detector\n\n**Correct answer:** D\n**Explanation:** Azure Anomaly Detector is an AI service that can analyze time-series data in real time and identify any anomalies, making it ideal for this scenario.\n\n### Q36\nWhich of the following is a key feature of the Azure Face API that differentiates it from other Azure Computer Vision services?\n\n- **A.** Custom image classification model training\n- **B.** Reading and extracting text from images\n- **C.** Real-time object detection in video streams\n- **D.** Analysis of facial attributes such as emotion, age, and facial landmarks\n\n**Correct answer:** D\n**Explanation:** A key feature of the Azure Face API is its ability to analyze facial attributes, including emotions, estimated age, gender, and facial landmarks. This type of analysis is unique to facial recognition solutions.\n\n### Q37\nYou are the lead AI architect at a large retail company aiming to analyze customer reviews and feedback from the website and social media to understand sentiment and identify areas for improvement. Which Azure services would you consider for this use case?\n\n- **A.** Azure Digital Twins\n- **B.** Azure Text Analytics\n- **C.** Azure Form Recognizer\n- **D.** Azure Anomaly Detector\n\n**Correct answer:** B\n**Explanation:** Azure Text Analytics can analyze unstructured text for tasks like sentiment analysis, key phrase extraction, named entity recognition, and language detection, which makes it ideal for understanding customer feedback.\n\n### Q38\nYou are developing an AI solution for a multinational company to extract, identify, and categorize entities from unstructured data (emails, reviews, social media). You\'ve chosen Microsoft Azure Text Analytics for entity recognition. Which strategy would best optimize your model\'s performance?\n\n- **A.** Using Text Analytics for entity recognition on raw, unprocessed data.\n- **B.** Training and deploying a Text Analytics custom named entity recognition model using the company\'s domain-specific data.\n- **C.** Deploying the Text Analytics API without customization, since the pre-trained models are extensive enough for various data sources.\n- **D.** Using Text Analytics for health even though the company is not in the healthcare industry.\n\n**Correct answer:** B\n**Explanation:** Training a custom model using the company\'s domain-specific data will help the model identify and categorize entities that are unique to the company\'s operations.\n\n### Q39\nYou need to optimize and troubleshoot a cloud-based NLP application analyzing multilingual customer feedback, processing large data volumes, and providing sentiment and intent insights. Which Azure services should you integrate, considering NLP workload features and language modeling?\n\n- **A.** Azure Virtual Machines\n- **B.** Azure Cognitive Services for Language\n- **C.** Azure Blob Storage\n- **D.** Azure HDInsight\n\n**Correct answer:** B\n**Explanation:** Azure Cognitive Services for Language provides advanced NLP capabilities, including sentiment analysis, language detection, and key phrase extraction, which are essential for analyzing customer feedback efficiently across multiple languages.\n\n### Q40\nYour company operates a multilingual call center, and you have been tasked to develop a solution to monitor and analyze the customer-agent interactions. The primary needs are real-time transcription, sentiment analysis, and key phrase extraction from the conversation. Which Azure AI services should you use in combination to achieve this?\n\n- **A.** Use Azure\'s Text Analytics API for sentiment analysis and key phrase extraction, and Azure\'s Text to Speech for transcription.\n- **B.** Use Azure\'s Speech to Text for transcription, Azure\'s Text Analytics API for sentiment analysis and key phrase extraction.\n- **C.** Use Azure\'s Text to Speech for transcription, and Azure\'s Translator Text API for sentiment analysis and key phrase extraction.\n- **D.** Use Azure\'s Language Understanding (LUIS) for transcription, sentiment analysis, and key phrase extraction.\n\n**Correct answer:** B\n**Explanation:** Azure\'s Speech to Text service provides real-time transcription, and Azure\'s Text Analytics API is used to perform sentiment analysis and key phrase extraction, fulfilling all the requirements.\n\n## Practice Test 1 - Questions 41-60\n\n### Q41\nWhich of the following workloads would most likely use sentiment analysis as a core component?\n\n- **A.** Classifying images of animals\n- **B.** Predicting the next word in a sentence\n- **C.** Translating spoken language into text\n- **D.** Identifying positive or negative opinions in customer reviews\n\n**Correct answer:** D\n**Explanation:** This is the essence of sentiment analysis. The goal is to determine whether the sentiment expressed in the review is positive, negative, or neutral. Sentiment analysis is a core NLP workload, often applied in business to gauge customer satisfaction from text-based data like reviews, feedback, or social media posts.\n\n### Q42\nYou are developing an AI-based loan approval system for a financial institution. The AI system uses applicant data to predict loan default risk and recommend approval or rejection. Which of the following factors is least crucial to maintaining transparency in this AI solution?\n\n- **A.** Providing an explanation to applicants about why their loan was approved or rejected.\n- **B.** Ensuring that the model\'s predictions can be understood by non-technical stakeholders.\n- **C.** Using the latest deep learning model architecture for the highest prediction accuracy.\n- **D.** Regularly auditing the AI model\'s decisions to ensure consistency and fairness.\n\n**Correct answer:** C\n**Explanation:** While prediction accuracy is important, it does not necessarily contribute to transparency. A complex model might be less interpretable, and therefore less transparent, than a simpler one.\n\n### Q43\nA machine learning model is being developed to predict the resale value of used cars based on parameters like make, model, age, mileage, and whether the car has been involved in an accident. Which of the following is true for this scenario?\n\n- **A.** Whether the car has been involved in an accident is a label, make and model are features.\n- **B.** The resale value is a label, make, model, age, mileage, and accident involvement are features.\n- **C.** Age and mileage are labels, the resale value is a feature.\n- **D.** The resale value and accident involvement are both labels.\n\n**Correct answer:** B\n**Explanation:** The resale value is the output we are trying to predict, making it a label. All the other parameters - make, model, age, mileage, and whether the car has been in an accident - are inputs used to make that prediction, making them features.\n\n### Q44\nYour company has developed an AI-based recommendation system for an e-commerce platform. The system analyzes user behavior and product characteristics to suggest products to users. Which of the following aspects is least directly related to ensuring accountability in this AI solution?\n\n- **A.** Setting up a mechanism to review and handle user complaints about inappropriate recommendations.\n- **B.** Establishing policies defining who is responsible if the recommendation system suggests inappropriate products.\n- **C.** Ensuring the recommendation system has a seamless integration with the website\'s user interface for a smooth user experience.\n- **D.** Maintaining clear documentation about the data sources used and how the recommendation algorithm works.\n\n**Correct answer:** C\n**Explanation:** While this is crucial for a good user experience, it doesn\'t directly contribute to accountability in the AI system.\n\n### Q45\nYour organization is planning to build a conversational AI solution using Microsoft Azure Bot Services that involves multiple language support, adaptive responses, and a hybrid environment deployment. Which of the following considerations will be most important to ensure effective operation?\n\n- **A.** The configuration of the Bot Service to leverage Azure QnA Maker for knowledge base support, and Azure LUIS for language understanding.\n- **B.** Deploying the bot solely in an on-premises environment.\n- **C.** Exclusively using Azure Machine Learning to process and understand user inputs.\n- **D.** Using only pre-built conversational models without customization.\n\n**Correct answer:** A\n**Explanation:** Microsoft Azure provides various AI services like QnA Maker and LUIS to support conversational AI solutions. QnA Maker provides a knowledge base that can easily be referenced by the bot to provide responses, and LUIS helps in understanding the user\'s language and intent.\n\n### Q46\nYour company is deploying a text analytics solution using Azure Cognitive Services. The application should be able to handle spikes in demand without manual intervention while minimizing costs. Which of the following is the best practice for managing this requirement?\n\n- **A.** Use Azure DevOps to automate the deployment of additional instances during peak periods.\n- **B.** Use Azure Functions to dynamically scale the service based on demand.\n- **C.** Use Azure Monitor to manually increase the service tier during peak periods.\n- **D.** Use Azure Kubernetes Service to orchestrate and manage the service.\n\n**Correct answer:** B\n**Explanation:** Azure Functions, which provides serverless architectures, can scale dynamically based on demand, allowing you to only pay for what you use, thus managing costs effectively.\n\n### Q47\nYou are the CTO of a startup that is developing a sophisticated AI system to evaluate job applications. The system will assess the qualifications, skills, and experience of each candidate, and it will automatically generate a shortlist of the best candidates for each job. Which of the following is not consistent with Microsoft\'s guiding principles for Responsible AI in this context?\n\n- **A.** Ensuring that the AI system does not favor candidates based on their gender, race, or age.\n- **B.** Designing the AI system to explain the reason why a particular candidate was not shortlisted.\n- **C.** Refusing to disclose how the AI system processes and assesses job applications.\n- **D.** Testing and reviewing the AI system\'s decisions regularly to ensure they are accurate and fair.\n\n**Correct answer:** C\n**Explanation:** This is inconsistent with the principle of transparency. Stakeholders should have the ability to understand how AI systems operate and make decisions.\n\n### Q48\nA multinational corporation plans to deploy a Microsoft Azure AI solution to automate customer service responses across languages and regions. In line with Azure AI Fundamentals, which approach optimizes data storage and processing, addresses common AI workload features, and adheres to responsible AI principles, especially accountability?\n\n- **A.** Deploy separate, region-specific AI models for each language and cultural context, integrating Azure Cognitive Services for translation and sentiment analysis, with a centralized logging system for monitoring AI decisions and performance.\n- **B.** Implement an AI model that provides automated responses without any logging mechanism for the decisions made or the data processed.\n- **C.** Use a generic, one-size-fits-all AI model for all regions without considering the linguistic and cultural nuances of different customer bases.\n- **D.** Store all customer interactions in a single, unencrypted database to simplify data access for AI processing, prioritizing ease of use over security.\n\n**Correct answer:** A\n**Explanation:** This approach optimizes data processing by using specialized models for different languages and cultures, leverages Azure services for enhanced AI workloads, and ensures accountability through a centralized logging mechanism.\n\n### Q49\nWhich of the following is the most appropriate machine learning technique to use for predicting whether a customer will renew their subscription based on historical data?\n\n- **A.** Classification, as it determines whether the customer will renew or not, which is a categorical outcome.\n- **B.** Dimensionality reduction, as it simplifies the dataset to improve the prediction of whether a customer will renew.\n- **C.** Regression, as it provides the exact probability of renewal for each customer.\n- **D.** Clustering, as it groups customers into those who have renewed and those who haven\'t.\n\n**Correct answer:** A\n**Explanation:** Classification is the appropriate technique since the problem involves predicting a categorical outcome—whether a customer will renew or not. In this case, it is a binary classification problem (renew vs. not renew).\n\n### Q50\nWhat is a critical consideration for ensuring the reliability and safety of an AI system in a healthcare application?\n\n- **A.** Allowing the AI to make independent decisions without human oversight in emergency situations\n- **B.** Minimizing training data to avoid overfitting and improve model generalization\n- **C.** Continuously monitoring the AI system for unexpected behaviors or erroneous outputs\n- **D.** Collecting as much data as possible from a single demographic to ensure consistency\n\n**Correct answer:** C\n**Explanation:** Continuously monitoring the AI system for unexpected behaviors or erroneous outputs is correct because reliability and safety are crucial in AI, especially in sensitive domains like healthcare. This also allows for timely intervention when issues arise.\n\n### Q51\nA technology firm is developing an AI-based traffic management system using Azure AI services to reduce congestion and improve road safety. The system analyzes real-time data, predicts hotspots, and adjusts traffic signals. Considering Azure AI\'s principles for responsible AI, particularly reliability and safety, what is the most crucial aspect to address during design and deployment?\n\n- **A.** Integrate a fail-safe mechanism that defaults to manual traffic control in case of system failure or uncertain predictions.\n- **B.** Implement the system with the capability to autonomously override human traffic controller decisions to improve efficiency.\n- **C.** Focus on developing a highly complex AI model that ensures superior prediction capabilities, minimizing the need for human intervention.\n- **D.** Design the system to prioritize high-speed data processing over accuracy to ensure real-time responsiveness.\n\n**Correct answer:** A\n**Explanation:** A fail-safe mechanism ensures that, in the event of AI system failure or uncertainty, control can safely revert to human operators, maintaining reliability and safety.\n\n### Q52\nYou are working on a project to predict the demand for a specific product in a retail store based on historical sales data and other relevant factors (like holidays, promotions, etc.). The target variable here is the number of product units sold, which is a continuous variable. Which of the following machine learning algorithms is least suitable for this prediction task?\n\n- **A.** Lasso Regression\n- **B.** Poisson Regression\n- **C.** Naive Bayes\n- **D.** Random Forest Regression\n\n**Correct answer:** C\n**Explanation:** Naive Bayes is primarily a classification algorithm and assumes that all features are independent of each other. It is not typically used for regression tasks.\n\n### Q53\nA city government is deploying an Azure AI-powered chatbot for residents to access local services, event schedules, and emergency alerts via the city\'s website and mobile app. What is the most critical consideration in its development and deployment to align with Azure AI\'s responsible AI principles, particularly inclusiveness?\n\n- **A.** Implement the chatbot with a voice recognition feature that only supports the most commonly spoken language in the city.\n- **B.** Ensure the chatbot interface and interactions are accessible to individuals with disabilities, including those who require screen readers or other assistive technologies.\n- **C.** Restrict chatbot access to users who are registered on the city\'s website to ensure only residents benefit from the service.\n- **D.** Design the chatbot to use advanced technical jargon in its responses to demonstrate the sophistication of the AI technology.\n\n**Correct answer:** B\n**Explanation:** Making the chatbot accessible to individuals with disabilities ensures that the service is inclusive, allowing all residents to access information and services equally.\n\n### Q54\nA travel company is building an application that allows users to upload their holiday photos. The application should automatically create an album based on the landmarks detected in the photos. Which feature of Azure services should be the focus in this case?\n\n- **A.** OCR in Azure Form Recognizer\n- **B.** Landmark detection in Azure Computer Vision\n- **C.** Text Recognition in Azure Computer Vision\n- **D.** Image classification in Azure Custom Vision\n\n**Correct answer:** B\n**Explanation:** Landmark detection in Azure Computer Vision is the feature designed for identifying landmarks in images, which aligns with the needs of this scenario.\n\n### Q55\nA tech company is developing an intelligent video analysis system on Azure to automatically categorize video content into genres. The system will analyze audio, video frames, and metadata to improve classification accuracy. Which approach effectively utilizes deep learning techniques for optimizing data storage, processing, and machine learning on Azure?\n\n- **A.** Utilize Azure Blob Storage for video data and Azure Machine Learning to train a Convolutional Neural Network (CNN) for video frame analysis and a Recurrent Neural Network (RNN) for audio analysis.\n- **B.** Implement Azure File Storage for video archives and utilize Azure HDInsight with Apache Spark for clustering algorithms.\n- **C.** Store video metadata in Azure Table Storage and use Azure Cognitive Services for rule-based genre classification.\n- **D.** Use Azure Cosmos DB for real-time processing of video data and Azure Logic Apps for orchestrating a decision tree algorithm.\n\n**Correct answer:** A\n**Explanation:** Azure Blob Storage is suitable for storing large volumes of unstructured video data. Using Azure Machine Learning to train a CNN for analyzing video frames and an RNN for audio analysis leverages deep learning\'s strength in handling sequential and image data.\n\n### Q56\nA digital marketing firm is planning to develop a machine learning model to classify emails into spam or not spam based on features such as email content, subject line, and sender. The dataset is highly imbalanced with a small proportion of spam emails. Which of the following models is LEAST suitable for handling this imbalanced dataset?\n\n- **A.** Decision Trees with class weights\n- **B.** Random Forests with class weights\n- **C.** Logistic Regression with class weights\n- **D.** K-Means Clustering\n\n**Correct answer:** D\n**Explanation:** K-means is an unsupervised learning algorithm used for clustering, not classification. It does not have a concept of classes, let alone class imbalance, and is therefore not suitable for this task.\n\n### Q57\nYou\'re an AI specialist in a healthcare organization tasked with developing an AI model to predict disease progression based on patient data. Which of the following steps is least essential in ensuring the reliability and safety of this AI solution?\n\n- **A.** Testing the model in different stages of development with a variety of data samples to ensure reliability.\n- **B.** Running the model on the latest, high-end GPU to ensure maximum computational performance.\n- **C.** Using a diverse and representative dataset for model training to ensure it performs reliably across different demographic groups.\n- **D.** Implementing regular reviews and audits of the model\'s predictions.\n\n**Correct answer:** B\n**Explanation:** While computational performance can influence the efficiency and speed of training and deploying a model, it doesn\'t directly ensure the reliability or safety of the AI solution.\n\n### Q58\nAs an AI consultant, you\'re developing a solution for a financial institution to detect fraudulent activities. The system must extract entities from financial transaction notes, which include information such as account numbers, dates, and transaction amounts. You\'ve chosen Azure Text Analytics for entity recognition. Which of the following approaches would most effectively handle this task?\n\n- **A.** Use Azure Text Analytics with a custom Named Entity Recognition (NER) model, trained with financial domain-specific data.\n- **B.** Use the pre-trained model provided by Azure Text Analytics without any customization.\n- **C.** Feed raw, uncleaned transaction notes directly to Azure Text Analytics for entity extraction.\n- **D.** Use Azure Text Analytics for health to recognize financial entities.\n\n**Correct answer:** A\n**Explanation:** Training a custom NER model with financial domain-specific data would be the most effective strategy, as it allows Azure Text Analytics to recognize and extract entities that are specific to financial transactions.\n\n### Q59\nWhich of the following scenarios is an ideal use case for leveraging a machine learning (ML) model in an AI solution?\n\n- **A.** Predicting whether a customer review is positive or negative\n- **B.** Adding two numbers based on user input\n- **C.** Setting static shipping prices for various geographic locations\n- **D.** Creating a series of If-Else rules to validate form entries\n\n**Correct answer:** A\n**Explanation:** This is a classic machine learning use case called sentiment analysis, where the goal is to predict whether the sentiment of a customer review is positive, negative, or neutral based on patterns learned from data.\n\n### Q60\nA company wants to integrate artificial intelligence capabilities into their products to improve customer interactions by analyzing customer feedback from various forms, such as surveys, emails, and support tickets. The goal is to understand the sentiment and key themes from this feedback. Which Azure AI service would best meet this need?\n\n- **A.** Azure QnA Maker\n- **B.** Azure Text Analytics\n- **C.** Azure Bot Service\n- **D.** Azure Speech to Text\n\n**Correct answer:** B\n**Explanation:** Azure Text Analytics is designed for tasks like sentiment analysis, key phrase extraction, and entity recognition. It\'s ideal for analyzing customer feedback and identifying sentiments and key themes from surveys, emails, or support tickets.\n';
+const examMd = '## PRACTICE TEST 1 (Exam #1) - 60 Questions\n\n### Q1\nA multinational corporation needs an internal tool to help employees draft, summarize, and translate emails and reports in English and other languages. The project requires optimization of data storage, processing, and NLP workloads. Which Azure service should be used to build the core functionality efficiently?\n\n- **A.** Azure Bot Services, to create a bot for assisting in email drafting and summarization, using Azure Cosmos DB for data storage.\n- **B.** Azure AI Language Service, utilizing its pre-built models for language understanding, summarization, and translation, with Azure Blob Storage for storing documents.\n\n**Correct answer:** B\n**Explanation:** Azure AI Language Service provides pre-built models for language understanding, summarization, and translation, making it ideal for drafting and summarizing emails in multiple languages. Azure Blob Storage efficiently stores documents.\n\n### Q2\nYour organization plans to use Microsoft Azure\'s Health Bot service to create a virtual health assistant that provides users with information about various health topics. Which feature of Azure Health Bot is key to this functionality?\n\n- **A.** Text Analytics API\n- **B.** Azure QnA Maker\n- **C.** Language Understanding Intelligent Service (LUIS)\n- **D.** Built-in medical intelligence\n\n**Correct answer:** D\n**Explanation:** Built-in medical intelligence provides medical knowledge and expertise, allowing the bot to answer complex medical inquiries, suggest actions based on symptoms, and direct users to resources.\n\n### Q3\nYou are optimizing a machine learning model to predict customer purchase behavior based on browsing history and demographics. Which Azure services should you use for storage, processing, and model deployment?\n\n- **A.** Azure Table Storage, Azure Data Lake Analytics, Azure Cognitive Services\n- **B.** Azure Blob Storage, Azure Functions, Azure Machine Learning\n- **C.** Azure SQL Database, Azure HDInsight, Azure Kubernetes Service\n- **D.** Azure File Storage, Azure Batch, Azure Container Instances\n\n**Correct answer:** B\n**Explanation:** Azure Blob Storage is cost-effective for unstructured data. Azure Functions provide serverless compute. Azure Machine Learning offers comprehensive model deployment platform.\n\n### Q4\nAs a data scientist using Azure Machine Learning\'s AutoML for regression, you want to constrain model complexity to prevent overfitting. Which setting allows you to control complexity?\n\n- **A.** Metric Threshold\n- **B.** Validation Size\n- **C.** Block Algorithms\n- **D.** Experiment Exit Criterion\n\n- **E.** Concurrent Iterations\n\n\n\n**Correct answer:** C\n**Explanation:** Blocking algorithms limits the complexity of models generated, preventing overly complex models that may overfit.\n\n### Q5\nAn advertising firm plans digital billboards showing personalized ads based on demographics. The system should detect faces, estimate age/gender, and analyze emotion. Which Azure service is most suitable?\n\n- **A.** Azure Video Indexer\n- **B.** Azure Custom Vision\n- **C.** Azure Form Recognizer\n- **D.** Azure Face API\n\n**Correct answer:** D\n**Explanation:** Azure Face API is designed for face detection, age/gender estimation, and emotion analysis.\n\n### Q6\nWhich best describes the primary use of Azure ML\'s AutoML feature?\n\n- **A.** To automate hyperparameter tuning for deep learning models only.\n- **B.** To enable users to create ML models without any coding or configuration.\n- **C.** To deploy ML models to multiple Azure regions simultaneously.\n- **D.** To automatically select the most appropriate ML algorithm and optimize it based on the dataset.\n\n**Correct answer:** D\n**Explanation:** AutoML automates model selection, feature engineering, and hyperparameter tuning by analyzing datasets.\n\n### Q7\nYou are working on an Azure-based project integrating AI for visual data processing. Which Azure tools best support a scalable, low-latency solution for image classification?\n\n- **A.** Azure SQL Database with Azure Databricks\n- **B.** Azure Cosmos DB with Azure Machine Learning and Azure Cognitive Services\n- **C.** Azure Blob Storage with Azure Machine Learning\n- **D.** Azure Table Storage with Azure Cognitive Services\n\n**Correct answer:** B\n**Explanation:** Cosmos DB provides high availability and low latency. Combined with Azure ML and Cognitive Services, it supports scalable image classification.\n\n### Q8\nA bank wants to predict loan defaults (binary classification) with interpretable models. Which ML model is LEAST suitable?\n\n- **A.** Logistic Regression\n- **B.** Random Forests\n- **C.** Decision Trees\n- **D.** Neural Networks\n\n**Correct answer:** D\n**Explanation:** Neural Networks are black box models, not easily interpretable. This goes against the requirement for interpretable models.\n\n### Q9\nYou developed an ML model to predict product demand in retail. The model processes large data in real-time and needs frequent updates. Which deployment strategy is best?\n\n- **A.** Azure Databricks cluster\n- **B.** Azure Container Instances (ACI)\n- **C.** Azure Virtual Machine\n- **D.** Azure Kubernetes Service (AKS) with Azure Pipelines for retraining\n\n**Correct answer:** D\n**Explanation:** AKS allows scalability, high availability, and efficient real-time processing. Azure Pipelines ensures frequent model updates.\n\n### Q10\nYou developed an ML model predicting equipment failures. The model processes large volumes of real-time data and must be robust against failures. Recommended deployment?\n\n- **A.** Azure Kubernetes Service (AKS)\n- **B.** Azure Container Instance (ACI)\n- **C.** Local on-premises server\n- **D.** Azure Databricks\n\n**Correct answer:** A\n**Explanation:** AKS provides scalability, reliability, and efficient management of containerized applications.\n\n### Q11\nWhich feature of Azure ML is most beneficial for managing large-scale generative AI experiments?\n\n- **A.** Managed feature store\n- **B.** Experiment tracking\n- **C.** Model interpretability tools\n- **D.** MLOps integration\n\n**Correct answer:** B\n**Explanation:** Experiment tracking helps manage different training runs, parameters, and outcomes for generative AI experiments.\n\n### Q12\nA multinational wants to analyze sentiments in customer reviews from different regions globally. Which Azure service is most suitable?\n\n- **A.** Azure QnA Maker\n- **B.** Azure Text Analytics\n- **C.** Azure Computer Vision\n- **D.** Azure Bot Service\n\n**Correct answer:** B\n**Explanation:** Azure Text Analytics provides sentiment analysis, key phrase extraction, language detection for multi-language reviews.\n\n### Q13\nWhich best exemplifies the principle of fairness in AI?\n\n- **A.** Avoiding collecting personal user data\n- **B.** Ensuring equal accuracy across all demographic groups\n- **C.** Prioritizing user satisfaction and response time\n- **D.** Implementing encryption for data\n\n**Correct answer:** B\n**Explanation:** Fairness means ensuring AI does not disproportionately benefit or harm any group. Equal accuracy across demographics is key.\n\n### Q14\nYour company develops an AI credit risk assessment system. Which is LEAST associated with maintaining accountability?\n\n- **A.** Clear procedures for responsibility\n- **B.** Providing customers with detailed explanations\n- **C.** Utilizing the most cutting-edge deep learning model\n- **D.** Regular auditing of performance and data\n\n**Correct answer:** C\n**Explanation:** Using advanced deep learning models relates to accuracy, not accountability.\n\n### Q15\nYou are optimizing NLP workload for a customer support chatbot. Which approach best leverages language modeling?\n\n- **A.** Increasing database storage capacity\n- **B.** Implementing a rule-based system\n- **C.** Implementing a pre-trained language model like GPT-3\n- **D.** Upgrading network infrastructure\n\n**Correct answer:** C\n**Explanation:** Pre-trained language models like GPT-3 can generate accurate, contextually relevant responses.\n\n### Q16\nYou need to monitor ML model performance and be notified when accuracy degrades. Which Azure service?\n\n- **A.** Azure Advisor\n- **B.** Azure Model Management\n- **C.** Azure ML Model Monitoring\n- **D.** Azure Monitor\n\n**Correct answer:** C\n**Explanation:** Azure ML Model Monitoring tracks model metrics, detects data drift, and sets up alerts.\n\n### Q17\nYou are developing an ML solution to group customers into segments based on purchasing patterns. Which technique is most appropriate?\n\n- **A.** K-means clustering\n- **B.** Decision trees\n- **C.** Logistic regression\n- **D.** Linear regression\n\n**Correct answer:** A\n**Explanation:** K-means clustering is an unsupervised algorithm for grouping data points into clusters based on similarities.\n\n### Q18\nYou are using Azure AI Video Indexer for educational videos. Which capability helps students efficiently search for specific topics?\n\n- **A.** Speaker recognition\n- **B.** Visual content moderation\n- **C.** Brand detection\n- **D.** Audio effects identification\n\n**Correct answer:** A\n**Explanation:** Speaker recognition distinguishes and tags different speakers, helping users navigate to specific content.\n\n### Q19\nYou use Azure Text Analytics API for key phrase extraction but some domain-specific phrases aren\'t recognized. How to improve?\n\n- **A.** Deploy multiple instances of Text Analytics API\n- **B.** Preprocess data using third-party NLP library\n- **C.** Use Text Analytics for health\n- **D.** Develop a custom Named Entity Recognition model\n\n**Correct answer:** D\n**Explanation:** A custom NER model trained with domain-specific data recognizes important phrases in your domain.\n\n### Q20\nYour organization wants a smart search feature using natural language that suggests products based on search history. Which combination?\n\n- **A.** Azure Bot Service + Azure Text Analytics\n- **B.** Azure QnA Maker + Azure Cognitive Search\n- **C.** Azure Cognitive Search + Azure Personalizer\n- **D.** Azure LUIS + Azure Machine Learning\n\n**Correct answer:** C\n**Explanation:** Cognitive Search enables full-text search; Personalizer provides\n\n## PRACTICE TEST 1 (continued - Questions 21-30)\n\n### Q21\nA company plans to deploy an AI solution for analyzing customer feedback from email, social media, and calls, using sentiment analysis, keyword extraction, and categorization to provide insights to the customer service team. To ensure fairness in the AI solution, what should be the company\'s first step, considering responsible AI principles?\n\n- **A.** Use only customer service call data for training the AI model, as it is the most detailed feedback channel.\n- **B.** Limit the AI analysis to positive feedback to ensure that the AI solution has a positive impact on customer service.\n- **C.** Deploy the solution immediately to all customer channels to gather as much data as possible.\n- **D.** Train the AI model on a dataset that includes diverse demographics to ensure it can accurately understand sentiment across different customer groups.\n\n**Correct answer:** D\n**Explanation:** Training the model on a diverse dataset helps to mitigate biases and ensures the AI solution treats all customer groups fairly.\n\n### Q22\nYour organization is designing a large-scale AI solution using Azure Machine Learning. The application will be used globally and you have strict requirements on the system\'s latency, efficiency, and model update frequency. Which of the following practices is the most effective to meet these requirements?\n\n- **A.** Set up an automatic retraining pipeline with the use of Azure Machine Learning Pipelines.\n- **B.** Manually tune hyperparameters after each model training.\n- **C.** Deploy all models in a single region for easier management.\n- **D.** Use distributed deep learning, such as Horovod, to accelerate training.\n\n**Correct answer:** A\n**Explanation:** Setting up an automatic retraining pipeline with Azure Machine Learning Pipelines would allow for frequent model updates, better efficiency, and lower latency.\n\n### Q23\nYou are working on a project that involves predicting housing prices based on various features such as location, size, and number of bedrooms. You need to choose the most appropriate Azure machine learning technique to optimize and troubleshoot data storage and processing for this scenario. Which technique would you use?\n\n- **A.** Reinforcement Learning\n- **B.** Clustering\n- **C.** Linear Regression\n- **D.** Classification\n\n**Correct answer:** C\n**Explanation:** Linear regression is ideal for this scenario as it predicts a quantitative response based on predictor variables, fitting well with housing price predictions based on features like location and size.\n\n### Q24\nYou are developing a real-time transcription system for a multinational corporation that often hosts multilingual meetings. The system needs to convert spoken language from different languages into written text. You decide to use Azure\'s Speech service for this task. Which approach would be the most effective?\n\n- **A.** Use Azure Text Analytics for speech recognition and transcription.\n- **B.** Use Azure\'s translation service to convert all speech to English first, then use Azure\'s pre-built Speech to Text service.\n- **C.** Use the pre-built Speech to Text service provided by Azure without any modification.\n- **D.** Train a custom speech-to-text model using Azure\'s Custom Speech service, utilizing past recorded meetings as training data.\n\n**Correct answer:** D\n**Explanation:** Training a custom model using Azure\'s Custom Speech service with past recorded meetings as the training data would provide the most accurate results, as the model would learn to understand the specific accents, languages, and terminology used in the company\'s meetings.\n\n### Q25\nYour company wants an Azure-based image classification system that can handle large volumes of images in various categories and adapt to changes in classes without extensive retraining. Which Azure image classification feature should you focus on to meet this requirement?\n\n- **A.** Multiclass Classification\n- **B.** Anomaly Detection\n- **C.** Multilabel Classification\n- **D.** Transfer Learning\n\n**Correct answer:** D\n**Explanation:** Transfer Learning allows for leveraging a pre-trained model, which has learned from a large volume of data, to a new related task. This enables the model to adapt to new classes with minimal additional training, thus providing the flexibility needed.\n\n### Q26\nYour company is developing an AI solution to automate fruit inspection in a packaging plant. The system should analyze fruit images, identify types (apples, bananas, oranges), and assess ripeness. It should improve accuracy over time. Which Azure service should you use?\n\n- **A.** Azure Custom Vision\n- **B.** Azure Text Analytics\n- **C.** Azure Bot Service\n- **D.** Azure Logic Apps\n\n**Correct answer:** A\n**Explanation:** Azure Custom Vision allows you to build, deploy, and improve your own image classifiers, making it an ideal choice for an image-based inspection process. It can differentiate between different types of fruits and their ripeness based on the provided training images and can continually learn and improve over time.\n\n### Q27\nA financial institution plans to use Azure Machine Learning to predict loan default risk based on historical data, including features like loan amount, term, income, credit score, and employment status. The target variable is loan default status. Which correctly identifies the features and labels for machine learning?\n\n- **A.** Features: Loan default risk; Label: Loan amount, term, applicant\'s income, credit score, employment status.\n- **B.** Features: Loan term; Label: Applicant\'s income, credit score, employment status, loan default risk.\n- **C.** Features: Loan amount, term, applicant\'s income, credit score, employment status; Label: Loan default risk.\n- **D.** Features: Credit score, employment status; Label: Loan amount, term, applicant\'s income.\n\n**Correct answer:** C\n**Explanation:** The features are input variables that are used to predict the outcome. The label is the target variable that the model will predict, which in this case is the loan default risk.\n\n### Q28\nIn a scenario where you are developing a machine learning model to predict customer behavior based on large datasets stored in Azure, you need to optimize data storage and processing while adhering to core machine learning concepts and implementing MLOps practices for continuous integration and delivery. Which of the following approaches would best align with these requirements?\n\n- **A.** Implement Azure Data Lake Storage Gen2 with hierarchical namespace enabled, to store big data efficiently and optimize data processing operations.\n- **B.** Store all data in Azure SQL Database to leverage relational data storage for machine learning.\n- **C.** Use Azure Table Storage for all data needs to simplify operations and reduce costs.\n- **D.** Rely exclusively on Azure Cache for Redis to ensure data is quickly accessible for real-time predictions.\n\n**Correct answer:** A\n**Explanation:** Azure Data Lake Storage Gen2 is designed for big data analytics, supports hierarchical namespace, and is optimized for performance, making it ideal for storing and processing large datasets in machine learning scenarios.\n\n### Q29\nA retail company wants to use facial analysis to gather insights about customer demographics and emotions in their stores. The data will be used to adjust marketing strategies and product placements in real time. They need a system capable of analyzing multiple faces simultaneously, identifying gender, age, emotion, and other attributes. Which Azure AI service would be most suitable for this task?\n\n- **A.** Azure Custom Vision\n- **B.** Azure Face API\n- **C.** Azure Form Recognizer\n- **D.** Azure Video Indexer\n\n**Correct answer:** B\n**Explanation:** Azure Face API is a powerful service for face detection and recognition, as well as additional features like emotion detection, age estimation, gender identification, etc. It can also handle multiple faces in an image or video frame, making it ideal for this scenario.\n\n### Q30\nIn a scenario where a retail company aims to enhance customer experience by implementing a computer vision solution to recognize products in real-time within their stores, which combination of Microsoft Azure services should be used to optimize and troubleshoot data storage, data processing, and effectively handle computer vision workloads?\n\n- **A.** Azure SQL Database for structured data storage, Azure Functions for executing serverless code, and Azure HDInsight for big data analytics.\n- **B.** Azure Virtual Machines to manually process images, Azure Files for file sharing, and Azure Cognitive Services without specifying the use of the Computer Vision API.\n- **C.** Azure Machine Learning for building custom vision models, Azure Queue Storage for message queuing, and Azure Data Lake Storage for storing unstructured data.\n- **D.** Azure Cognitive Services (Computer Vision API) for real-time product recognition, Azure Blob Storage for storing images, and Azure Stream Analytics for processing data streams.\n\n**Correct answer:** D\n**Explanation:** This solution efficiently handles computer vision workloads by using Azure Cognitive Services\' Computer Vision API for real-time product recognition. Azure Blob Storage is ideal for storing large volumes of image data, and Azure Stream Analytics is capable of processing data streams in real time, making it suitable for analyzing video feeds or image data directly from store cameras.\n\n### Q31\nA retail company wants to implement a system to automatically classify customer inquiries into categories like orders, returns, complaints, and feedback, while identifying sentiment to prioritize responses. The solution requires efficient data processing, storage optimization, and advanced NLP workloads. Which Azure service combination is best for this solution?\n\n- **A.** Deploy Azure Cognitive Search for extracting, classifying, and analyzing sentiment from inquiries, using Azure Cosmos DB for storing the inquiries.\n- **B.** Utilize Azure AI Language Service for text classification and sentiment analysis, combined with Azure Blob Storage for storing customer inquiries.\n- **C.** Implement Azure Machine Learning to train custom models for inquiry classification and sentiment analysis, with Azure Table Storage for data storage.\n- **D.** Apply Azure Databricks for data processing and NLP tasks on customer inquiries, with Azure Data Lake Storage for data storage.\n\n**Correct answer:** B\n**Explanation:** Azure AI Language Service offers sophisticated NLP capabilities, including text classification and sentiment analysis, which directly addresses the need to categorize customer inquiries and assess their sentiment. Azure Blob Storage is well-suited for storing large volumes of unstructured data like customer inquiries.\n\n### Q32\nWhat is the main advantage of using Azure Machine Learning pipelines?\n\n- **A.** They offer pre-built models for common machine learning tasks, reducing the need for custom training.\n- **B.** They allow you to train models faster by parallelizing computations across multiple GPUs.\n- **C.** They provide a cloud-based graphical interface for building machine learning models without coding.\n- **D.** They enable the automation and orchestration of machine learning workflows, such as data preprocessing, training, and deployment.\n\n**Correct answer:** D\n**Explanation:** Azure Machine Learning pipelines are designed to orchestrate the various steps involved in a machine learning workflow, including data preparation, feature engineering, model training, evaluation, and deployment.\n\n### Q33\nWhich Azure service is best for optimizing and troubleshooting data storage and processing on a content-driven website with user-generated content, while supporting AI workloads like content moderation and personalization?\n\n- **A.** Azure Machine Learning\n- **B.** Azure Cosmos DB\n- **C.** Azure SQL Database\n- **D.** Azure Cognitive Services\n\n**Correct answer:** D\n**Explanation:** Azure Cognitive Services provides a suite of AI services and APIs that enable applications to see, hear, speak, understand, and interpret human needs using natural methods of communication. It includes services for content moderation and personalization.\n\n### Q34\nA financial institution is leveraging machine learning to predict whether a loan applicant will default based on a variety of factors such as credit score, income, age, etc. This prediction will then influence the decision to approve or reject the loan application. Which of the following machine learning concepts is least relevant in this scenario?\n\n- **A.** Unsupervised Learning\n- **B.** Overfitting\n- **C.** Feature Engineering\n- **D.** Classification\n\n**Correct answer:** A\n**Explanation:** Unsupervised learning is a type of machine learning that looks for previously undetected patterns in a dataset with no pre-existing labels and with a minimum of human supervision. It\'s not directly relevant to this problem.\n\n### Q35\nYour organization monitors real-time telemetry from thousands of IoT devices across multiple locations. Recently, unexpected device failures have occurred. You need a solution to analyze telemetry data in real time and detect anomalies indicating potential device failures. Which Azure service should you use?\n\n- **A.** Azure Form Recognizer\n- **B.** Azure Cognitive Search\n- **C.** Azure Text Analytics\n- **D.** Azure Anomaly Detector\n\n**Correct answer:** D\n**Explanation:** Azure Anomaly Detector is an AI service that can analyze time-series data in real time and identify any anomalies, making it ideal for this scenario.\n\n### Q36\nWhich of the following is a key feature of the Azure Face API that differentiates it from other Azure Computer Vision services?\n\n- **A.** Custom image classification model training\n- **B.** Reading and extracting text from images\n- **C.** Real-time object detection in video streams\n- **D.** Analysis of facial attributes such as emotion, age, and facial landmarks\n\n**Correct answer:** D\n**Explanation:** A key feature of the Azure Face API is its ability to analyze facial attributes, including emotions, estimated age, gender, and facial landmarks. This type of analysis is unique to facial recognition solutions.\n\n### Q37\nYou are the lead AI architect at a large retail company aiming to analyze customer reviews and feedback from the website and social media to understand sentiment and identify areas for improvement. Which Azure services would you consider for this use case?\n\n- **A.** Azure Digital Twins\n- **B.** Azure Text Analytics\n- **C.** Azure Form Recognizer\n- **D.** Azure Anomaly Detector\n\n**Correct answer:** B\n**Explanation:** Azure Text Analytics can analyze unstructured text for tasks like sentiment analysis, key phrase extraction, named entity recognition, and language detection, which makes it ideal for understanding customer feedback.\n\n### Q38\nYou are developing an AI solution for a multinational company to extract, identify, and categorize entities from unstructured data (emails, reviews, social media). You\'ve chosen Microsoft Azure Text Analytics for entity recognition. Which strategy would best optimize your model\'s performance?\n\n- **A.** Using Text Analytics for entity recognition on raw, unprocessed data.\n- **B.** Training and deploying a Text Analytics custom named entity recognition model using the company\'s domain-specific data.\n- **C.** Deploying the Text Analytics API without customization, since the pre-trained models are extensive enough for various data sources.\n- **D.** Using Text Analytics for health even though the company is not in the healthcare industry.\n\n**Correct answer:** B\n**Explanation:** Training a custom model using the company\'s domain-specific data will help the model identify and categorize entities that are unique to the company\'s operations.\n\n### Q39\nYou need to optimize and troubleshoot a cloud-based NLP application analyzing multilingual customer feedback, processing large data volumes, and providing sentiment and intent insights. Which Azure services should you integrate, considering NLP workload features and language modeling?\n\n- **A.** Azure Virtual Machines\n- **B.** Azure Cognitive Services for Language\n- **C.** Azure Blob Storage\n- **D.** Azure HDInsight\n\n**Correct answer:** B\n**Explanation:** Azure Cognitive Services for Language provides advanced NLP capabilities, including sentiment analysis, language detection, and key phrase extraction, which are essential for analyzing customer feedback efficiently across multiple languages.\n\n### Q40\nYour company operates a multilingual call center, and you have been tasked to develop a solution to monitor and analyze the customer-agent interactions. The primary needs are real-time transcription, sentiment analysis, and key phrase extraction from the conversation. Which Azure AI services should you use in combination to achieve this?\n\n- **A.** Use Azure\'s Text Analytics API for sentiment analysis and key phrase extraction, and Azure\'s Text to Speech for transcription.\n- **B.** Use Azure\'s Speech to Text for transcription, Azure\'s Text Analytics API for sentiment analysis and key phrase extraction.\n- **C.** Use Azure\'s Text to Speech for transcription, and Azure\'s Translator Text API for sentiment analysis and key phrase extraction.\n- **D.** Use Azure\'s Language Understanding (LUIS) for transcription, sentiment analysis, and key phrase extraction.\n\n**Correct answer:** B\n**Explanation:** Azure\'s Speech to Text service provides real-time transcription, and Azure\'s Text Analytics API is used to perform sentiment analysis and key phrase extraction, fulfilling all the requirements.\n\n## Practice Test 1 - Questions 41-60\n\n### Q41\nWhich of the following workloads would most likely use sentiment analysis as a core component?\n\n- **A.** Classifying images of animals\n- **B.** Predicting the next word in a sentence\n- **C.** Translating spoken language into text\n- **D.** Identifying positive or negative opinions in customer reviews\n\n**Correct answer:** D\n**Explanation:** This is the essence of sentiment analysis. The goal is to determine whether the sentiment expressed in the review is positive, negative, or neutral. Sentiment analysis is a core NLP workload, often applied in business to gauge customer satisfaction from text-based data like reviews, feedback, or social media posts.\n\n### Q42\nYou are developing an AI-based loan approval system for a financial institution. The AI system uses applicant data to predict loan default risk and recommend approval or rejection. Which of the following factors is least crucial to maintaining transparency in this AI solution?\n\n- **A.** Providing an explanation to applicants about why their loan was approved or rejected.\n- **B.** Ensuring that the model\'s predictions can be understood by non-technical stakeholders.\n- **C.** Using the latest deep learning model architecture for the highest prediction accuracy.\n- **D.** Regularly auditing the AI model\'s decisions to ensure consistency and fairness.\n\n**Correct answer:** C\n**Explanation:** While prediction accuracy is important, it does not necessarily contribute to transparency. A complex model might be less interpretable, and therefore less transparent, than a simpler one.\n\n### Q43\nA machine learning model is being developed to predict the resale value of used cars based on parameters like make, model, age, mileage, and whether the car has been involved in an accident. Which of the following is true for this scenario?\n\n- **A.** Whether the car has been involved in an accident is a label, make and model are features.\n- **B.** The resale value is a label, make, model, age, mileage, and accident involvement are features.\n- **C.** Age and mileage are labels, the resale value is a feature.\n- **D.** The resale value and accident involvement are both labels.\n\n**Correct answer:** B\n**Explanation:** The resale value is the output we are trying to predict, making it a label. All the other parameters - make, model, age, mileage, and whether the car has been in an accident - are inputs used to make that prediction, making them features.\n\n### Q44\nYour company has developed an AI-based recommendation system for an e-commerce platform. The system analyzes user behavior and product characteristics to suggest products to users. Which of the following aspects is least directly related to ensuring accountability in this AI solution?\n\n- **A.** Setting up a mechanism to review and handle user complaints about inappropriate recommendations.\n- **B.** Establishing policies defining who is responsible if the recommendation system suggests inappropriate products.\n- **C.** Ensuring the recommendation system has a seamless integration with the website\'s user interface for a smooth user experience.\n- **D.** Maintaining clear documentation about the data sources used and how the recommendation algorithm works.\n\n**Correct answer:** C\n**Explanation:** While this is crucial for a good user experience, it doesn\'t directly contribute to accountability in the AI system.\n\n### Q45\nYour organization is planning to build a conversational AI solution using Microsoft Azure Bot Services that involves multiple language support, adaptive responses, and a hybrid environment deployment. Which of the following considerations will be most important to ensure effective operation?\n\n- **A.** The configuration of the Bot Service to leverage Azure QnA Maker for knowledge base support, and Azure LUIS for language understanding.\n- **B.** Deploying the bot solely in an on-premises environment.\n- **C.** Exclusively using Azure Machine Learning to process and understand user inputs.\n- **D.** Using only pre-built conversational models without customization.\n\n**Correct answer:** A\n**Explanation:** Microsoft Azure provides various AI services like QnA Maker and LUIS to support conversational AI solutions. QnA Maker provides a knowledge base that can easily be referenced by the bot to provide responses, and LUIS helps in understanding the user\'s language and intent.\n\n### Q46\nYour company is deploying a text analytics solution using Azure Cognitive Services. The application should be able to handle spikes in demand without manual intervention while minimizing costs. Which of the following is the best practice for managing this requirement?\n\n- **A.** Use Azure DevOps to automate the deployment of additional instances during peak periods.\n- **B.** Use Azure Functions to dynamically scale the service based on demand.\n- **C.** Use Azure Monitor to manually increase the service tier during peak periods.\n- **D.** Use Azure Kubernetes Service to orchestrate and manage the service.\n\n**Correct answer:** B\n**Explanation:** Azure Functions, which provides serverless architectures, can scale dynamically based on demand, allowing you to only pay for what you use, thus managing costs effectively.\n\n### Q47\nYou are the CTO of a startup that is developing a sophisticated AI system to evaluate job applications. The system will assess the qualifications, skills, and experience of each candidate, and it will automatically generate a shortlist of the best candidates for each job. Which of the following is not consistent with Microsoft\'s guiding principles for Responsible AI in this context?\n\n- **A.** Ensuring that the AI system does not favor candidates based on their gender, race, or age.\n- **B.** Designing the AI system to explain the reason why a particular candidate was not shortlisted.\n- **C.** Refusing to disclose how the AI system processes and assesses job applications.\n- **D.** Testing and reviewing the AI system\'s decisions regularly to ensure they are accurate and fair.\n\n**Correct answer:** C\n**Explanation:** This is inconsistent with the principle of transparency. Stakeholders should have the ability to understand how AI systems operate and make decisions.\n\n### Q48\nA multinational corporation plans to deploy a Microsoft Azure AI solution to automate customer service responses across languages and regions. In line with Azure AI Fundamentals, which approach optimizes data storage and processing, addresses common AI workload features, and adheres to responsible AI principles, especially accountability?\n\n- **A.** Deploy separate, region-specific AI models for each language and cultural context, integrating Azure Cognitive Services for translation and sentiment analysis, with a centralized logging system for monitoring AI decisions and performance.\n- **B.** Implement an AI model that provides automated responses without any logging mechanism for the decisions made or the data processed.\n- **C.** Use a generic, one-size-fits-all AI model for all regions without considering the linguistic and cultural nuances of different customer bases.\n- **D.** Store all customer interactions in a single, unencrypted database to simplify data access for AI processing, prioritizing ease of use over security.\n\n**Correct answer:** A\n**Explanation:** This approach optimizes data processing by using specialized models for different languages and cultures, leverages Azure services for enhanced AI workloads, and ensures accountability through a centralized logging mechanism.\n\n### Q49\nWhich of the following is the most appropriate machine learning technique to use for predicting whether a customer will renew their subscription based on historical data?\n\n- **A.** Classification, as it determines whether the customer will renew or not, which is a categorical outcome.\n- **B.** Dimensionality reduction, as it simplifies the dataset to improve the prediction of whether a customer will renew.\n- **C.** Regression, as it provides the exact probability of renewal for each customer.\n- **D.** Clustering, as it groups customers into those who have renewed and those who haven\'t.\n\n**Correct answer:** A\n**Explanation:** Classification is the appropriate technique since the problem involves predicting a categorical outcome—whether a customer will renew or not. In this case, it is a binary classification problem (renew vs. not renew).\n\n### Q50\nWhat is a critical consideration for ensuring the reliability and safety of an AI system in a healthcare application?\n\n- **A.** Allowing the AI to make independent decisions without human oversight in emergency situations\n- **B.** Minimizing training data to avoid overfitting and improve model generalization\n- **C.** Continuously monitoring the AI system for unexpected behaviors or erroneous outputs\n- **D.** Collecting as much data as possible from a single demographic to ensure consistency\n\n**Correct answer:** C\n**Explanation:** Continuously monitoring the AI system for unexpected behaviors or erroneous outputs is correct because reliability and safety are crucial in AI, especially in sensitive domains like healthcare. This also allows for timely intervention when issues arise.\n\n### Q51\nA technology firm is developing an AI-based traffic management system using Azure AI services to reduce congestion and improve road safety. The system analyzes real-time data, predicts hotspots, and adjusts traffic signals. Considering Azure AI\'s principles for responsible AI, particularly reliability and safety, what is the most crucial aspect to address during design and deployment?\n\n- **A.** Integrate a fail-safe mechanism that defaults to manual traffic control in case of system failure or uncertain predictions.\n- **B.** Implement the system with the capability to autonomously override human traffic controller decisions to improve efficiency.\n- **C.** Focus on developing a highly complex AI model that ensures superior prediction capabilities, minimizing the need for human intervention.\n- **D.** Design the system to prioritize high-speed data processing over accuracy to ensure real-time responsiveness.\n\n**Correct answer:** A\n**Explanation:** A fail-safe mechanism ensures that, in the event of AI system failure or uncertainty, control can safely revert to human operators, maintaining reliability and safety.\n\n### Q52\nYou are working on a project to predict the demand for a specific product in a retail store based on historical sales data and other relevant factors (like holidays, promotions, etc.). The target variable here is the number of product units sold, which is a continuous variable. Which of the following machine learning algorithms is least suitable for this prediction task?\n\n- **A.** Lasso Regression\n- **B.** Poisson Regression\n- **C.** Naive Bayes\n- **D.** Random Forest Regression\n\n**Correct answer:** C\n**Explanation:** Naive Bayes is primarily a classification algorithm and assumes that all features are independent of each other. It is not typically used for regression tasks.\n\n### Q53\nA city government is deploying an Azure AI-powered chatbot for residents to access local services, event schedules, and emergency alerts via the city\'s website and mobile app. What is the most critical consideration in its development and deployment to align with Azure AI\'s responsible AI principles, particularly inclusiveness?\n\n- **A.** Implement the chatbot with a voice recognition feature that only supports the most commonly spoken language in the city.\n- **B.** Ensure the chatbot interface and interactions are accessible to individuals with disabilities, including those who require screen readers or other assistive technologies.\n- **C.** Restrict chatbot access to users who are registered on the city\'s website to ensure only residents benefit from the service.\n- **D.** Design the chatbot to use advanced technical jargon in its responses to demonstrate the sophistication of the AI technology.\n\n**Correct answer:** B\n**Explanation:** Making the chatbot accessible to individuals with disabilities ensures that the service is inclusive, allowing all residents to access information and services equally.\n\n### Q54\nA travel company is building an application that allows users to upload their holiday photos. The application should automatically create an album based on the landmarks detected in the photos. Which feature of Azure services should be the focus in this case?\n\n- **A.** OCR in Azure Form Recognizer\n- **B.** Landmark detection in Azure Computer Vision\n- **C.** Text Recognition in Azure Computer Vision\n- **D.** Image classification in Azure Custom Vision\n\n**Correct answer:** B\n**Explanation:** Landmark detection in Azure Computer Vision is the feature designed for identifying landmarks in images, which aligns with the needs of this scenario.\n\n### Q55\nA tech company is developing an intelligent video analysis system on Azure to automatically categorize video content into genres. The system will analyze audio, video frames, and metadata to improve classification accuracy. Which approach effectively utilizes deep learning techniques for optimizing data storage, processing, and machine learning on Azure?\n\n- **A.** Utilize Azure Blob Storage for video data and Azure Machine Learning to train a Convolutional Neural Network (CNN) for video frame analysis and a Recurrent Neural Network (RNN) for audio analysis.\n- **B.** Implement Azure File Storage for video archives and utilize Azure HDInsight with Apache Spark for clustering algorithms.\n- **C.** Store video metadata in Azure Table Storage and use Azure Cognitive Services for rule-based genre classification.\n- **D.** Use Azure Cosmos DB for real-time processing of video data and Azure Logic Apps for orchestrating a decision tree algorithm.\n\n**Correct answer:** A\n**Explanation:** Azure Blob Storage is suitable for storing large volumes of unstructured video data. Using Azure Machine Learning to train a CNN for analyzing video frames and an RNN for audio analysis leverages deep learning\'s strength in handling sequential and image data.\n\n### Q56\nA digital marketing firm is planning to develop a machine learning model to classify emails into spam or not spam based on features such as email content, subject line, and sender. The dataset is highly imbalanced with a small proportion of spam emails. Which of the following models is LEAST suitable for handling this imbalanced dataset?\n\n- **A.** Decision Trees with class weights\n- **B.** Random Forests with class weights\n- **C.** Logistic Regression with class weights\n- **D.** K-Means Clustering\n\n**Correct answer:** D\n**Explanation:** K-means is an unsupervised learning algorithm used for clustering, not classification. It does not have a concept of classes, let alone class imbalance, and is therefore not suitable for this task.\n\n### Q57\nYou\'re an AI specialist in a healthcare organization tasked with developing an AI model to predict disease progression based on patient data. Which of the following steps is least essential in ensuring the reliability and safety of this AI solution?\n\n- **A.** Testing the model in different stages of development with a variety of data samples to ensure reliability.\n- **B.** Running the model on the latest, high-end GPU to ensure maximum computational performance.\n- **C.** Using a diverse and representative dataset for model training to ensure it performs reliably across different demographic groups.\n- **D.** Implementing regular reviews and audits of the model\'s predictions.\n\n**Correct answer:** B\n**Explanation:** While computational performance can influence the efficiency and speed of training and deploying a model, it doesn\'t directly ensure the reliability or safety of the AI solution.\n\n### Q58\nAs an AI consultant, you\'re developing a solution for a financial institution to detect fraudulent activities. The system must extract entities from financial transaction notes, which include information such as account numbers, dates, and transaction amounts. You\'ve chosen Azure Text Analytics for entity recognition. Which of the following approaches would most effectively handle this task?\n\n- **A.** Use Azure Text Analytics with a custom Named Entity Recognition (NER) model, trained with financial domain-specific data.\n- **B.** Use the pre-trained model provided by Azure Text Analytics without any customization.\n- **C.** Feed raw, uncleaned transaction notes directly to Azure Text Analytics for entity extraction.\n- **D.** Use Azure Text Analytics for health to recognize financial entities.\n\n**Correct answer:** A\n**Explanation:** Training a custom NER model with financial domain-specific data would be the most effective strategy, as it allows Azure Text Analytics to recognize and extract entities that are specific to financial transactions.\n\n### Q59\nWhich of the following scenarios is an ideal use case for leveraging a machine learning (ML) model in an AI solution?\n\n- **A.** Predicting whether a customer review is positive or negative\n- **B.** Adding two numbers based on user input\n- **C.** Setting static shipping prices for various geographic locations\n- **D.** Creating a series of If-Else rules to validate form entries\n\n**Correct answer:** A\n**Explanation:** This is a classic machine learning use case called sentiment analysis, where the goal is to predict whether the sentiment of a customer review is positive, negative, or neutral based on patterns learned from data.\n\n### Q60\nA company wants to integrate artificial intelligence capabilities into their products to improve customer interactions by analyzing customer feedback from various forms, such as surveys, emails, and support tickets. The goal is to understand the sentiment and key themes from this feedback. Which Azure AI service would best meet this need?\n\n- **A.** Azure QnA Maker\n- **B.** Azure Text Analytics\n- **C.** Azure Bot Service\n- **D.** Azure Speech to Text\n\n**Correct answer:** B\n**Explanation:** Azure Text Analytics is designed for tasks like sentiment analysis, key phrase extraction, and entity recognition. It\'s ideal for analyzing customer feedback and identifying sentiments and key themes from surveys, emails, or support tickets.\n';
 document.addEventListener('DOMContentLoaded', () => {
   try {
     const parsed = parseMarkdown(examMd);
